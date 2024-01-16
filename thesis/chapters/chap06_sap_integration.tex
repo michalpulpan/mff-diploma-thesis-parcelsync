@@ -1,0 +1,44 @@
+\chapter{Integrating SAP Business One}
+\label{chap:integrating-sap-b1}
+
+% problem description -> for the proof of context and real life texting was neccessary to build direct connection with SAP B1
+% Communication with SAP isn't straight forward and is forbidden to write into SAP tables
+% the decision was that the external software will be in charge of the synchronizations (call Parcelsync directly when needed, no webhooks or calls from the Parcelsync)
+
+\section{Existing solutions}
+\label{sec:existing-solutions}
+% describe state of the art
+\subsection{SAP Business One DI API}
+\label{subsec:sap-b1-di-api}
+% low level approach with direct access to the object
+% was implemented in the bachaleor's thesis however did not fullfill the expectations and was pretty much phased out in favor of the SAP Business One Service Layer
+\subsection{SAP Business One Service Layer}
+\label{subsec:sap-b1-service-layer}
+% Year after finishing the bachaleor's thesis, company moved to the newer version of SAP Business One (v9) which introduced SAP Business One Service Layer which finally brought simple REST-based approach for communicating with SAP with all mappings onto SAP objects and tables
+\section{SAP Business One Service Layer Proxy with Database connector}
+\label{sec:sap-b1-service-layer-proxy}
+% description of the SAP Business One Server Layer Proxy which was created so that company can simply integrate Parcelsync. 
+\subsection{Analysis}
+\label{subsec:analysis}
+% analysis of the proxy
+\subsubsection{Functional requirements}
+\label{subsubs:functional-requirements}
+% func requirements of the proxy -> 
+% - simpler authentication with basic role based access
+% - proxy requests to the Service Layer
+% - create database GETTER (for MS SQL DB with ODBC connector)
+\subsubsection{Nonfunctional requirements}
+\label{subsubsec:nonfunctional-requirements}
+% deployment locally to the SAP B1 instance
+% CI/CD
+\subsection{Architecture}
+\label{subsec:architecture}
+% high level architecture of the proxy software
+\subsection{Implementation}
+\label{subsec:implementation}
+% KoaJS app simmilar to the Parcelsync backend
+\subsection{Deployment}
+\label{subsec:deployment}
+% Deployed as an containarized application into Docker
+% Had to be local to the SAP B1 instance -> Linux VM on the server of company 
+

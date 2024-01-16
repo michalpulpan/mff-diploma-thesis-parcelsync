@@ -1,0 +1,48 @@
+\chapter{Deployment}
+\label{chap:deployment}
+% brief introduction into the chapter 
+\section{Current Deployment Strategy}
+\label{sec:current-deployment-strategy}
+%  introduce the current deployment strategy of project
+%  the deployment is managed using Infrastructure as Code (IaC) on AWS, use of specific services (Amazon S3 for hosting the static frontend and AWS Lambda for the backend functionality)
+% how these components are organized into multiple stacks using AWS cloudformation
+
+\subsection{Amazon S3 for Static Frontend Hosting}
+\label{subsec:amazon-s3-static-frontend}
+% how Amazon S3 is used for storing and serving the static ReactJS app
+
+\subsection{AWS Lambda for Backend Services}
+\label{subsec:aws-lambda-backend}
+% use of AWS Lambda for the backend
+% discussing how serverless architecture benefits the application, including scalability, cost-efficiency, and reduced operational overhead.
+
+\subsection{AWS CloudFormation for Infrastructure Management}
+\label{subsec:aws-cloudformation-infrastructure}
+% the role of AWS cloudformation in managing the infrastructure.
+% consistent, repeatable deployment processes
+
+\section{Alternative Deployment Methods}
+\label{sec:alternative-deployment-methods}
+% This section should explore alternative deployment methods that could be used for the project. 
+
+\subsection{Containerization}
+\label{subsec:containerization}
+% concept of containerization, particularly using Docker
+% how containerization could be applied to both the frontend and backend
+
+\subsection{Other Cloud Providers and Services}
+\label{subsec:other-cloud-providers}
+% Briefly touching on alternative cloud providers (like Azure or Google Cloud Platform) and their services that could be used for a similar deployment strategy.
+
+\section{Continuous Integration and Continuous Deployment (CI/CD)}
+\label{sec:cicd}
+% Dedicate this section to the CI/CD processes implemented in the project, emphasizing the use of GitHub Actions.
+
+\subsection{GitHub Actions for CI/CD}
+\label{subsec:github-actions-cicd}
+% how GitHub Actions are used for CI/CD
+% details on how code changes in the repository trigger automated workflows for building, and deploying both the frontend and backend components
+
+\subsection{Workflow Automation and Pipeline}
+\label{subsec:workflow-automation-pipeline}
+% specific steps involved in  CICD pipeline, including code commits, automated testing, build processes, and deployment to AWS services.
