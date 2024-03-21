@@ -1,0 +1,187 @@
+\chapter{Integrating SAP Business One}
+\label{chap:integrating-sap-b1}
+% problem description -> for the proof of context and real life texting was neccessary to build direct connection with SAP B1
+% Communication with SAP isn't straight forward and is forbidden to write into SAP tables
+% the decision was that the external software will be in charge of the synchronizations (call Parcelsync directly when needed, no webhooks or calls from the Parcelsync)
+
+In the modern landscape of daily business operations, seamless integration between external software solutions and core enterprise resource planning (ERP) systems is not just a convenience; it is a necessity.
+As the number of external services needed for businesses to operate grows rapidly, comes the need to integrate those with minimising tight coupling and complex (hard to maintain) dependencies.
+SAP Business One, a leading ERP solution for small to medium companies, offers robust and unimaginable capabilities, but presents unique challenges when it comes to integration with third-party software. 
+
+This chapter dives into the complexity of establishing a direct connection with SAP Business One and its underlying database. 
+Direct write interactions with database tables are highly discouraged due to potential repercussions on system warranty and technical support.
+However, it is important to understand that the caution advised against direct database modifications does not arise merely from overarching restrictions but stems from a recognition of the complex structure of SAP's database. Unauthorised alterations carry the risk of compromising the integrity of the system.
+Also, we should mention that SAP Business One's pricing model is not merely instance-based, but also user-based.
+This introduces additional limitations and costs that businesses must consider and potentially accept. 
+Or do they?
+
+\section{Possible solutions}
+\label{sec:possible-solutions}
+% describe state of the art
+
+Bridging the gap between SAP's robust functionalities and the needs of business utilising third-party software is not as straightforward as it might initially appear. 
+In today's software environment, a common requirement is the need for a web service to programmatically transfer data bewern third-party applications and SAP.
+Despite SAP's widespread popularity, an official solution for this specific challenge was absent for a long time.
+
+\subsection{SAP Business One Data Interface API}
+\label{subsec:sap-b1-di-api}
+% low level approach with direct access to the object
+% was implemented in the bachaleor's thesis however did not fullfill the expectations and was pretty much phased out in favor of the SAP Business One Service Layer
+
+One of the foundational solutions provided by SAP is \textit{Data Interface API} (DI API).
+This low-level programming interface offers direct access to SAP Business One objects, enabling developers to perform CRUD (Create, Rear, Update, Delete) operations on SAP data. 
+The DI API was the go-to choice for many years because it was already installed with every SAP instance and the programmer could access SAP directly via C\# interface already known from a SAP user interface.
+However, this convenience also introduces significant limitations.
+The \textit{DI API} operates through a local \textit{Component Object Model} (COM) that is installed alongside SAP Business One.
+This architecture requires that any code that uses the DI API must be executed in the environment where the COM is located.
+Consequently, this code must typically run on a Windows machine and is ideally written in C\#, which may not always align with the preferred development practices or the existing infrastructure of a business.
+Despite these challenges, there exists a workaround in the form of a \textit{wrapper library}.
+Although this does not address the deployment environment limitations, it enables the translation of the library's existing interface into one that is compatible with other programming languages.
+For example, it is then possible to port C\# library into Python using tools such as the \lstinline[language=Python]{makepy} library.
+
+
+\subsection{SOAP API VCZ.WebService}
+% Briefly present VCZ.WebService and it's drawbacks
+A noteworthy solution to address several issues associated with using the \textit{DI API} alone  is the \textit{VCZ.WebService} developed by Versino, a SAP Business One supplier. 
+It was one of the first web services available for SAP users operating on the \textit{SOAP} (Simple Object Access Protocol) standard. 
+This makes \textit{VCZ.WebService} a good choice for data transmission between SAP and a variety of third-party software.
+In particular, the connection to \textit{VCZ.WebService} utilises the standard SAP user licence.
+
+This introduces key advantages, flexibility. 
+Unlike using a pure DI API, \textit{VCZ.WebService} introduces a layer over the \textit{DI API} that allows third-party software to run in various operating systems and environments.
+
+However, \textit{VCZ.WebService} is not without its disadvantage.
+In today's world, using SOAP is not considered a modern approach. Most programmers seek RESTful services which more align with the modern architectural styles and preferences.
+Since the log-in is done using a standard SAP user, a programmer using \textit{VCZ.WebService} has to use a licence provided by the business to be used just for the WebService, raising security concerns.
+Moreover, as of writing this thesis, the \textit{VCZ.WebService} is gradually being phased out in favour of newer technologies introduced in the next part.
+
+\subsection{SAP Business One Service Layer}
+\label{subsec:sap-b1-service-layer}
+% Year after finishing the bachaleor's thesis, company moved to the newer version of SAP Business One (v9) which introduced SAP Business One Service Layer which finally brought simple REST-based approach for communicating with SAP with all mappings onto SAP objects and tables
+
+The introduction of \textit{ SAP Business One Service Layer} marked an evolution in SAP integration capabilities. 
+Launched with version 9 of SAP Business One, the \textit{Service Layer} is a modern REST-based interface that handles communication with SAP systems. 
+The \textit{Service Layer} is controllable only using HTTP operations, making it accessible from any programming environment able to perform HTTP requests, thus vastly broadening its applicability.
+
+It offers a well-documented, standardised way to interact with SAP objects and perform operations similar to the ones in ERP's user interface. 
+Featuring user-defined queries and the ability to control the safe patching and posting into the SAP database.
+User-defined queries are an interesting feature. They are normal SQL Select queries with the requirement to first be stored as a string in the SAP database and then called by the \textit{ Service Layer} for data retrieval.
+It is very safe in this way, but fairly limiting and time-consuming for the user. 
+Sadly, the authentication is still done using an SAP user licence, generating a short lived token via \textit{Service Layer} introducing a little overhead when using this service.
+We will return to both limitations and introduce a solution in this chapter.
+
+The transition from the raw \textit{DI API} adopting \textit{SAP Business One Service Layer} reflects a broader trend towards web-based APIs for enterprise integration.
+
+However, being a first-party solution and providing key features with seamless SAP data manipulation, it still lacks the features needed for fast data queries and it's own authentication. Business does not want to provide it's own licence for which they have to pay extra and raise a security concerns with exposing the licence.
+
+In the following section, we propose a new approach to overcome these challenges.
+By introducing a publicly accessible solution through a reverse proxy equipped with its own authentication policies.
+
+\section{SAP Business One Service Layer Proxy with direct Database connector}
+\label{sec:sap-b1-service-layer-proxy}
+% description of the SAP Business One Server Layer Proxy which was created so that company can simply integrate Parcelsync. 
+Integrating SAP Business One with external applications - such as eCommerce platforms, different warehouse solutions, and Parcelsync - presents complex challenges that existing  approaches fail to address. 
+These challenges call for a new solution that allows secure access to the Service Layer over the Internet without compromising SAP credentials. 
+This solution should not only allow new integration capabilities but also ensure that business can maintain the security and integrity of the SAP Business One and it's database.
+
+\subsection{Analysis}
+\label{subsec:analysis}
+% analysis of the proxy
+As we came to the conclusion that existing solutions for integrating SAP Business One with external applications fall short of meeting requirements of business and isn't very straight forward to use in few aspects.
+This analysis explores the needs for creating a proxy for SAP Business One service layer with a direct database connector.
+
+\subsubsection{Functional requirements}
+\label{subsubs:functional-requirements}
+% func requirements of the proxy -> 
+% - simpler authentication with basic role based access
+% - proxy requests to the Service Layer
+% - create database GETTER (for MS SQL DB with ODBC connector)
+\begin{itemize}
+    \item Implement own authentication system without compromising SAP credentials.
+    \item Maintain a unified SAP login session across all user interactions.
+    \item Forward requests/responses to/from the SAP Business One Service Layer.
+    \item Implement a direct route to execute SELECT database queries bypassing the SAP Service Layer.
+    \item Provide the ability to switch between production and development environments for both the SAP Service Layer and the direct database connector.
+    \item Implement a simple user management system for CRUD operations on users of the Proxy.
+\end{itemize}
+
+\subsubsection{Nonfunctional requirements}
+\label{subsubsec:nonfunctional-requirements}
+% deployment locally to the SAP B1 instance
+% CI/CD
+\begin{itemize}
+    \item Local deployment close to SAP Business One Instance.
+    \item Continuous Integration and Continuous Deployment (CI/CD).
+    \item Ensure that the API is accessible via the HTTPS protocol from the public network.
+    \item Expose the API Proxy endpoint under a public domain name.
+\end{itemize}
+
+\subsection{Architecture}
+\label{subsec:architecture}
+% high level architecture of the proxy software
+The architecture is designed to ensure seamless integration between external applications and SAP Business One via SAP Business One Service Layer and direct connector to the MS SQL database underlying the SAP instance. 
+The main part of the architecture is an application that serves as a proxy and manager of singleton connectors to the SAP Service Layer and MS SQL database in both development and production environments.
+This application is strategically positioned behind the NGINX reverse proxy which serves as the entry point for all inbound requests.
+
+The architecture consists of following key parts:
+\begin{itemize}
+    \item Reverse proxy
+    \item Proxy app
+    \item Proxy database
+    \item SAP Business One Service Layer
+    \item SAP database
+\end{itemize}
+
+As illustrated in Figure \ref{img07:structurizr:landscape}, the architecture within the company network can be categorised into two principal systems. One being Proxy Server and the second SAP Business One.
+
+\begin{figure}[p]\centering
+\includegraphics[width=140mm]{img/chap07/fig_structurizr-landscape.png}
+\caption{Landscape diagram of communication with SAP}
+\label{img07:structurizr:landscape}
+\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=140mm]{img/chap07/fig_structurizr-proxy-system.png}
+\caption{System diagram of Proxy App}
+\label{img07:structurizr:system:proxy}
+\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=140mm]{img/chap07/fig_structurizr-sap-system.png}
+\caption{System diagram of SAP Business One}
+\label{img07:structurizr:system:sap}
+\end{figure}
+
+A more detailed examination provided in Figure \ref{img07:structurizr:system:proxy} presents the components that make up the Proxy Server, including:
+
+\subsubsection{Reverse proxy as the entry point}
+As the entry-point, the front-facing reverse proxy was chosen.
+Managing and directing incoming traffic to the Proxy app service
+
+\subsubsection{Proxy app and database}
+The proxy application with its own database is the heart of the system.
+They are responsible for user management as well as maintaining SAP Service Layer access tokens for both environments and connection pools to both MS SQL database environments.
+
+In contrast to the Proxy system, within our scope, the SAP Business One system is visualised in Figure \ref{img07:structurizr:system:sap} consisting of the following key components (simplified for clarity):
+ 
+\subsubsection{SAP Business One Service Layer}
+Running instance of SAP Business One Service Layer installed locally on the server with SAP Business One and the database. 
+The Service Layer is accessible via HTTP on a given port.
+
+\subsubsection{SAP Database}
+Underlying database used by the SAP Business One instance.
+In our case, we are talking about an MS SQL database.
+
+
+\subsection{Implementation}
+\label{subsec:implementation}
+% KoaJS app simmilar to the Parcelsync backend
+\subsection{Deployment}
+\label{subsec:deployment}
+% Deployed as an containarized application into Docker
+% Had to be local to the SAP B1 instance -> Linux VM on the server of company 
+
+\subsection{Data sender}
+\label{subsec:data-sender}
+% Write about implementation of a simple Node.JS app which works like an intermidiate between Parcelsync and SAP Proxy
+
