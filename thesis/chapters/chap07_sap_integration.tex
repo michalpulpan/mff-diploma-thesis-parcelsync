@@ -11,7 +11,7 @@ SAP Business One, a leading ERP solution for small to medium companies, offers r
 This chapter dives into the complexity of establishing a direct connection with SAP Business One and its underlying database. 
 Direct write interactions with database tables are highly discouraged due to potential repercussions on system warranty and technical support.
 However, it is important to understand that the caution advised against direct database modifications does not arise merely from overarching restrictions but stems from a recognition of the complex structure of SAP's database. Unauthorised alterations carry the risk of compromising the integrity of the system.
-Also, we should mention that SAP Business One's pricing model is not merely instance-based, but also user-based.
+It is worth mentioning that SAP Business One's pricing model is not merely instance-based, but also user-based.
 This introduces additional limitations and costs that businesses must consider and potentially accept. 
 Or do they?
 
@@ -51,8 +51,8 @@ This introduces key advantages, flexibility.
 Unlike using a pure DI API, \textit{VCZ.WebService} introduces a layer over the \textit{DI API} that allows third-party software to run in various operating systems and environments.
 However, \textit{VCZ.WebService} is not without its disadvantages.
 In today's world, using SOAP is not considered a modern approach. Most programmers seek RESTful services which more align with the modern architectural styles and preferences.
-Since the log-in is done using a standard SAP user, a programmer using \textit{VCZ.WebService} has to use a licence provided by the business to be used only for the WebService, raising security concerns.
-Moreover, as of writing this thesis, the \textit{VCZ.WebService} is gradually being phased out in favour of newer technologies introduced in the next part.
+Since the log-in is done using a standard SAP user, a programmer using \textit{VCZ.WebService} has to use a licence provided by the company to use only for the WebService, raising security concerns.
+Furthermore, at the time of writing this thesis, \textit{VCZ.WebService} is gradually being phased out in favour of newer technologies introduced in \ref{subsec:sap-b1-service-layer}.
 
 \subsection{SAP Business One Service Layer}
 \label{subsec:sap-b1-service-layer}
@@ -66,27 +66,25 @@ It offers a well-documented, standardised way to interact with SAP objects and p
 Featuring user-defined queries and the ability to control the safe patching and posting into the SAP database.
 User-defined queries are an interesting feature. They are normal SQL \texttt{SELECT} queries with the requirement to first be stored as a string in the SAP database and then called by the \textit{ Service Layer} for data retrieval.
 It is very safe in this way, but fairly limiting and time-consuming for the user. 
-Sadly, the authentication is still done using an SAP user licence, generating a short lived token via \textit{Service Layer} introducing a little overhead when using this service.
-We will return to both limitations and introduce a solution in this chapter.
-
+Sadly, authentication is still done using an SAP user licence, generating a short-lived token via \textit{Service Layer} introducing a little overhead when using this service.
+Both limitations will be discussed later in this chapter \ref{chap:analysis} including a possible solution.
 The transition from the raw \textit{DI API} adopting \textit{SAP Business One Service Layer} reflects a broader trend towards web-based APIs for enterprise integration.
-
 However, being a first-party solution and providing key features with seamless SAP data manipulation, it still lacks the features needed for fast data queries and it's own authentication. Business does not want to provide it's own licence for which they have to pay extra and raise a security concerns with exposing the licence.
 
-In the following section, we propose a new approach to overcome these challenges.
+This project proposes a new approach to overcome these challenges.
 By introducing a publicly accessible solution through a reverse proxy equipped with its own authentication policies.
 
 \section{SAP Business One Service Layer Proxy with direct Database connector}
 \label{sec:sap-b1-service-layer-proxy}
 % description of the SAP Business One Server Layer Proxy which was created so that company can simply integrate Parcelsync. 
 Integrating SAP Business One with external applications - such as eCommerce platforms, different warehouse solutions, and Parcelsync - presents complex challenges that existing  approaches fail to address. 
-These challenges call for a new solution (or at least an enhancement of existing) that allows secure access to the Service Layer over the Internet without compromising SAP credentials and thus creating SAP user accounts for each user of the API.
+These challenges call for a new solution (or at least an enhancement of the existing one) that allows secure access to the Service Layer over the Internet without compromising SAP credentials and thus creating SAP user accounts for each user of the API.
 This solution should not only allow new integration capabilities but also ensure that business can maintain the security and integrity of the SAP Business One and it's database.
 
 \subsection{Analysis}
 \label{subsec:analysis}
 % analysis of the proxy
-As we came to the conclusion that existing solutions for integrating SAP Business One with external applications fall short of meeting requirements of business and isn't very straight forward to use in few aspects.
+As we came to the conclusion that existing solutions for integrating SAP Business One with external applications fall short of meeting requirements of business and are not very straight forward to use in few aspects.
 This analysis explores the needs for creating a proxy for SAP Business One service layer with a direct database connector.
 
 \subsubsection{Functional requirements}
@@ -232,7 +230,7 @@ The goal was to evaluate efficiency of the Proxy API while handling authenticati
 As can be seen in figure \ref{img07:response_times}, on average, direct calls to request the full \texttt{BusinessPartner} object from the SAP Business One Service Layer were completed in approximately 0.085 seconds. 
 In contrast, calls made through the Proxy API were executed in an average response time of approximately 0,268 seconds.
 
-Although the Proxy API introduces an additional overhead, resulting in longer response times compared to direct Service Layer interactions, the increase in fairly consistent and within acceptable margins, given the added functionalities and remote location with public domain access which introduces considerable network latency.
+Although the Proxy API introduces an additional overhead, resulting in longer response times compared to direct Service Layer interactions, the increase is fairly consistent and within acceptable margins, given the added functionalities and remote location with public domain access which introduces considerable network latency.
 
 
 \begin{figure}[p]\centering
