@@ -4,13 +4,13 @@
 % Communication with SAP isn't straight forward and is forbidden to write into SAP tables
 % the decision was that the external software will be in charge of the synchronizations (call Parcelsync directly when needed, no webhooks or calls from the Parcelsync)
 
-In the modern landscape of daily business operations, seamless integration between external software solutions and core enterprise resource planning (ERP) systems is not just a convenience; it is a necessity.
+In the modern landscape of daily business operations, seamless integration between external software solutions and core \ac{ERP} systems is not just a convenience; it is a necessity.
 As the number of external services needed for businesses to operate grows rapidly, comes the need to integrate those with minimising tight coupling and complex (hard to maintain) dependencies.
-SAP Business One, a leading ERP solution for small to medium companies, offers robust and unimaginable capabilities, but presents unique challenges when it comes to integration with third-party software. 
+SAP Business One, a leading \ac{ERP} solution for small to medium companies, offers robust and unimaginable capabilities, but presents unique challenges when it comes to integration with third-party software. 
 
 This chapter dives into the complexity of establishing a direct connection with SAP Business One and its underlying database. 
 Direct write interactions with database tables are highly discouraged due to potential repercussions on system warranty and technical support.
-However, it is important to understand that the caution advised against direct database modifications does not arise merely from overarching restrictions but stems from a recognition of the complex structure of SAP's database. Unauthorised alterations carry the risk of compromising the integrity of the system.
+However, it is important to understand that the caution advised against direct database modifications does not arise merely from overarching restrictions, but stems from a recognition of the complex structure of SAP's database. Unauthorised alterations carry the risk of compromising the integrity of the system.
 It is worth mentioning that SAP Business One's pricing model is not merely instance-based, but also user-based.
 This introduces additional limitations and costs that businesses must consider and potentially accept. 
 Or do they?
@@ -28,29 +28,29 @@ Despite SAP's widespread popularity, an official solution for this specific chal
 % low level approach with direct access to the object
 % was implemented in the bachaleor's thesis however did not fullfill the expectations and was pretty much phased out in favor of the SAP Business One Service Layer
 
-One of the foundational solutions provided by SAP is \textit{Data Interface API} (DI API).
-This low-level programming interface offers direct access to SAP Business One objects, enabling developers to perform CRUD (Create, Rear, Update, Delete) operations on SAP data. 
-The DI API was the go-to choice for many years because it was already installed with every SAP instance and the programmer could access SAP directly via \texttt{C\#} interface already known from a SAP user interface.
+One of the foundational solutions provided by SAP is \ac{DI API}.
+This low-level programming interface offers direct access to SAP Business One objects, enabling developers to perform Create, Rear, Update, Delete (\ac{CRUD}) operations on SAP data. 
+The \ac{DI API} was the go-to choice for many years because it was already installed with every SAP instance and the programmer could access SAP directly via \texttt{C\#} interface already known from a SAP user interface.
 However, this convenience also introduces significant limitations.
-The \textit{DI API} operates through a local \textit{Component Object Model} (COM) that is installed alongside SAP Business One.
+The \ac{DI API} operates through a local \textit{Component Object Model} (COM) that is installed alongside SAP Business One.
 This architecture requires that any code that uses the DI API must be executed in the environment where the COM is located.
-Consequently, this code must typically run on a Windows machine and is ideally written in \texttt{C\#}, which may not always align with the preferred development practices or the existing infrastructure of a business.
+Consequently, this code must typically run on a Windows machine and is ideally written in \texttt{C\#}, which may not always align with the preferred development practices or the existing infrastructure of a company.
 Despite these challenges, there exists a workaround in the form of a \textit{wrapper library}.
 Although this does not address the deployment environment limitations, it enables the translation of the library's existing interface into one that is compatible with other programming languages.
 For example, it is then possible to port \texttt{C\#} library into Python using tools such as the \texttt{makepy} library.
 
 
-\subsection{SOAP API VCZ.WebService}
+\subsection{VCZ.WebService}
 % Briefly present VCZ.WebService and it's drawbacks
-A noteworthy solution to address several issues associated with using the \textit{DI API} alone  is the \textit{VCZ.WebService} developed by Versino, a SAP Business One supplier. 
+A noteworthy solution to address several issues associated with using the \ac{DI API} alone  is the \textit{VCZ.WebService} developed by Versino, a SAP Business One supplier. 
 It was one of the first web services available for SAP users operating on the \textit{SOAP} (Simple Object Access Protocol) standard. 
 This makes \textit{VCZ.WebService} a good choice for data transmission between SAP and a variety of third-party software.
-In particular, the connection to \textit{VCZ.WebService} utilises the standard SAP user licence.
+In particular, the connection to \textit{VCZ.WebService} uses the standard SAP user licence.
 
 This introduces key advantages, flexibility. 
-Unlike using a pure DI API, \textit{VCZ.WebService} introduces a layer over the \textit{DI API} that allows third-party software to run in various operating systems and environments.
+Unlike using a pure \ac{DI API}, \textit{VCZ.WebService} introduces a layer over the \ac{DI API} that allows third-party software to run in various operating systems and environments.
 However, \textit{VCZ.WebService} is not without its disadvantages.
-In today's world, using SOAP is not considered a modern approach. Most programmers seek RESTful services which more align with the modern architectural styles and preferences.
+In today's world, using \ac{SOAP} is not considered a modern approach. Most programmers seek \ac{REST} services which more align with the modern architectural styles and preferences.
 Since the log-in is done using a standard SAP user, a programmer using \textit{VCZ.WebService} has to use a licence provided by the company to use only for the WebService, raising security concerns.
 Furthermore, at the time of writing this thesis, \textit{VCZ.WebService} is gradually being phased out in favour of newer technologies introduced in \ref{subsec:sap-b1-service-layer}.
 
@@ -59,10 +59,10 @@ Furthermore, at the time of writing this thesis, \textit{VCZ.WebService} is grad
 % Year after finishing the bachaleor's thesis, company moved to the newer version of SAP Business One (v9) which introduced SAP Business One Service Layer which finally brought simple REST-based approach for communicating with SAP with all mappings onto SAP objects and tables
 
 The introduction of \textit{ SAP Business One Service Layer} marked an evolution in SAP integration capabilities. 
-Launched with version 9 of SAP Business One, the \textit{Service Layer} is a modern REST-based interface that handles communication with SAP systems. 
+Launched with version 9 of SAP Business One, the \textit{Service Layer} is a modern \ac{REST}-based interface that handles communication with SAP systems. 
 The \textit{Service Layer} is controllable only using HTTP operations, making it accessible from any programming environment able to perform HTTP requests, thus vastly broadening its applicability.
 
-It offers a well-documented, standardised way to interact with SAP objects and perform operations similar to the ones in ERP's user interface. 
+It offers a well-documented, standardised way to interact with SAP objects and perform operations similar to the ones in \ac{ERP}'s user interface. 
 Featuring user-defined queries and the ability to control the safe patching and posting into the SAP database.
 User-defined queries are an interesting feature. They are normal SQL \texttt{SELECT} queries with the requirement to first be stored as a string in the SAP database and then called by the \textit{ Service Layer} for data retrieval.
 It is very safe in this way, but fairly limiting and time-consuming for the user. 
@@ -77,7 +77,7 @@ By introducing a publicly accessible solution through a reverse proxy equipped w
 \section{SAP Business One Service Layer Proxy with direct Database connector}
 \label{sec:sap-b1-service-layer-proxy}
 % description of the SAP Business One Server Layer Proxy which was created so that company can simply integrate Parcelsync. 
-Integrating SAP Business One with external applications - such as eCommerce platforms, different warehouse solutions, and Parcelsync - presents complex challenges that existing  approaches fail to address. 
+Integrating SAP Business One with external applications - such as e-Commerce platforms, different warehouse solutions, and Parcelsync - presents complex challenges that existing  approaches fail to address. 
 These challenges call for a new solution (or at least an enhancement of the existing one) that allows secure access to the Service Layer over the Internet without compromising SAP credentials and thus creating SAP user accounts for each user of the API.
 This solution should not only allow new integration capabilities but also ensure that business can maintain the security and integrity of the SAP Business One and it's database.
 
@@ -109,7 +109,7 @@ This analysis explores the needs for creating a proxy for SAP Business One servi
 % CI/CD
 \begin{itemize}
     \item Local deployment close to SAP Business One Instance.
-    \item Continuous Integration and Continuous Deployment (CI/CD).
+    \item Continuous Integration and Continuous Deployment (\ac{CI}/\ac{CD}).
     \item Ensure that the API is accessible via the HTTPS protocol from the public network.
     \item Expose the API Proxy endpoint under a public domain name.
 \end{itemize}
@@ -203,19 +203,19 @@ Each middleware is designed to perform specific functions and, if needed, store 
     \item \textbf{SAP Environment middleware}
     \item \textbf{SAP Service Layer Login middleware}
 \end{itemize}
-Services usually perform CRUD operations on a database using a package \texttt{Objection} as ORM. They are most often called from actions; however, in some instances, they are called directly from one of our middlewares.
+Services usually perform \ac{CRUD} operations on a database using a package \texttt{Objection} as \ac{ORM}. They are most often called from actions; however, in some instances, they are called directly from one of our middlewares.
 \begin{itemize}
     \item \textbf{SAP service} provides a log-in to generate, store, and retrieve SAP Service Layer authentication tokens for both environments.
     \item \textbf{User service} provides simple CRUD and authentication methods for user objects.
 \end{itemize}
 At the end of the middleware chain there are actions.
 They serve as the main endpoint function.
-In our instance, we only need CRUD operations for manipulating and listing user objects, proxy for SAP Service Layer, and MS SQL query method making use of pre-initialised singleton database connection pool for both environments.
-\subsubsection{MS SQL connector}
+In our instance, we only need CRUD operations for manipulating and listing user objects, proxy for SAP Service Layer, and \ac{MS} SQL query method making use of pre-initialised singleton database connection pool for both environments.
+\subsubsection{Microsoft SQL connector}
 In order to allow for efficient SQL queries directly to the database, the Proxy API implements an endpoint that expects a query in the body.
-The query is then forwarded to preinitialised MS SQL connection for either development or production database, based on the user's choice. 
+The query is then forwarded to pre-initialised \ac{MS} SQL connection for either development or production database, based on the user's choice. 
 The database connection pool is initialised on application start-up in order to minimise cold-starts.
-As a connector to the database, the \texttt{mssql} package for Node.js from \texttt{tediousjs} was used. However, as was later found, this package isn't able to keep two distinct connection pools when calling the basic \texttt{login} method.
+As a connector to the database, the \texttt{mssql} package for Node.js from \texttt{tediousjs} was used. However, as was later found, this package is not able to keep two distinct connection pools when calling the basic \texttt{login} method.
 It stored in cache only, although a different one was required. This was an issue since the requirement was to allow for connection to two different databases. 
 However, this behaviour can be overcome by creating a \texttt{ConnectionPool} instance directly instead of relying on built-in login functions and caching it outside of the library.
 % todo pridat kod??

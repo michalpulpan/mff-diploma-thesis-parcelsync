@@ -42,14 +42,20 @@
 \usepackage{bm}             % boldface symbols (\bm)
 \usepackage{graphicx}       % embedding of pictures
 \usepackage{fancyvrb}       % improved verbatim environment
-\usepackage{natbib}         % citation style AUTHOR (YEAR), or AUTHOR [NUMBER]
-\usepackage[nottoc]{tocbibind} % makes sure that bibliography and the lists
+\usepackage[nottoc]{tocbibind} % zajistí přidání seznamu literatury,
+\usepackage[natbib,style=iso-numeric,sorting=none]{biblatex}
+
+% \usepackage{natbib}         % citation style AUTHOR (YEAR), or AUTHOR [NUMBER]
+%\usepackage[nottoc]{tocbibind} % makes sure that bibliography and the lists
 			    % of figures/tables are included in the table
 			    % of contents
 \usepackage{dcolumn}        % improved alignment of table columns
 \usepackage{booktabs}       % improved horizontal lines in tables
 \usepackage{paralist}       % improved enumerate and itemize
 \usepackage{xcolor}         % typesetting in color
+
+\usepackage[printonlyused]{acronym} % acronyms package
+
 
 \usepackage{listings}       % code styling
 \usepackage{color} %use color
@@ -196,6 +202,9 @@ Abstract.
 \hypersetup{unicode}
 \hypersetup{breaklinks=true}
 
+\addbibresource{bibliography.bib}
+
+
 % Definitions of macros (see description inside)
 \include{macros}
 
@@ -222,6 +231,8 @@ Abstract.
 %%% Bibliography
 \include{bibliography}
 
+
+
 %%% Figures used in the thesis (consider if this is needed)
 \listoffigures
 
@@ -232,6 +243,29 @@ Abstract.
 %%% Abbreviations used in the thesis, if any, including their explanation
 %%% In mathematical theses, it could be better to move the list of abbreviations to the beginning of the thesis.
 \chapwithtoc{List of Abbreviations}
+\begin{acronym}[ICANN]
+    \acro {APEK} [APEK] {Czech Association for Electronic Commerce}
+    \acro {ERP} [ERP] {Enterprise Resource Planning}
+    \acro {DI API} [DI API] {Data Interface API for SAP Business One}
+    \acro {CRUD} [CRUD] {Create, Read, Update, Delete}
+    \acro {COM} [COM] {Component Object Model}
+    \acro {ORM} [ORM] {Object–relational mapping}
+    \acro {SaaS} [SaaS] {Software as a Service}
+    \acro {AWS} [AWS] {Amazon Web Services}
+    \acro {CI} [CI] {Continuous Integration}
+    \acro {CD} [CD] {Continuous Deployment}
+    \acro {MS} [MS] {Microsoft}
+    \acro {B2B} [B2B] {Business to Business}
+    \acro {B2C} [B2C] {Business to Customer}
+    \acro {SOAP} [SOAP] {Simple Object Access Protocol}
+    \acro {REST} [REST] {Representational state transfer}
+    \acro {IaC} [IaC] {Infrastructure as Code}
+    \acro {RDS} [RDS] {Relational Database Service}
+    \acro {SES} [SES] {Simple Email Service}
+    \acro {SPA} [SPA] {Single Page Application}
+    \acro {S3} [S3] {Simple Storage Service}
+    \acro {CDN} [CDN] {Content Delivery Network}
+\end{acronym}
 
 %%% Attachments to the master thesis, if any. Each attachment must be
 %%% referred to at least once from the text of the thesis. Attachments

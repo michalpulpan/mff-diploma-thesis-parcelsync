@@ -1,34 +1,28 @@
-%%% Bibliography (literature used as a source)
+%%% Seznam použité literatury (bibliografie)
 %%%
-%%% We employ bibTeX to construct the bibliography. It processes
-%%% citations in the text (e.g., the \cite{...} macro) and looks up
-%%% relevant entries in the bibliography.bib file.
+%%% Pro vytváření bibliografie používáme biblatex. Ten zpracovává
+%%% citace v textu (např. makro \cite{...}) a vyhledává k nim literaturu
+%%% v souboru literatura.bib.
 %%%
-%%% The \bibliographystyle command selects, which style will be used
-%%% for references from the text. The argument in curly brackets is
-%%% the name of the corresponding style file (*.bst). Both styles
-%%% mentioned in this template are included in LaTeX distributions.
+%%% Podívejte se na nastavení biblatexu v souboru thesis.tex.
 
-\bibliographystyle{plainnat}    %% Author (year)
-% \bibliographystyle{unsrt}     %% [number]
+%%% Vytvoření seznamu literatury. Pozor, pokud jste necitovali ani jednu
+%%% položku, seznam se automaticky vynechá.
 
-\renewcommand{\bibname}{Bibliography}
+% Dovolíme položkám trochu vyčuhovat přes pravý okraj.
+\def\bibfont{\hfuzz=3pt}
 
-%%% Generate the bibliography. Beware that if you cited no works,
-%%% the empty list will be omitted completely.
+\printbibliography[heading=bibintoc,title=Bibliography]
 
-\bibliography{bibliography}
-
-%%% If case you prefer to write the bibliography manually (without bibTeX),
-%%% you can use the following. Please follow the ISO 690 standard and
-%%% citation conventions of your field of research.
+%%% Kdybyste chtěli bibliografii vytvářet ručně (bez biblatexu), lze to udělat
+%%% následovně. V takovém případě se řiďte normou ISO 690 a zvyklostmi v oboru.
 
 % \begin{thebibliography}{99}
 %
 % \bibitem{lamport94}
 %   {\sc Lamport,} Leslie.
 %   \emph{\LaTeX: A Document Preparation System}.
-%   2nd edition.
+%   2. vydání.
 %   Massachusetts: Addison Wesley, 1994.
 %   ISBN 0-201-52983-1.
 %

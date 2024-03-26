@@ -1,15 +1,34 @@
 \chapter{Deployment}
 \label{chap:deployment}
-% brief introduction into the chapter 
+% brief introduction into the chapter
+In the fast-changing world of web applications, deployment plays a crucial role in the success of any software.
+When building a \ac{SaaS} platform meant for various users in various environments, it is important to ensure that the platform is not only adaptable and scalable, but also robust and secure.
+This necessity is the foundation on which this chapter is built.
+Combining modern cloud technologies with good practices, this section explores how these elements are used in order to ensure smooth and efficient deployment process.
+With a focus on \ac{IaC}, this chapter highlights how this method is used within the \ac{AWS} ecosystem providing in-depth look at the deployment procedure for both frontend and backend components discovering how they directly impact scalability, reliability, and security of the platform.
+
 \section{Current Deployment Strategy}
 \label{sec:current-deployment-strategy}
 %  introduce the current deployment strategy of project
 %  the deployment is managed using Infrastructure as Code (IaC) on AWS, use of specific services (Amazon S3 for hosting the static frontend and AWS Lambda for the backend functionality)
 % how these components are organized into multiple stacks using AWS cloudformation
 
-\subsection{Amazon S3 for Static Frontend Hosting}
+The deployment strategy for this projects leverages \ac{AWS} services with focus on \ac{IaC} to automate and manage cloud infrastructure.
+Thanks to this approach, creating a consistent deployment process is achieved while reducing possibilities of human error and ensuring replication across different stages or environments.
+
+Specifically, the strategy uses Amazon \ac{S3} for hosting the static frontend(s), \ac{AWS} Lambda for backend functionalities including scheduled background tasks and organising these diverse components into multiple stacks using \ac{AWS} CloudFormation.
+Furthermore, this project improves its architecture with the inclusion of the PostgreSQL database using \ac{RDS}, Amazon Route 53 for domain routing, Amazon Certificate Manager for SSL/TLS certificate management and Amazon \ac{SES} for securing a high email delivery rate.
+This structure allows for a well-controlled infrastructure, allowing quick adjustments if needed.
+
+\subsection{Amazon Simple Storage Service for Static Frontend Hosting}
 \label{subsec:amazon-s3-static-frontend}
 % how Amazon S3 is used for storing and serving the static ReactJS app
+The deployment strategy for the static frontend applications of the platform employs the Amazon \ac{S3} to host the ReactJS applications. Amazon \ac{S3} provides a reliable, scalable and secure solution for serving static content, making it ideal choice for hosting a \ac{SPA} applications like ours.
+Both frontend applications (tracking page and dashboard) use very similar deployment strategies.
+The \ac{S3} buckets are configured to serve a website with \texttt{index.html} with allowing public access and establishing removal policies to ensure that the buckets are destroyed when needed. 
+However, we cannot provide access to the S3 bucket just like that.
+Defining Amazon CloudFront distribution (Amazon \ac{CDN}) is vital for catching errors and unauthorised accesses with enforcing an SSL certificate managed by \ac{AWS} Certificate Manager.
+Finally, DNS routing for applications is configured with Amazon Route 53, creating an A record pointing to the CloudFront distribution.
 
 \subsection{AWS Lambda for Backend Services}
 \label{subsec:aws-lambda-backend}
