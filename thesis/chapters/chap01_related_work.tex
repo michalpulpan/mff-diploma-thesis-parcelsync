@@ -2,12 +2,28 @@
 \label{chap:related-work}
 % brief intorduction of the purpose of this chapter
 % importance of understanding these works in the context of this project
+This chapter dives into the overview of existing solutions within the scope of parcel logistics in the dispatch process, generating labels, and shipment tracking, with a focus on the Czech market.
+Understanding these projects and their limitations helps us to understand the market gap that this project is filling.
+Particularly in offering a cloud-based multi-tenant solution integrating customised tracking page and email notifications for recipients.
+The overview underscores the importance of innovating beyond current offerings, which primarily lack features such as a simple dashboard for data viewing, custom tracking pages for improved customer communication, and automated email notifications.
+
 \section{Related projects}
 \label{sec:related-projects}
 % boundaries of Czech environment and usage of local carriers - PPL, Packeta, Česká Pošta
 % None of those implementing custom tracking page for customer communication 
 % None of those implement auto e-mail sender to customer
 % None of these is in cloud serving working as a multi tenant solution that customer doesn't have to care about
+
+Projects handling data communication with carriers are, of course, heavily biased with the demographics they are targeting. 
+Although the process is usually very similar, shipping companies and customers with their e-Commerce platforms or ERP solutions are different.
+Hence, we will limit ourselves to the Czech logistics environment, where several systems facilitate the integration with local carriers. However, these solutions often fall short in several areas:
+\begin{itemize}
+    \item None operates as a cloud-based multi-tenant solution that offers the business a hassle-free platform for their logistic needs without the necessity for in-house infrastructure or maintenance.
+    \item Usually, they require a distinct approach and data model for different carriers. This makes it more difficult to integrate.
+    \item They typically do not provide a custom tracking page for end-to-end customer communication, missing an opportunity to enhance the customer experience with a branded informative user interface.
+\end{itemize}
+
+Let us take a look at some options available in the Czech market.
 
 \subsection{Balíkobot.cz}
 \label{subsec:balikobot}
@@ -16,14 +32,70 @@
 % offloading processes from ERP
 % SAP is fairly small and hardly accessible from the "outside" so it's not a great option
 % usually doesn't directly implement data structure of the ERP
+Offering integration directly into ERP/e-Commerce systems, however lacking the flexibility to modify parcels outside of these systems.
+Requiring that the user using this software be able to modify the source data in ERP might be a strong limitation.
+The next limitation might be the label format provided by Balíkobot.cz.
+This solution generates its own layout of labels, validated by the carrier, of course, but sometimes a different layout might lead to inefficiency or even errors at the sorting centres or when loaded to the delivery vehicle.
+
+Overall, Balíkobot is definitely a robust solution, but being integrated directly into the ERP makes it a bit slow to use and usually inaccessible from outside of the company network when needed.
+
+However, it deals only with company processes, not with customer communication and presentation.
+
 \subsection{LabelPrinter.cz}
 \label{subsec:labelprinter}
 % on premise windows service run at client
-\subsection{In-House made solution}
-\label{subsec:in-house-made-solution}
-% bachaleors thesis
-\section{Abstraction in Logistics Automation}
-\label{sec:abstraction-in-logistics-automation}
-% creating data model suitable for all carriers and options
-% creating multi parcel shipments
-% mapping of shipping states onto something generic (from array of multiple carriers onto something more unified)
+LabelPrinter, as name suggests, is meant for a label printing and data transfer. Similarly to Balíkobot, LabelPrinter only works as a warehouse software meant purely for the data transfer from company to carrier.
+Additionally, it operates only as an on-premise Windows service runtime at the client's computer. 
+This approach requires local infrastructure and maintenance, potentially increasing operational overhead in small to medium-sized enterprises, limiting scalability and accessibility.
+
+% Zminit inhouse solution nebo to nechat byt??
+
+\section{Addressing the shortcomings of existing solutions}
+\label{sec:addressing-shortcoming-existing-solutions}
+% - Abstract data model allowing for unified data format sent to the software
+%- Dashboard with data overview seeing all the errors and direct label/consignment list printing accessible from outside network not beeing hosted locally
+%- Unification of parcel statuses into few statuses only so that the user doesn't have differentiate between different carriers and translate statuses for their purpose
+%- Branded parcel tracking page
+%- Branded e-mail tracking notification
+%- Not having to care about the deployment
+%- Role based access for users
+%- Having multiple projects with different carrier API credentials and settings
+
+Problems of data communication with carriers present numerous challenges with existing solutions, particularly in their ability to scale and offer a seamless user experience across different carriers.
+This project confronts these issues, presenting a new approach to the landscape of automation logistic expedition and post-purchase experience.
+
+\subsection{Unified data model}
+Existing solutions often lack a unified approach to data handling, which complicates integration with different carriers. 
+This solution introduces a unified data model normalising data formats across all carriers, simplifying the integration, leaving the complexity of understanding different models to the project itself.
+
+\subsection{Centralized dashboard}
+Absence of a user-friendly dashboard in existing systems makes monitoring and managing shipments inconvenient, since most of it is left to the existing ERP which is usually not made to handle logistics data.
+Providing a modern web application with a dashboard accessible from anywhere brings a great competitive advantage and improves the user experience. 
+With an overview of all data sent and retrieved from carriers and direct functionalities for label and consignment list printing, the user does not have to use any other interface when working with parcels.
+
+\subsection{Parcel status unification}
+The set of parcel statuses provided by the carriers is, of course, very distinct. Every carrier API is different; hence, it provides different data and communicates in a different way.
+Consolidation of various statuses into a standardised set, allowing users to easily understand and manage the shipments without getting lost in carrier-specific environments.
+
+\subsection{Branded tracking and notifications}
+Enhancing post-purchase communication is often overlooked.
+Businesses usually leave this channel to the third party (carrier) and focus on pre-purchase marketing, which is usually, in a digital marketing, standard \ac{PPC} adverts. 
+However, as this segment becomes more regulated, some customers are difficult to approach.
+Smartly communicating with a customer when the most important part of the purchase is happening could be a key to greater brand recall in today's advertising overload. 
+
+\subsection{Simplified integration}
+The technical challenges and costs of implementing and installing a software solution in premise might act as a barrier to many businesses. 
+The cloud-based solution eliminates these obstructions.
+
+\subsection{Role-based access control}
+Security demands tailored access controls.
+Implementing role-based access improves security and ensures that users have the appropriate permissions for their role.
+
+\subsection{Versatile carrier communication}
+Businesses often work with multiple shipping carriers with different contracts and settings. 
+For example, each warehouse might require a different contract with the carrier when it is in a different region.
+This can be difficult to manage. 
+Hence, it is necessary to implement a solution that can manage multiple locations (projects) in one profile with different carrier API credentials and settings while distinguishing between shipments and users from different locations.
+
+
+

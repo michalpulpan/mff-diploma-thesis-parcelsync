@@ -35,7 +35,7 @@ However, this convenience also introduces significant limitations.
 The \ac{DI API} operates through a local \textit{Component Object Model} (COM) that is installed alongside SAP Business One.
 This architecture requires that any code that uses the DI API must be executed in the environment where the COM is located.
 Consequently, this code must typically run on a Windows machine and is ideally written in \texttt{C\#}, which may not always align with the preferred development practices or the existing infrastructure of a company.
-Despite these challenges, there exists a workaround in the form of a \textit{wrapper library}.
+Despite these challenges, a workaround exists in the form of a \textit{wrapper library}.
 Although this does not address the deployment environment limitations, it enables the translation of the library's existing interface into one that is compatible with other programming languages.
 For example, it is then possible to port \texttt{C\#} library into Python using tools such as the \texttt{makepy} library.
 
@@ -63,7 +63,7 @@ Launched with version 9 of SAP Business One, the \textit{Service Layer} is a mod
 The \textit{Service Layer} is controllable only using HTTP operations, making it accessible from any programming environment able to perform HTTP requests, thus vastly broadening its applicability.
 
 It offers a well-documented, standardised way to interact with SAP objects and perform operations similar to the ones in \ac{ERP}'s user interface. 
-Featuring user-defined queries and the ability to control the safe patching and posting into the SAP database.
+Featuring user-defined queries and the ability to control safe patching and posting into the SAP database.
 User-defined queries are an interesting feature. They are normal SQL \texttt{SELECT} queries with the requirement to first be stored as a string in the SAP database and then called by the \textit{ Service Layer} for data retrieval.
 It is very safe in this way, but fairly limiting and time-consuming for the user. 
 Sadly, authentication is still done using an SAP user licence, generating a short-lived token via \textit{Service Layer} introducing a little overhead when using this service.
@@ -84,7 +84,7 @@ This solution should not only allow new integration capabilities but also ensure
 \subsection{Analysis}
 \label{subsec:analysis}
 % analysis of the proxy
-As we came to the conclusion that existing solutions for integrating SAP Business One with external applications fall short of meeting requirements of business and are not very straight forward to use in few aspects.
+As we came to the conclusion, existing solutions for integrating SAP Business One with external applications fall short of meeting requirements of business and are not very straight forward to use in few aspects.
 This analysis explores the needs for creating a proxy for SAP Business One service layer with a direct database connector.
 
 \subsubsection{Functional requirements}
@@ -168,7 +168,7 @@ The Service Layer is accessible via HTTP on a given port.
 
 \subsubsection{SAP Database}
 Underlying database used by the SAP Business One instance.
-In our case, we are talking about an Microsoft SQL database.
+In our case, we are talking about a Microsoft SQL database.
 
 
 \subsection{Implementation}

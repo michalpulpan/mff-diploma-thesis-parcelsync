@@ -51,7 +51,8 @@
 			    % of contents
 \usepackage{dcolumn}        % improved alignment of table columns
 \usepackage{booktabs}       % improved horizontal lines in tables
-\usepackage{paralist}       % improved enumerate and itemize
+%\usepackage{paralist}       % improved enumerate and itemize
+\usepackage{enumitem}       % improved enumerate and itemize
 \usepackage{xcolor}         % typesetting in color
 
 \usepackage[printonlyused]{acronym} % acronyms package
@@ -135,7 +136,7 @@ captionpos=b
 % Set formatting for \subsubsubsection
 \titleformat{\subsubsubsection}
   {\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
-\titlespacing*{\subsubsubsection}
+\titlespacing{\subsubsubsection}
 {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
 % Ensure numbering is correct
@@ -148,7 +149,11 @@ captionpos=b
 \makeatother
 
 % Adjust depth for Table of Contents
-% \setcounter{tocdepth}{4}
+\setcounter{tocdepth}{4}
+
+% Ajdust depth of numbering
+\setcounter{secnumdepth}{4}
+
 
 
 %%% Basic information on the thesis
@@ -157,7 +162,7 @@ captionpos=b
 \def\ThesisTitle{Development and deployment of SaaS solution for logistics automation in e-commerce}
 
 % Author of the thesis
-\def\ThesisAuthor{Bc. Michal Půlpán}
+\def\ThesisAuthor{Michal Půlpán}
 
 % Year when the thesis is submitted
 \def\YearSubmitted{2024}
@@ -246,6 +251,7 @@ Abstract.
 \begin{acronym}[ICANN]
     \acro {APEK} [APEK] {Czech Association for Electronic Commerce}
     \acro {ERP} [ERP] {Enterprise Resource Planning}
+    \acro {PPC} [PPC] {Pay-per-click}
     \acro {DI API} [DI API] {Data Interface API for SAP Business One}
     \acro {CRUD} [CRUD] {Create, Read, Update, Delete}
     \acro {COM} [COM] {Component Object Model}
@@ -265,6 +271,15 @@ Abstract.
     \acro {SPA} [SPA] {Single Page Application}
     \acro {S3} [S3] {Simple Storage Service}
     \acro {CDN} [CDN] {Content Delivery Network}
+    \acro {VPC} [VPC] {Virtual Private Cloud}
+    \acro {IAM} [IAM] {Identity and Access Management}
+    \acro {AWS CDK} [AWS CDK] {AWS Cloud Development Kit}
+    \acro {AWS CLI} [AWS CLI] {AWS Command Line Interface}
+    \acro {VPS} [VPS] {Virtual Private Server}
+    \acro {ECS} [ECS] {Elastic Container Service}
+    \acro {GCP} [GCP] {Google Cloud Platform}
+    \acro {GKE} [GKE] {Google Kubernetes Engine}
+    \acro {AKS} [AKS] {Azure Kubernetes Service}
 \end{acronym}
 
 %%% Attachments to the master thesis, if any. Each attachment must be
