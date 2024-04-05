@@ -93,15 +93,15 @@ This analysis explores the needs for creating a proxy for SAP Business One servi
 % - simpler authentication with basic role based access
 % - proxy requests to the Service Layer
 % - create database GETTER (for MS SQL DB with ODBC connector)
-\begin{itemize}
+\begin{enumerate}[label=\bfseries \text{FR-SAP}\arabic*:,leftmargin=*]
     \item Implement own authentication system without compromising SAP credentials.
     \item Maintain a unified SAP login session across all user interactions.
     \item Forward requests/responses to/from the SAP Business One Service Layer.
     \item Implement a direct route to execute \texttt{SELECT} database queries bypassing the SAP Service Layer.
     \item Provide the ability to switch between production and development environments for both the SAP Service Layer and the direct database connector.
     \item Implement a simple user management system for CRUD operations on users of the Proxy.
-    \item Provide authorization tools for role-based access to create admins and users.
-\end{itemize}
+    \item Provide authorization tools for role-based access to create administrators and users.
+\end{enumerate}
 
 \subsubsection{Nonfunctional requirements}
 \label{subsubsec:nonfunctional-requirements}

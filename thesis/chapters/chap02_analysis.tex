@@ -3,7 +3,8 @@
 % recap of introduction - motiovation, goals + related work
 % brief intorduction of the purpose of chapter
 After framing context of the project by presenting both motivation and goals with previewing related solutions, we take a closer look at the overall analysis for our software.
-The purpose is to present and understand the process flow of order dispatching and the practical implications of implementing and testing this solution within a real-world company environment, and defined to define the specific requirements that will guide development of the project.
+The purpose is to present and understand the order dispatch process flow and the practical implications of implementing and testing this solution within a real-world company environment.
+And also to define the specific requirements that will guide the development of the project.
 This analysis is the foundation for a solution that not only meets technical specifications but also addresses practical business needs within a logistics sector and day-to-day usage.
 
 
@@ -74,7 +75,7 @@ For a visualisation using the sequence diagram, refer to \ref{img02:order-dispat
 Project's real-world applicability will be verified through integration and testing within an operating company.
 Practical implementation will focus on incorporating three major shipping carriers in the Czech republic - Česká Pošta, PPL, and Packeta - to allow the company to make a seamless transition to use the project.
 This means that the project will gain three carrier implementations with testing to offer to the rest of the user base.
-Together with testing integration capabilities with external systems, namely SAP Business One, it will be necessary to create a connector module presented in \ref{chap:integrating-sap-b1}.
+Together with testing integration capabilities with external systems, namely SAP Business One, it will be necessary to create a connector module presented in chapter \ref{chap:integrating-sap-b1}.
 
 \section{Requirements}
 \label{sec:requirements}
@@ -87,6 +88,7 @@ Requirements can be classified into two groups \cite{sommervilleSW}:
     \item \textit{Non-functional requirements:} constraints on the services of functions by the system. Including development process constraints and constraints defined by some standards. Non-functional requirements often apply to the system as a whole, rather than individual features.
 \end{enumerate}
 For a better description, we will define the three actors used in the requirements later.
+\label{sec:requirements-actors}
 \begin{enumerate}
     \item \textbf{User:} Role attributed to individuals employed by the company, interacting with the platform through its user interface. 
     \item \textbf{Developer:} Individual in this role utilises the platform's API for developing third-party integration.
@@ -104,7 +106,7 @@ This newly acquired information provided the opportunity to design the requireme
 The requirements were then slightly modified according to our own requirements for the platform, such as the limitation to the possibility of using one instance by multiple users, i.e. the platform should be designed as Software as a Service.
 
 %\pointedenum\begin{enumerate}[\bfseries {FR}1{:}]
-\begin{enumerate}[label=\bfseries FR\arabic*:]
+\begin{enumerate}[label=\bfseries FR\arabic*:,leftmargin=*]
     \item Users can sign up and verify their accounts using a verification code sent to their provided email address.
     \item Users can change password to their accounts using a verification code sent to their provided email address.
     \item Users can log into their accounts using valid credentials.
@@ -127,7 +129,7 @@ The requirements were then slightly modified according to our own requirements f
     \item Users can view a paginated list of all shipments.
     \item Users can adjust the number of shipment items displayed per page.
     \item Users can navigate through the shipment list pages (next or previous).
-    \item Users can easily identify shipments by carrier (using color coding and names) and those created on the current day directly from the list.
+    \item Users can easily identify shipments by carrier (using colour coding and names) and those created on the current day directly from the list.
     \item Users can apply filters to search through shipments based on textual data (reference, email) using four criteria (equal to, contains, starts with, ends with), date-time data (creation date) using a range picker, and list types (carrier, status) selecting multiple values.
     \item Users can select multiple shipments across carriers and perform bulk actions on the selected items.
     \item Users can send shipment data to carriers for all selected shipments in bulk.
