@@ -1,0 +1,156 @@
+\chapter{Programming Documentation - SAP Business One ServiceLayer Proxy with Database Connector}
+\label{attachments:programming-sap}
+
+The SAP Proxy serves as an intermediary between client applications and SAP Business One ServiceLayer ensuring secure and efficient data exchanges.
+Its primary function is to authenticate, authorise, and process requests.
+It is designed to operate in both development and production environments, utilising a connector to both development and production SAP underlying MS SQL databases and SAP ServiceLayer tokens. 
+
+\section{Workflow}
+Requests are received at various endpoints, processed by middlewares for security checks, and then routed to the appropriate actions, utilising services managing database operations or interactions with SAP ServiceLayer or MS SQL database connection.
+Responses are generated based on the outcome of these interactions and sent back to the client.
+
+\section{Overview}
+The SAP Proxy holds active connections to both environments of the SAP ServiceLayer as well as the Microsoft SQL database, which underlies the SAP.
+With this proxy, it is possible to call requests on both environments just by specifying route segment \texttt{.../<env>/...}.
+The SAP Proxy is built around several key components in the following order:
+\begin{enumerate}
+    \item \textbf{Router:} Is pretty much the entry-file where all endpoints are defined.
+    \item \textbf{Middlewares:} Are chain-able methods initiated at the beginning of endpoint request or at the end to modify response. They handle authorization, authentization, and even environment retrieval. 
+    \item \textbf{Actions:} Actions present the "called" method of the endpoint after request middleware.
+    \item \textbf{Entities:} Objects stored in the connected database.
+    \item \textbf{Services:} Manage database interactions, user data processing, and connectivity with SAP ServiceLayer and Microsoft SQL database.
+\end{enumerate}
+
+The folder structure of the program is meant to group components of similar purpose together:
+\dirtree{%
+.1 config.
+.2 types.ts.
+.2 utils.ts.
+.1 scripts.
+.2 build.js.
+.1 src.
+.2 actions/.
+.2 constants.
+.3 error-names.ts.
+.2 entities.
+.3 sap-tokens.ts.
+.3 user.ts.
+.2 errors.
+.3 service-error.ts.
+.2 lib.
+.3 db.
+.4 knex.ts.
+.4 knexfile.ts.
+.4 migration-source.ts.
+.4 migrations.ts.
+.4 seed-source.ts.
+.4 seeds.ts.
+.3 mssql.
+.4 connection.ts.
+.2 middlewares/.
+.2 services/.
+.2 types/.
+.2 utils/.
+.2 router.ts.
+.2 server.ts.
+}
+
+We will go through the most important directories and files.
+
+\subsection{Initialization}
+The initialisation is performed by convention in \texttt{src/index.ts} which creates an instance of the Koa.js application by calling the \texttt{createServer} method from \texttt{/src/server.ts}.
+Here, the initialisation occurs. 
+Create a new Koa instance with the necessary settings, router, and initialising the Microsoft SQL connection.
+
+\subsubsection{MSSQLConnection}
+Since one of the requirements is to initialise both development and production environments at the same time, it was necessary to eliminate the cold starts caused by logging into the database and request time. 
+For this purpose, the class \texttt{MSSQLConnection} (located in the file \texttt{src/lib/mssql/connection.ts}) was created with a static mapping of connections \texttt{<environment, MSSQLConnection>} containing a pool of connections for each environment.
+
+Connection is done through the \texttt{mssql} package creating \\ \texttt{mssql.sql.ConnectionPool(config)} with config passed into it.
+As it turned out during development, it is not possible to simply initialise multiple connections calling \texttt{mssql.sql.connect(config)}.
+In this way, the package silently denies creating other connections than the first one initialised.
+For different connection configurations, it always returns the reference to the first connection pool initialised.
+Hence why it is necessary to initialise \texttt{ConnectionPool} directly, instead of calling the \texttt{connection} wrapper.
+
+If one connection fails for some reason during the request, a new one is initiated.
+This may slow down the data retrieval but will ensure that, as long as the database is reachable, the proxy will try to connect.
+The pool retrieval from anywhere within the program is done by calling \texttt{MSSQLConnection.getInstance(env)} where \texttt{env} parameter is \texttt{dev} or \texttt{prod}.
+
+\subsection{Router}
+The file representing router \texttt{src/router.ts} defines endpoints and HTTP methods with middleware chains together with the result action.
+
+\subsection{Middlewares}
+Middlewares are chained methods within the router for each endpoint.
+The SAP Proxy defines middlewares for:
+\begin{itemize}
+    \item Schema validation
+    \item Authentication
+    \item Authorization
+    \item Environment resolver
+    \item SAP ServiceLayer login
+\end{itemize}
+
+\subsection{Actions}
+Actions present the actual method called by the endpoint.
+The usual workflow of these methods defined in \texttt{src/actions} is to retrieve a request validated or authorised by the middleware chain with data passed within the context (such as body, environment or instance of the ServiceLayer), and call some service \ref{attachments:programming-sap.overview.sevices}.
+The service usually returns some data which are then passed into the response.
+
+\subsection{Entities}
+Entities defined in SAP Proxy are TypeScript classes that extend \texttt{objection.Model} and are directly mapped to the database using modules \texttt{knex} and \texttt{objection}.
+
+\subsubsection{\texttt{SAPToken}}
+Entity used for caching the login token for SAP ServiceLayer. 
+It's model directly mapped to the database which hold data such as:
+\begin{itemize}
+    \item \texttt{token}
+    \item \texttt{environment}
+    \item \texttt{expiry}
+\end{itemize}
+
+This ensures that whenever user calls the SAP ServiceLayer Proxy, we retrieve the token from the database or refresh the token in SAP ServiceLayer based on the environment and expiration.
+
+
+\subsubsection{\texttt{User}}
+User entity presents the database model mapping stored for authentication and authorization of the SAP ServiceLayer Proxy.
+Containing fields such as:
+\begin{itemize}
+    \item \texttt{username}
+    \item \texttt{password}
+    \item \texttt{role}
+    \item \texttt{email}
+\end{itemize}
+
+\subsection{Services}
+\label{attachments:programming-sap.overview.sevices}
+Services presents the data communication between the application and the database or the SAP ServiceLayer.
+
+\subsubsection{\texttt{sap-service}}
+This service represents the connector to both the SAP ServiceLayer and \texttt{SAPToken} entity in the database.
+It is located at \texttt{src/services/sap-service.ts}.
+The service methods for SAP ServiceLayer login for token retrieval, token caching in the database for each environment, and proxy call from method \texttt{SAPService.proxy} while returning \texttt{Stream} object.
+
+
+\subsubsection{\texttt{user-service}}
+User service performs database operations on User Entity. 
+Containing methods such as \texttt{signup}, \texttt{changePassword}, \texttt{authenticate} and much more.
+
+
+\section{Error handling and logging}
+This section describes the practices used in the SAP Proxy to manage errors and log activities.
+
+\subsection{Error handling}
+The application uses a central error handling mechanism to capture and process errors and exceptions in a uniform way.
+Koa Middleware is used to wrap all endpoint handlers.
+This middleware catches any uncaught exceptions thrown during the request life cycle.
+Once caught, these exceptions are passed to a centralised error handling function which determines the type of error and the appropriate response to send back to the client.
+
+\subsubsection{HTTP status codes}
+Depending on the type of error, the handler sets the HTTP status code appropriately. 
+For example, validation errors might return a 400 Bad Request, authentication errors a 401 unauthorised, and internal server errors a 500 Internal Server Error.
+
+\subsubsection{Error responses}
+All error responses are formatted in a consistent structure, which includes an error code, a human-readable message, and optional additional details that could help debugging.
+
+\subsection{Logging}
+The logs include the timestamp, error type, endpoint involved, and a stack trace for severe errors.
+The application uses logging framework \texttt{Winston} with appropriate configuration to differentiate log levels (info, warn, error) and to output formats.

@@ -1,0 +1,163 @@
+\chapter{Administration Manual - SAP Business One ServiceLayer Proxy with Database Connector}
+\label{attachments:admin-manual-sap}
+This manual outlines the deployment and administration procedures for the SAP Business One ServiceLayer Proxy integrated with a database connector. 
+Details how to establish and manage the service within a Docker environment, using Nginx as a reverse proxy and Certbot for SSL certificate management. 
+The following sections will guide you through the necessary steps to configure and maintain the system effectively, ensuring secure and optimal operation.
+
+\section{Prerequisites}
+Before proceeding with the installation of SAP Business One ServiceLayer Proxy, it is important to ensure that the deployment node meets the necessary requirements.
+Both the SAP ServiceLayer service and the Microsoft SQL database should be reachable from the server network if not exposed publicly.
+However, it is worth noting that, in order to minimise communication latency, it is good to keep the servers geographically and network-wise as close as possible. 
+
+Please, note that the deployment node of the Proxy should be reachable from public network.
+Ideally, there should be a domain name routed to the server.
+
+The minimal system requirements of the service come primarily from the requirements of the Docker environment.
+For more information on Docker installation and requirements, please refer to the official Docker documentation \url{https://docs.docker.com/}.
+For the containers Ngninx and Certbot, we will ideally need at least 5GB of free space.
+
+\section{Deployment}
+\label{sec:admin-manual-sap.deployment}
+The deployment node is a \ac{VPS} hosted locally within the company.
+The server is running Ubuntu Server 22.04.3 with Docker version 24.0.7.
+
+\subsection{PostgreSQL database}
+Utilised PostgreSQL database container is the official image of PostgreSQL version 16.0 (\texttt{postgres:16.0}).
+
+\subsection{Proxy Service}
+The service container is automatically built as a private image on Docker Hub \texttt{michalpulpan/milpex-sap-api:latest}.
+
+\subsubsection{Environment variables}
+To ensure both SAP ServiceLayer and MS SQL connections, it is necessary to run the service with a set of environment variables located in \texttt{/srv/sap-api/\.env}
+\begin{lstlisting}[language=bash,caption={SAP Business One ServiceLayer Proxy with database connector environment variables setup}]
+DB_HOST=postgres_host
+DB_PORT=postgres_port
+DB_USERNAME=postgres_username
+DB_PASSWORD=postgres_password
+
+APP_DOMAIN=production_platform_url
+
+SAP_SERVICE_LAYER_URL=https://SAP_URL:PORT/b1s/v1
+SAP_SERVICE_LAYER_PROD_USERNAME=sap_prod_username
+SAP_SERVICE_LAYER_PROD_PASSWORD=sap_prod_password
+SAP_SERVICE_LAYER_PROD_DB=sap_prod_db
+SAP_SERVICE_LAYER_DEV_USERNAME=sap_dev_username
+SAP_SERVICE_LAYER_DEV_PASSWORD=sap_dev_password
+SAP_SERVICE_LAYER_DEV_DB=SBO-sap_dev_db
+
+MSSQL_DEV_DB=mssql_dev_db
+MSSQL_DEV_DB_USERNAME=mssql_dev_username
+MSSQL_DEV_DB_PASSWORD=mssql_dev_password
+MSSQL_DEV_DB_HOST=mssql_dev_host
+MSSQL_DEV_DB_PORT=mssql_dev_post
+
+MSSQL_PROD_DB=mssql_prod_db
+MSSQL_PROD_DB_USERNAME=mssql_prod_username
+MSSQL_PROD_DB_PASSWORD=mssql_prod_password
+MSSQL_PROD_DB_HOST=mssql_prod_host
+MSSQL_PROD_DB_PORT=mssql_prod_port
+\end{lstlisting}
+
+
+\section{Docker Compose}
+In order to orchestrate and simplify the deployment process of both services, it is recommended to use the Docker Compose tool.
+The \texttt{docker-compose.yml} configuration on the deployment node \ref{sec:admin-manual-sap.deployment} is specified in \texttt{/srv/sap-api/docker-compose.yml}
+
+The example \texttt{docker-compose.yml} is:
+\begin{lstlisting}[caption={SAP Business One ServiceLayer Proxy with database connector \texttt{docker-compose.yml}}]
+version: '3.9'
+
+services:
+  api:
+    container_name: sapb1-middleware-api
+    image: michalpulpan/milpex-sap-api:latest
+    ports:
+      - '3333:3000'
+    depends_on:
+      - database
+    env_file:
+      - .env
+    profiles:
+      - prod
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "10"
+  database:
+    container_name: sapb1-middleware-postgres-database
+    command: postgres -c 'max_connections=300'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    restart: always
+    image: postgres:16.0
+    volumes:
+      - database_volume:/var/lib/postgresql/data:Z
+    ports:
+      - '5432:5432'
+    profiles:
+      - prod
+volumes:
+  database_volume:
+    name: database_volume
+    external: true
+\end{lstlisting}
+
+\subsection{\texttt{Watchtower}}
+\texttt{Watchtower} is used to pull and rerun newly build images on the Docker Hub.
+The \texttt{Watchtower} is ran as a docker container from a Compose file specified in \texttt{/srv/monitoring/docker-compose.yml}.
+
+\begin{lstlisting}[caption={Watchtower \texttt{docker-compose.yml}}]
+version: '3.9'
+services:
+  watchtower:
+    image: containrrr/watchtower
+    restart: always
+    env_file:
+      - watchtower/.env
+    volumes:
+      - /home/user/.docker/config.json:/config.json
+      - /var/run/docker.sock:/var/run/docker.sock
+\end{lstlisting}
+
+\texttt{Watchtower} is defined to automatically send Slack notifications using \texttt{shoutrrr} \url{https://containrrr.dev/projects/shoutrrr/} module when new version is pulled. The Slack notification is defined in the \texttt{/srv/monitoring/watchtower/.env}:
+\begin{lstlisting}[caption={Watchtower environment variables}]
+WATCHTOWER_LABEL_ENABLE=1
+WATCHTOWER_NOTIFICATIONS="shoutrrr"
+WATCHTOWER_NOTIFICATION_URL="slack://token:token@channel/"
+\end{lstlisting}
+In order to define other communication channel, please refer to the \texttt{shoutrrr} documentation \url{https://containrrr.dev/projects/shoutrrr/}
+
+\subsection{Working with the containers}
+To start/stop or update containers, it is recommended to use Docker Compose.
+\subsubsection{Start the containers}
+In order to start the containers in background, go to the folder \texttt{/srv/sap-api} and run \texttt{docker compose --profile prod up -d}
+
+\subsubsection{Stop the containers}
+In order to stop the containers in background, go to the folder \texttt{/srv/sap-api} and run \texttt{docker compose stop}
+
+\subsubsection{Update the service}
+In order to update the API service, go to the folder \texttt{/srv/sap-api} and run \texttt{docker compose pull api \&\& docker compose up --profile prod -d}.
+This command will pull the latest container from the Docker Hub and start the services again.
+
+However, note that containers should update automatically if there is a new image.
+
+\section{Reverse-proxy}
+A reverse-proxy used for deployment is Nginx version 1.18.0.
+Since there is a domain routed directly onto the server, we can use Nginx for internal routing as a reverse-proxy.
+
+The standard Nginx definition is found by convention in \texttt{/etc/nginx/sites-available/domain}.
+The route is then symlinked to the \texttt{/etc/nginx/sites-enabled} folder using \texttt{`sudo ln -s /etc/nginx/sites-available/domain /etc/nginx/sites-enabled/}.
+
+\subsection{SSL certificate}
+For automatically SSL certificate renewal from Let's Encrypt, \texttt{Certbot} was installed and configured.
+To obtain a certificate for the newly created route, run \texttt{`sudo certbot --nginx -d example.com -d www.example.com`}
+
+
+
+
+
+

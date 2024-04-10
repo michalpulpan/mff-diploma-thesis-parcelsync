@@ -1,7 +1,7 @@
 \chapter{Technical design}
 \label{chap:technical-design}
 % repeat technical specifics of the architecture - choice of languages, frameworks, libraries and other tools
-The large number of options from spectre of  programming languages and associated frameworks presents both an opportunity and a challenge at the same time in today's fast paced technological landscape.
+In today's fast paced technological landscape, the large number of options from spectre of programming languages and associated frameworks presents both an opportunity and a challenge at the same time.
 As we move into the technical details of the architecture presented in the previous chapter \ref{chap:architectural-design}, it is important to recall an idea mentioned in \cite{sommervilleSW}. Establishing a robust architecture in the early stages of development is key because it will become significantly more expensive in future phases than at the beginning. 
 These phases and decisions are very closely linked. 
 Because, as important as how we lay out the application, it is equally important how and with what we write it.
@@ -178,7 +178,7 @@ const Welcome = (props) => {
 \end{lstlisting}
 
 \subsubsection{Alternatives}
-As mentioned previously, there are several alternatives to React for a web development in the TypeScript environment.
+As mentioned previously, there are several alternatives to React for web development in the TypeScript environment.
 \begin{itemize}
     \item \textbf{Vue.js:} JavaScript framework usually highlighted by its simplicity. Vue is written in JavaScript/TypeScript with HTML-based template syntax. Vue uses the so-called single-file components. Special file formats that allow one to encapsulate the template, logic, and styling of a Vue component are a single file \cite{vue-docs}. Similarly to React, Vue.js uses virtual \ac{DOM}.
     \item \textbf{AngularJS:} Developed and maintained by Google, is a full-fledged \ac{MVC} framework providing much more functionality than React and Vue out of the box for the price of higher complexity and unnecessary features given the project architecture.
@@ -284,7 +284,7 @@ Given that, PostgreSQL was a good choice given its performance and ability to st
 Multi-tenancy refers to a software architecture approach, designed for cost-efficiency and ease of maintenance.
 It's key principle is to simulate, otherwise needed on-premise deployment or a dedicated instance of the software, on a single instance.
 
-This model works with a premise, that the data are kept isolated from each other using several possible approaches.
+This model works with the premise that the data are kept isolated from each other using several possible approaches.
 Let us define key terms and take a look at possible approaches to this interesting architectural model.
 
 \subsection{Tenant}
@@ -295,8 +295,8 @@ Usually, tenants are from different legal entities; hence, tenant can be a compa
 
 \subsection{Single-tenancy}
 For completeness and a better understanding of the forthcoming information, it is good to define the term "single-tenancy".
-It is an architecture in which a single instance of a software application and supporting infrastructure serves one tenant  \ref{subsec:tenant}.
-This approach is usable for a \ac{SaaS} software, however, comes with a cost where for each tenant it is necessary to pay for additional infrastructure resources.
+It is an architecture in which a single instance of a software application and supporting infrastructure serves one tenant \ref{subsec:tenant}.
+However, this approach is usable for a \ac{SaaS} software, however, comes with a cost where for each tenant it is necessary to pay for additional infrastructure resources.
 In practice, this approach is commonly used when moving old on-premise software to the cloud with a dedicated deployment pipeline which sets up each instance based on tenant demand. 
 
 
@@ -309,7 +309,7 @@ Usually, this means data isolation, which can be done on several levels.
 \subsection{Approaches}
 % discuss possible approaches to multi-tenancy, detail each aproach's technical implementation - advantages and disadvantages
 After defining the foundational concept, it is important to consider how to approach design of the multi-tenant architecture - balancing between security, cost-efficiency and ease of maintenance.
-Let us take a look at possible approaches proposed in both \cite{MultitennancyArchitecture2012} and \cite{MultitenancyArchitectureMedium} to the multi-tenant architecture and suggest the best approach suited for our needs.
+Let us take a look at possible approaches to the multi-tenant architecture proposed in both \cite{MultitennancyArchitecture2012} and \cite{MultitenancyArchitectureMedium} and suggest the best approach suited for our needs.
 
 \subsubsection{Multiple databases}
 % Each tenant has its own database, maximizing data isolation and allowing for customizations but increasing complexity and potential resource usage.
@@ -326,8 +326,8 @@ This can lead to the best possible data isolation in \ac{SaaS} multi-tenant soft
 \subsubsection{Single database, multiple schemas}
 %Each tenant has its own schema within a shared database, providing better data isolation while still sharing the same database instance.
 
-This model involves a single database with multiple schemas, also referred to as "schema-level tenancy".
-Each schema is serving a different tenant.
+This model involves a single database with multiple schemas, also known as "schema-level tenancy".
+Each schema serves a different tenant.
 Infrastructure cost is significantly reduced compared to the previous approach, bringing some implementation complexities.
 
 
@@ -341,8 +341,7 @@ Infrastructure cost is significantly reduced compared to the previous approach, 
 \subsubsection{Single database, single schema}
 \label{subsubsec:single-database-single-schema}
 %Where all tenants share the same database and schema, but data is logically separated using tenant IDs in tables.
-Known as "record level tenancy" is perhaps the most straight forward to implement.
-All tenants share the same database and the same schema.
+Known as "record level tenancy" is designed that all tenants share the same database and the same schema.
 Tenant's data are stored in the same tables differentiated by column or columns containing a tenant identification.
 This approach necessitates strict data isolation within application queries, as the application layer is the only enforcer of data separation.
 
@@ -357,7 +356,7 @@ This approach necessitates strict data isolation within application queries, as 
 % multitenancy is handled via so-called projects. Which are entities groupping multiple users sharing project biased entities between them with role based access
 % data isolation is ensured via ORM queries which are project bias
 The backend of the platform achieves multi-tenancy through the concepts of "Projects".
-Projects are entities that bundle multiple users into a signle tenant, adopting the "record-level tenancy" seen in section \ref{subsubsec:single-database-single-schema}.
+Projects are entities that bundle multiple users into a single tenant, adopting the "record-level tenancy" seen in Section \ref{subsubsec:single-database-single-schema}.
 
 This setup allows users to share project-biased data among themselves with role-based access, ensuring that the data of each tenant are isolated and secure.
 Without giving much detail that would compensate for the clarity of the design in figure \ref{img04:uml-user-project} we can see a simple UML diagram of the relation ship. 

@@ -1,0 +1,203 @@
+\chapter{Administration Manual - Platform}
+\label{attachments:admin-manual-local-development}
+
+
+\section{Local development}
+Local development is essential to test new features and debugging. This section outlines the requirements and steps to set up your local development environment for the platform, ensuring that all components function together seamlessly.
+
+
+\subsection{Prerequisites}
+Before setting up the local development environment, ensure that you have the following prerequisites installed:
+\begin{itemize}
+    \item \textbf{Node.js $\geq$ 16}
+    \item \textbf{Docker}
+    \item \textbf{Yarn}
+\end{itemize}
+
+\subsection{Running database}
+Navigate to the source directory containing the \texttt{docker-compose.yml} file which includes the service definition for the database.
+Run the following command to start the service:
+\texttt{docker compose up -d}.
+This command will pull the necessary images and create container for your database and start the service on the background.
+
+\subsection{Running backend and frontend services}
+\begin{enumerate}
+    \item Once you have \texttt{yarn} and \texttt{Node.js} installed - preferably by using some package manager like \texttt{asdf}.
+    \item Run \texttt{yarn install} to install all the dependencies needed.
+    \item Set up a public S3 bucket to upload files from seller configurations. 
+    \item Create a \texttt{.env} file and place it in the root folder. The file should contain the following:
+\begin{lstlisting}[language=bash,caption={Platform local environment configuration}]
+JWT_SECRET_KEY=<key>
+JWT_ACCESS_LIFESPAN_SECONDS=3600
+JWT_REFRESH_LIFESPAN_SECONDS=604800
+AWS_ACCESS_KEY_ID=<access_key_id>
+AWS_SECRET_KEY_ID=<secret_key_id>
+PARCELSYNC_AWS_ACCESS_KEY_ID=<parcelsync_access_key_id>
+PARCELSYNC_AWS_SECRET_KEY_ID=<parcelsync_secret_key_id>
+AWS_ACCESS_KEY_ID=AKIAYPBDNT3BPBNEMMS7
+AWS_SECRET_ACCESS_KEY=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
+FROM_EMAIL=<from_email>
+AWS_ACCOUNT=<aws_account>
+AWS_S3_ASSETS_BUCKET=<s3_bucket_url>
+\end{lstlisting}
+    \item Run \texttt{yarn install} and all three services (both frontends and API) should start up.
+\end{enumerate}
+    
+
+\section{Administration Manual - AWS Infrastructure}
+\label{attachments:admin-manual-aws-platform}
+This section provides a comprehensive guide to managing the platform's AWS infrastructure. 
+Although the implementation and integration processes mainly leverage \ac{IaC} for efficiency and consistency, there are instances where manual intervention is required. 
+Accessing logs, managing database credentials, and performing specific tweaks often require direct interaction with the AWS Management Console. 
+This section outlines essential administrative tasks and highlights adjustments and configurations that were manually implemented during the deployment phase, providing information about how to effectively navigate and manage the AWS environment.
+
+Please note that as long as there is an option, all infrastructure should be deployed within eu-central region.
+
+\subsection{Lambda}
+The backend service fully utilises \textit{AWS Lambda} for the deployment and related services. 
+This section will describe managing of the Lambda handlers of both backend service and scheduled tasks.
+
+\subsubsection{Accessing logs}
+Logs of the Lambda handlers are accessible within the AWS console in \textit{CloudWatch} section.
+Here it is possible to list all the log groups within whole account where are all the deployed services as well as Lambda handlers used as scheduled tasks and those ran while deployment (migrations).
+
+To access the logs at a specific time, click the desired log group (usually labelled production environment see Figure \ref{img:admin-manual-aws.lambda.log}) and scroll through the log stream (see Figure \ref{img:admin-manual-aws.lambda.log.detail}) to find the time and event you want (see Figure \ref{img:admin-manual-aws.lambda.log.event.detail}).
+
+\begin{figure}[p]\centering
+\includegraphics[width=140mm]{img/docs/fig_aws_cloudwatch.png}
+\caption{AWS CloudWatch}
+\label{img:admin-manual-aws.lambda.log}
+\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=140mm]{img/docs/fig_aws_loggroup.png}
+\caption{AWS CloudWatch Log Group detail}
+\label{img:admin-manual-aws.lambda.log.detail}
+\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=140mm]{img/docs/fig_aws_log_event.png}
+\caption{AWS CloudWatch Log Group event detail}
+\label{img:admin-manual-aws.lambda.log.event.detail}
+\end{figure}
+
+\subsubsection{Scheduled tasks}
+Scheduled tasks can be found in the list of all Lambda functions.
+They are conveniently named and are used to retrieve shipment status from supported carriers and send tracking emails to customers.
+Each of these tasks has \textit{EventBridge} attached with configuration of the event trigger (cron-like definition), see Figure \ref{img:admin-manual-aws.lambda.eventbridge}
+
+\begin{figure}[p]\centering
+\includegraphics[width=140mm]{img/docs/fig_aws_eventbridge.png}
+\caption{AWS Lambda EventBridge definition}
+\label{img:admin-manual-aws.lambda.eventbridge}
+\end{figure}
+
+Each lambda handler can be triggered manually; however, it is recommended to do so only with the scheduled tasks and tasks that run migrations or seeding the database.
+You can see the URL of the function in the details of every Lambda function.
+This will trigger the function to run.
+
+
+\subsection{Database}
+Database on the AWS is deployed in two instances - staging and production.
+Both databases are instances of \textit{Amazon RDS} service setup with the PostgreSQL engine.
+The chosen instance type is \texttt{db.t4g.small} \url{https://aws.amazon.com/rds/instance-types/} which was chosen since after testing the \texttt{db.t4g.micro} could not handle a load of 100 sequential Shipment inserts with related objects (to form a complete object) at the same time.
+
+\begin{figure}[p]\centering
+\includegraphics[width=140mm]{img/docs/fig_aws_rds.png}
+\caption{AWS RDS instance detail}
+\label{img:admin-manual-aws.rds.detail}
+\end{figure}
+
+\subsubsection{Accessing credentials}
+In order to log into the database from a desktop viewer, it is necessary to obtain the credentials from the console. 
+The database credentials of \textit{Amazon RDS} within the AWS console can be obtained in the following way:
+\begin{enumerate}
+    \item First, log into the AWS console.
+    \item From the \textit{Services} menu select \textit{RDS}.
+    \item From the database list, select either the staging or production database.
+    \item In the \textit{Connectivity \& security} tab can be obtained \textbf{Endpoint} and \textbf{Port} (see Figure \ref{img:admin-manual-aws.rds.detail}.
+    \item In the \textit{Configuration} tab, we can see \textbf{Master username}.
+    \item To obtain the password, from the \textit{Services} menu select \textit{System Manager}.
+    \item In the \textit{Parameter Store} section search for \texttt{DB\_PASSWORD} and choose the expected environment.
+    \item In detail, we can show the decrypted value of the password.
+\end{enumerate}
+
+\subsubsubsection{Sequential inserts, database pool}
+If there are many sequential inserts at the same time from the public API, there is a small chance that all connection slots will be used.
+
+This happened during the testing, and the following was performed:
+\begin{enumerate}
+    \item Updated \texttt{knex} library used for database connection.
+    \item Modified database connection reference to singleton in the lambda API handler.
+    \item Upgraded the database instance type to \texttt{db.t4g.small}.
+    \item Changed \texttt{max\_connections} parameter in the PostgreSQL database to 1500.
+\end{enumerate}
+
+\subsection{\ac{S3}}
+\ac{S3} buckets are used to host static exports of frontend applications which are:
+\begin{itemize}
+    \item User documentation
+    \item Tracking page
+    \item Dashboard
+\end{itemize}
+
+Each of these buckets is served through the \textit{AWS CloudFront} distributions that handle routing.
+This \textit{CloudFront} distribution used for the user documentation had to be manually adjusted, more about that in Section \ref{attachments:admin-manual-aws.s3.docs_redirect}.
+
+However, dedicated \ac{S3} buckets are used to store static assets, for example user-uploaded images for the custom layout of the tracking page and notification emails.
+More on that later in Section \ref{attachments:admin-manual-aws.s3.permissions}.
+
+\subsubsection{Documentation deployment (locale redirection)}
+\label{attachments:admin-manual-aws.s3.docs_redirect}
+As mentioned previously, each bucket with direct routing from Route 53 uses the \textit{AWS CloudFront} distribution.
+Due to the nature of the user documentation or, more accurately, the routing of non-primary languages in a given application, it was necessary to adjust the \textit{CloudFront} distribution to ensure that other locales can be served without throwing error 404.
+Because, the Czech documentation is served on a non-prefixed path in URI such as \texttt{/docs/welcome}, English documentation is served on prefixed path like \texttt{/en/docs/welcome}. 
+
+This meant creating a simple function within the \textit{AWS CloudFront} that (in the background) attaches the \texttt{index.html} file to the end of each URI.
+
+\begin{enumerate}
+    \item In the \textit{AWS CloudFront} console select the \textit{Functions} section.
+    \item Now, if not created, create new function \texttt{indexhtml-appender} with JavaScript runtime containing:
+\begin{lstlisting}[language=javascript,caption={AWS CloudFront function to  append \texttt{index.html} to each URI}]
+function handler(event) {
+    var request = event.request;
+    var uri = request.uri;
+
+    if (uri.endsWith('/')) {
+        request.uri += 'index.html';
+    } else if (!uri.includes('.')) {
+        request.uri += '/index.html';
+    }
+
+    return request;
+}
+\end{lstlisting}
+\item Publish the function and associate it with distribution of documentation.
+\end{enumerate}
+
+This function will ensure that the requests of other languages other than the primary one are resolved correctly from the \ac{S3} bucket directories.
+
+\subsubsection{Setting up permissions for assets storage (enable ACLs)}
+\label{attachments:admin-manual-aws.s3.permissions}
+\ac{S3} used for storing static assets (uploaded from frontend via backend) require manual adjustments in the permission settings and object ownership after being freshly deployed.
+
+\begin{enumerate}
+    \item Navigate to the newly deployed AWS \ac{S3} bucket used to store public assets.
+    \item Go to the \textit{Permissions} tab and click on \textbf{Edit} button in section \textit{Block public access (bucket settings)}
+    \item Here uncheck all the check-boxes listed (\textit{Block all public access} and save changes.
+    \item Now within the \textit{Permissions} tab, scroll down to \textit{Object Ownership} and click the \textbf{Edit} button. 
+    \item Here select \textbf{ACLs enabled} and in the \textit{Bucket Ownership} section select \textbf{Bucket owner preferred}. Your setting should look like in Figure \ref{img:admin-manual-aws.s3.acls} and click \textit{Save changes}.
+\end{enumerate}
+
+\begin{figure}[p]\centering
+\includegraphics[width=140mm]{img/docs/fig_aws_object_ownership.png}
+\caption{AWS S3 bucket object ownership settings}
+\label{img:admin-manual-aws.s3.acls}
+\end{figure}
+
+
+\subsection{Email sender}
+As a email sender service \textit{AWS \ac{SES}} is used.
+The account, where the platform is hosted, was moved from the \textit{AWS \ac{SES}} sandbox.
+This process took approximately 7 days, and email examples and communication style had to be presented to the AWS support. 
+Now the account has sending quota of 50 000 messages per day with a maximum send rate of 14 messages per second.

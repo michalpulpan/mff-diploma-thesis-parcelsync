@@ -56,7 +56,9 @@
 \usepackage{xcolor}         % typesetting in color
 
 \usepackage[printonlyused]{acronym} % acronyms package
+\usepackage{pdfpages}
 
+\usepackage{dirtree}
 
 \usepackage{listings}       % code styling
 \usepackage{color} %use color
@@ -258,6 +260,7 @@ Abstract.
     \acro {ORM} [ORM] {Object–relational mapping}
     \acro {SaaS} [SaaS] {Software as a Service}
     \acro {AWS} [AWS] {Amazon Web Services}
+    \acro {CLI} [CLI] {Command-Line Interface}
     \acro {CRA} [CRA] {Create React App}
     \acro {DOM} [DOM] {Document Object Model}
     \acro {MVC} [MVC] {Model View Controller pattern}
@@ -274,6 +277,9 @@ Abstract.
     \acro {RDS} [RDS] {Relational Database Service}
     \acro {SES} [SES] {Simple Email Service}
     \acro {SPA} [SPA] {Single Page Application}
+    \acro {SSL} [SSL] {Secure Sockets Layer}
+    \acro {TLS} [TLS] {Transport Layer Security}
+    \acro {DNS} [DNS] {Domain Name Server}
     \acro {S3} [S3] {Simple Storage Service}
     \acro {CDN} [CDN] {Content Delivery Network}
     \acro {VPC} [VPC] {Virtual Private Cloud}
@@ -281,6 +287,7 @@ Abstract.
     \acro {AWS CDK} [AWS CDK] {AWS Cloud Development Kit}
     \acro {AWS CLI} [AWS CLI] {AWS Command Line Interface}
     \acro {VPS} [VPS] {Virtual Private Server}
+    \acro {VPC} [VPC] {Virtual Private Cloud}
     \acro {ECS} [ECS] {Elastic Container Service}
     \acro {GCP} [GCP] {Google Cloud Platform}
     \acro {GKE} [GKE] {Google Kubernetes Engine}
@@ -299,9 +306,15 @@ Abstract.
 %%% should be uploaded to SIS and optionally also included in the thesis on a~CD/DVD.
 %%% Allowed file formats are specified in provision of the rector no. 72/2017.
 \appendix
-\chapter{Attachments}
+\input{thesis/attachments/programming-platform}
+\input{thesis/attachments/programming-sap-proxy}
+\input{thesis/attachments/programming-sap-data-sender}
+\input{thesis/attachments/admin-platform}
+\input{thesis/attachments/admin-sap-proxy}
+\input{thesis/attachments/admin-sap-data-sender}
+\input{thesis/attachments/user-docs}
+\includepdf[pages=-]{thesis/attachments/user-docs.pdf}
 
-\section{First Attachment}
 
 \openright
 \end{document}

@@ -24,11 +24,11 @@ This structure allows for a well-controlled infrastructure, allowing quick adjus
 \label{subsec:amazon-s3-static-frontend}
 % how Amazon S3 is used for storing and serving the static ReactJS app
 Deploying static frontend applications of the platform employs the Amazon \ac{S3} to host the ReactJS applications. Amazon \ac{S3} provides a reliable, scalable and secure solution for serving static content, making it ideal choice for hosting a \ac{SPA} applications like ours.
-Both frontend applications (tracking page and dashboard) use very similar deployment strategies.
+All three frontend applications (documentation, tracking page and dashboard) use very similar deployment strategies.
 The \ac{S3} buckets are configured to serve a website with \texttt{index.html} with allowing public access and establish removal policies to ensure that the buckets are destroyed when needed. 
-However, we cannot provide access to the S3 bucket just like that.
-The definition of Amazon CloudFront distribution (Amazon \ac{CDN}) is vital for catching errors and unauthorised accesses with enforcing an SSL certificate managed by \ac{AWS} Certificate Manager.
-Finally, DNS routing for applications is configured with Amazon Route 53, creating an A record pointing to the CloudFront distribution.
+However, we cannot provide access to the \ac{S3} bucket just like that.
+The definition of Amazon CloudFront distribution (Amazon \ac{CDN}) is vital to catch errors and unauthorised accesses by enforcing a \ac{SSL} certificate managed by \ac{AWS} Certificate Manager.
+Finally, \ac{DNS} routing for applications is configured with Amazon Route 53, creating an A record that points to the CloudFront distribution.
 For a detailed visualisation of the deployment architecture for static frontend applications and how these components connect, refer to the diagram illustrated in \ref{img06:fig_static-webapp} 
 
 
@@ -55,14 +55,14 @@ These tasks are crucial for routine operations such as fetching parcel statuses 
 Specific Lambda handles are designed for database seeding and migrations tasks which are crucial for the deployment process.
 These handlers are invoked as part of the \ac{CI}/\ac{CD}.
 
-The \ac{IaC} approach for the deployment of the backend service is orchestrated throught \texttt{AWS CDK}, enabling automated provisioning of cloud resources.
+The \ac{IaC} approach for the deployment of the backend service is orchestrated thought \texttt{AWS CDK}, enabling automated provisioning of cloud resources.
 Key elements of the deployment include the following:
 \begin{itemize}
     \item \textbf{AWS Lambda:} The main building block of the backend service, AWS Lambda functions are integrated to run code in response events.
-    \item \textbf{Data storage and management:} A PostgreSQL hosted on Amazon \ac{RDS} provides a managed, scalable, and secure relation database solution that accompanies automated tasks such as backups and patching.
-    \item \textbf{Network configuration:} A dedicated \ac{VPC} is provisioned to encapsulate Lambda functions, ensuring that they operate within a secure and isolated network environment. The security groups within \ac{ VPC} define access rules, providing a security layer for backend interactions.
+    \item \textbf{Data storage and management:} A PostgreSQL hosted on Amazon \ac{RDS} provides a managed, scalable and secure relation database solution that accompanies automated tasks such as backups and patching.
+    \item \textbf{Network configuration:} A dedicated \ac{VPC} is provisioned to encapsulate Lambda functions, ensuring that they operate within a secure and isolated network environment. Security groups within \ac{ VPC} define access rules, providing a security layer for backend interactions.
     \item \textbf{API Gateway integration:} An API Gateway acts as the entry door backend services, managing incoming API requests and routing them to the appropriate Lambda function.
-    \item \textbf{Domain management and SSL/TLS encryption:} The deployment also uses Amazon Route 53 for domain routing and \ac{AWS} Certificate Manager to manage SSL/TLS certificates. 
+    \item \textbf{Domain management and \ac{SSL}/\ac{TLS} encryption:} The deployment also uses Amazon Route 53 for domain routing and \ac{AWS} Certificate Manager to manage \ac{SSL}/\ac{TLS} certificates. 
     \item \textbf{Static content hosting}: Amazon \ac{S3} buckets are integrated to host static assets used for user-uploaded public content.
 \end{itemize}
 
