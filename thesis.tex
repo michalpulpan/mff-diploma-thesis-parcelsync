@@ -58,6 +58,10 @@
 \usepackage[printonlyused]{acronym} % acronyms package
 \usepackage{pdfpages}
 
+\usepackage{float}
+
+\usepackage[utf8]{inputenc}
+
 \usepackage{dirtree}
 
 \usepackage{listings}       % code styling
@@ -65,6 +69,9 @@
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\usepackage{glossaries}
+\makeglossaries
  
 %Customize a bit the look
 \lstset{ %
@@ -209,35 +216,43 @@ Abstract.
 \hypersetup{unicode}
 \hypersetup{breaklinks=true}
 
-\addbibresource{bibliography.bib}
+\addbibresource{./thesis/bibliography.bib}
 
 
 % Definitions of macros (see description inside)
-\include{macros}
+\include{thesis/macros}
+
+
 
 % Title page and various mandatory informational pages
 \begin{document}
-\include{title}
+\include{thesis/title}
 
 %%% A page with automatically generated table of contents of the master thesis
+
+\include{thesis/glossaries}
+
 
 \tableofcontents
 
 %%% Each chapter is kept in a separate file
-\include{chapters/preface}
+\include{thesis/chapters/preface}
 \include{thesis/chapters/chap01_related_work}
 \include{thesis/chapters/chap02_analysis}
-\include{thesis/chapters/chap03_architecture}
+%\include{thesis/chapters/chap03_architecture}
+\include{thesis/chapters/chap03_architecture_2.0}
 \include{thesis/chapters/chap04_technical_design}
 \include{thesis/chapters/chap05_implementation}
 \include{thesis/chapters/chap06_deployment}
 \include{thesis/chapters/chap07_sap_integration}
-\include{thesis/chapters/chap08_testing}
-\include{chapters/epilog}
+\include{thesis/chapters/chap08_evaluation}
+\include{thesis/chapters/epilog}
+
+%%% Glossaries
+\printglossaries
 
 %%% Bibliography
-\include{bibliography}
-
+\include{thesis/bibliography}
 
 
 %%% Figures used in the thesis (consider if this is needed)
@@ -245,7 +260,7 @@ Abstract.
 
 %%% Tables used in the thesis (consider if this is needed)
 %%% In mathematical theses, it could be better to move the list of tables to the beginning of the thesis.
-\listoftables
+% \listoftables
 
 %%% Abbreviations used in the thesis, if any, including their explanation
 %%% In mathematical theses, it could be better to move the list of abbreviations to the beginning of the thesis.
@@ -277,6 +292,7 @@ Abstract.
     \acro {RDS} [RDS] {Relational Database Service}
     \acro {SES} [SES] {Simple Email Service}
     \acro {SPA} [SPA] {Single Page Application}
+    \acro {JWT} [JWT] {JSON Web Token}
     \acro {SSL} [SSL] {Secure Sockets Layer}
     \acro {TLS} [TLS] {Transport Layer Security}
     \acro {DNS} [DNS] {Domain Name Server}
@@ -287,11 +303,14 @@ Abstract.
     \acro {AWS CDK} [AWS CDK] {AWS Cloud Development Kit}
     \acro {AWS CLI} [AWS CLI] {AWS Command Line Interface}
     \acro {VPS} [VPS] {Virtual Private Server}
-    \acro {VPC} [VPC] {Virtual Private Cloud}
+    %\acro {VPC} [VPC] {Virtual Private Cloud}
     \acro {ECS} [ECS] {Elastic Container Service}
     \acro {GCP} [GCP] {Google Cloud Platform}
     \acro {GKE} [GKE] {Google Kubernetes Engine}
     \acro {AKS} [AKS] {Azure Kubernetes Service}
+    \acro {monorepo} [monorepo] {Monolithic repository}
+    \acro {multi-repo} [multi-repo] {multiple repositories}
+    \acro {DRY} [DRY] {Don't repeat yourself}
 \end{acronym}
 
 %%% Attachments to the master thesis, if any. Each attachment must be
@@ -313,7 +332,7 @@ Abstract.
 \input{thesis/attachments/admin-sap-proxy}
 \input{thesis/attachments/admin-sap-data-sender}
 \input{thesis/attachments/user-docs}
-\includepdf[pages=-]{thesis/attachments/user-docs.pdf}
+%\includepdf[pages=-]{thesis/attachments/user-docs.pdf}
 
 
 \openright

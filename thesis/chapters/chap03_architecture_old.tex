@@ -1,5 +1,4 @@
 \chapter{Architectural design}
-\label{chap:architectural-design}
 % overview of the project
 % high level view of the project - Present a bird’s-eye view of the project architecture, highlighting key components and their interactions, add diagrams for clarity
 % view of the project in the context of the ecommerce company - how the architecture aligns with the business goals and operational needs of the e-commerce company. Include considerations like scalability, maintainability, and security.
@@ -24,7 +23,7 @@ Given these constraints, we can foresee the foundational structure of our archit
 
 As the core, our architecture will comprise three principal components:
 \begin{enumerate}
-    \item \textbf{User Interface:} A user-friendly front-end that serves as the primary interaction poit for users and customers (see definition of actors in section \ref{sec:requirements-actors}). This component is essential for information presentation and user input.
+    \item \textbf{User Interface:} A user-friendly front-end that serves as the primary interaction point for users and customers (see definition of actors in section \ref{sec:requirements-actors}). This component is essential for information presentation and user input.
     \item \textbf{Business Logic Layer:} The backbone of our platform, where the essential functionalities and operational logic reside. This layer will encapsulate all the rules needed to run the core processes of our service. From handling user requests to processing data and orchestrating email notifications.
     \item \textbf{Data Storage:} A database system designed to store, manage, and retrieve user data, as well as application-specific information. Given the multi-tenant nature of the platform, the database architecture will be designed to ensure data isolation, integrity, and security for each tenant.
 \end{enumerate}
@@ -33,7 +32,7 @@ To visualise the high-level approach of the few components mentioned above, we w
 It is an architectural approach to organise the system into layers with different orders. 
 In our case, the layered architecture would look as visualised in Figure \ref{img03:layered_architecture_diagram}.
 
-\begin{figure}[p]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=80mm]{img/chap03/fig_layered_architecture_mermaid.png}
 \caption{High-level layered architecture diagram}
 \label{img03:layered_architecture_diagram}
@@ -95,7 +94,7 @@ The system needs to accommodate new shipping carriers and integrate with externa
 This section dives into various aspects of the platform's architecture, laying out a design prioritizing maintainability and scalability. For a high-level diagram of the system, see Figure \ref{img03:c4_container_diagram_software_sytem}.
 The architecture is intended to accommodate cloud-based, multi-tenant environment.
 
-\begin{figure}[p]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=140mm]{img/chap03/fig_architecture.png}
 \caption{C4 container diagram of the software system}
 \label{img03:c4_container_diagram_software_sytem}

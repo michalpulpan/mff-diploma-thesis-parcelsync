@@ -11,13 +11,16 @@ As more consumers turn to online shopping, the market has become saturated with 
 This situation requires brands to do more than just offer products; they must present distinct identities, maintain brand values, and establish deeper connections with their customers.
 Brands must aim to differentiate themselves, turning the focus towards building a recognisable brand presence while keeping up with customer care. 
 
-The competitive core of e-Commerce enforces brands to refine their strategies. In this context, the battle is not just about sales, but also about becoming the go-to-shop within the product domain. This requires an innovative approach to enhance the shopping experience, making it not only seamless and convenient, but also memorable and distinctive. Brand must wisely think about every touch-point, from e-Commerce store user interface and user experience to customer service and logistics, as an opportunity to boost brand awareness and values.
+The competitive core of e-Commerce enforces brands to refine their strategies. In this context, the battle is not just about sales, but also about becoming the go-to-shop within the product domain. 
+%This requires an innovative approach to enhance the shopping experience, making it not only seamless and convenient, but also memorable and distinctive. 
+Ogunmola and Kumar \cite{ecommerce-research-models} emphasise that the growing competitive environment in online retail forces brands to continuously innovate, especially to improve the shopping experience to differentiate themselves and achieve a dominant position in the market.
+Brand must wisely think about every touch point, from website quality to user interface, user experience, customer service, and logistics, as an opportunity to boost brand awareness and values.
 
 The logistical aspect of e-Commerce, often seen as a backend operation, has come to the forefront as an important part of customer satisfaction and brand differentiation.
 Efficiency in order processing, reliability in shipping, and transparency in delivery updates are now increasingly important in the customer experience.
 In today's fast digital world, consumer's patience for slow order processing has significantly decreased.
-According to the mentioned study by \ac{APEK} in September 2023, a growing number of consumers report that transparency in delivery times and fast order processing are among their main considerations when choosing between two vendors.
-This highlights a clear trend: Customers are willing to pay a premium for the assurance of a faster delivery.
+According to the mentioned study by \ac{APEK} in September 2023, a growing number of customers report that transparency in delivery times and fast order processing are among their main considerations when choosing between two vendors.
+This highlights a clear trend: Customers are willing to pay a premium for the assurance of a faster and more transparent delivery.
 This shift brings a new challenge to e-Commerce businesses; slow order processing is no longer just a logistical issue but is directly related to customer retention and brand loyalty.
 With that said, it is clear that the customer paying more attention to the delivery time of their order, will be likely to appreciate continuous updates of their order status in a user interface similar to the e-Commerce store they purchased from.
 This presents a problem that many e-Commerce platforms and retailers are dealing with: how to streamline their logistic operations to meet the demands of modern consumers.
@@ -38,10 +41,13 @@ In an era where consumers value speed, it is not viable to manually upload data 
 For a company that cooperates with multiple shipping carriers, this process becomes quickly unsustainable.
 It has to be automatic with direct feedback of data errors and import problems. For example, if the shipping address is not valid or if the carrier raises any other error with the provided data set or its own service.
 Having said that, each carrier is an isolated company without any unification when it comes to the data they accept and provide.
-Bridging the gap between the communication interface of each carrier and generalising parcel shipping statuses quickly becomes a very appreciated task, because programmers need to read only single documentation and understand only one data format without having to care about any implementation details and specifics.
+Bridging the gap between the communication interface of each carrier and generalising parcel shipping statuses quickly becomes a very appreciated task. 
+As a result, businesses can seamlessly integrate new shipping carriers without being bogged down by the specific implementation details and the varying data formats each carrier uses.
+%because programmers need to read only single documentation and understand only one data format without having to care about any implementation details and specifics.
 
-When a company collects the data obtained from its shipping carriers, it is also important to use it.
-At least so that the recognition and internet traffic is not given to the carrier directly.
+%When a company collects the data obtained from its shipping carriers, it is also important to use it.
+When a company collects data from its shipping carriers, it is important to utilise this information.
+Leveraging such data not only streamlines operations but also provides a competitive advantage by improving decision making and improving customer satisfaction and brand recognition.
 We will use this opportunity to present the tracking data with a company branding to increase brand awareness and create a new and unexplored marketing channel that customers are not used to and therefore resistant to.
 
 The goal is to transform logistics from a potential pain point into a competitive advantage for e-Commerce businesses, thus not only meeting but exceeding customer expectations by providing them with a branded tracking page and automatic e-mail notifications with branding.
@@ -50,13 +56,13 @@ The goal is to transform logistics from a potential pain point into a competitiv
 \label{subsec:project-goals}
 % Project goals
 The project is driven by a set of clear goals designed to address the challenges identified in the e-Commerce logistics domain and the software development itself:
-\begin{itemize}
+\begin{enumerate}[label=\bfseries G\arabic*:,leftmargin=*]
     \item \textbf{Streamline logistics operations:} Develop a platform that simplifies the process of dispatching orders to shipping carriers, automating data exchange, and minimizing need for manual intervention.
     \item \textbf{Modern cloud based multi-tenant solution:} Create application with multi-tenant architecture allowing it to be used by multiple companies deployed to the cloud with automated integration and deployment. 
     \item \textbf{Create branded shipping customer experience:} Introduce a new marketing communication platform using the data collected from the shipping carrier that allowed each company to specify custom branding for the parcel tracking page and parcel status notification emails.
     \item \textbf{Integration with existing systems:} Develop a solution that can be easily integrated with existing businesses' system.
     \item \textbf{Validate in a real-world setting with SAP Business One integration:} Test the platform in a live e-Commerce environment, handling a significant volume of orders in daily operations.
-\end{itemize}
+\end{enumerate}
 
 \subsection*{Solution overview}
 \label{subsec:solution-overview}
@@ -64,12 +70,27 @@ The project is driven by a set of clear goals designed to address the challenges
 % Deployment
 % SAP Business One integration
 % Real-life usage in the daily operation of an B2C and B2B focused company
-The proposed solution is a Software as a Service (\ac{SaaS}) platform designed to modernize and simplify e-Commerce order data dispatch logistics. As its core, the platform will facilitate order dispatching to shipping carrier, labels printing, and periodic updates of order statuses. 
+The proposed solution is a Software as a Service (\ac{SaaS}) platform designed to modernize and simplify e-Commerce order data dispatch logistics. As its core, the platform will facilitate order dispatching to the shipping carrier, label printing, and periodic updates of order statuses. 
 
-The whole code base will use continuous integration (\ac{CI}) practices and automatic deployment (\ac{CD}) to the Amazon Web Services (\ac{AWS}) ensuring high availability, security, and fast response times with resource scaling based on the traffic.
+The entire code base will use continuous integration (\ac{CI}) practices and automatic deployment (\ac{CD}) to the Amazon Web Services (\ac{AWS}) ensuring high availability, security, and fast response times with resource scaling based on traffic.
 
 The platform's user interface will be intuitive, well-documented, and easy to use, requiring minimal training for staff, and will provide customisable options for businesses to maintain their brand identity throughout the customer's post-purchase journey.
 The branded tracking pages and notification emails are not just an enhancement of the logistics process; it is a redefinition of how businesses communicate with their customers, transforming every shipment into opportunity for engagement and brand reinforcement.
 
-The testing and validation of the platform will take place in a company operating in both \ac{B2B} and \ac{B2C} segments of the fashion e-Commerce industry, dealing with more than 100 orders daily and running instance of SAP Business One with which the platform will have to exchange the data. 
+The testing and validation of the platform will take place in a company operating in both \ac{B2B} and \ac{B2C} segments of the fashion e-Commerce industry, dealing with more than 100 orders daily and running an instance of SAP Business One with which the platform will have to exchange data. 
 This real-life usage will provide thorough testing of the platform and provides valuable insight.
+
+% 
+
+This thesis is organised to comprehensively address the dual aspects of exploitation and exploration within software development, together with the challenges of solution analysis, implementation, and integration encountered in working with SAP Business One.
+
+\begin{itemize}
+    \item \textbf{Related Work \ref{chap:related-work}:} Reviews industry options in the sector and discusses project objectives.
+    \item \textbf{Analysis \ref{chap:analysis}:} It represents the actual work process within a given problem domain with the result of functional and non-functional requirements for a proposed platform.
+    \item \textbf{Architecture \ref{chap:architectural-design}:} Outlines the architectural design of the proposed solution, describing its components and their interactions.
+    \item \textbf{Technical design \ref{chap:technical-design}:} Describes the technical specifications and design considerations for creating a robust logistics platform.
+    \item \textbf{Implementation \ref{chap:implementation}:} Details the development process of the logistics platform, including coding methodologies and software engineering practices.
+    \item \textbf{Deployment \ref{chap:deployment}:} Explains the deployment strategy for the SaaS platform, including cloud hosting and service provisioning on Amazon Web Services.
+    \item \textbf{SAP Integration \ref{chap:integrating-sap-b1}:} Discusses and presents the integration with SAP Business One, focusing on development of an application for direct data exchange with the ERP system. 
+    \item \textbf{Evaluation \ref{chap:evaluation}:} Covers the evaluation used for validation the functionality and performance of the platform in real-world day-to-day business setting.
+\end{itemize}

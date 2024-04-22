@@ -5,7 +5,7 @@ The \texttt{Data-sender} program is designed to facilitate data communication be
 It handles the exchange of order and tracking information, ensuring that data flow is synchronised to-date across systems.
 This program acts as a middleware that not only transmits data to and from SAP, but also formats the data according to the requirements of the main platform.
 
-\begin{figure}[p]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=100mm]{img/docs/fig_data_sender.png}
 \caption{C4 Container diagram of \texttt{Data-sender} context}
 \label{imgdocs:structurizr:data_sender}
@@ -80,9 +80,9 @@ For each carrier implemented and used, there is a separate module that handles d
 
 Each carrier implements three main methods: 
 \begin{itemize}
-    \item \textbf{\texttt{new-orders}:} Queries data in SAP via SAP Proxy, transforms the data into expected format and sends to the platform. This task implements the data query with specifics to each carrier. 
+    \item \textbf{\texttt{new-orders}:} Queries data in SAP via SAP Proxy, transforms the data into expected format and sends to the platform. This task implements the data query with specifics for each carrier. 
     \item \textbf{\texttt{update-new-orders}:} Retrieves packages from the platform up to 1 day old and alters the tracking number, tracking link, status name and status date in SAP via SAP Proxy.
-    \item \textbf{\texttt{update-old-orders}:} Retrieves parcels from the platform that are up to 20 days (\texttt{ceskaposta}, \texttt{packeta}) day old (for \texttt{ppl} it is 35 days, more on that in Section \ref{subsec:programming-data-sender.carrier.ppl}) and alters the tracking number, tracking link, status name and status date in SAP through SAP Proxy.
+    \item \textbf{\texttt{update-old-orders}:} Retrieves parcels from the platform that are up to 20 days (\texttt{ceskaposta}, \texttt{packeta}) day old (for \texttt{ppl}, it is 35 days, more on that in Section \ref{subsec:programming-data-sender.carrier.ppl}) and alters the tracking number, tracking link, status name and status date in SAP through SAP Proxy.
 \end{itemize}
 \subsection{\texttt{ceskaposta}}
 Implements the three standard methods as mentioned in \ref{subsec:programming-data-sender.carrier}.

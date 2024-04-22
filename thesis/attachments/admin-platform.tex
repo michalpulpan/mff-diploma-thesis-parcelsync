@@ -1,8 +1,8 @@
 \chapter{Administration Manual - Platform}
-\label{attachments:admin-manual-local-development}
-
+\label{attachments:admin-manual-platform}
 
 \section{Local development}
+\label{attachments:admin-manual-local-development}
 Local development is essential to test new features and debugging. This section outlines the requirements and steps to set up your local development environment for the platform, ensuring that all components function together seamlessly.
 
 
@@ -31,16 +31,15 @@ JWT_SECRET_KEY=<key>
 JWT_ACCESS_LIFESPAN_SECONDS=3600
 JWT_REFRESH_LIFESPAN_SECONDS=604800
 AWS_ACCESS_KEY_ID=<access_key_id>
+AWS_SECRET_ACCESS_KEY=<secret_access_key>
 AWS_SECRET_KEY_ID=<secret_key_id>
 PARCELSYNC_AWS_ACCESS_KEY_ID=<parcelsync_access_key_id>
 PARCELSYNC_AWS_SECRET_KEY_ID=<parcelsync_secret_key_id>
-AWS_ACCESS_KEY_ID=AKIAYPBDNT3BPBNEMMS7
-AWS_SECRET_ACCESS_KEY=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
 FROM_EMAIL=<from_email>
 AWS_ACCOUNT=<aws_account>
 AWS_S3_ASSETS_BUCKET=<s3_bucket_url>
 \end{lstlisting}
-    \item Run \texttt{yarn install} and all three services (both frontends and API) should start up.
+    \item Run \texttt{yarn start} and all three services (both frontends and API) should start up.
 \end{enumerate}
     
 
@@ -63,19 +62,19 @@ Here it is possible to list all the log groups within whole account where are al
 
 To access the logs at a specific time, click the desired log group (usually labelled production environment see Figure \ref{img:admin-manual-aws.lambda.log}) and scroll through the log stream (see Figure \ref{img:admin-manual-aws.lambda.log.detail}) to find the time and event you want (see Figure \ref{img:admin-manual-aws.lambda.log.event.detail}).
 
-\begin{figure}[p]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=140mm]{img/docs/fig_aws_cloudwatch.png}
 \caption{AWS CloudWatch}
 \label{img:admin-manual-aws.lambda.log}
 \end{figure}
 
-\begin{figure}[p]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=140mm]{img/docs/fig_aws_loggroup.png}
 \caption{AWS CloudWatch Log Group detail}
 \label{img:admin-manual-aws.lambda.log.detail}
 \end{figure}
 
-\begin{figure}[p]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=140mm]{img/docs/fig_aws_log_event.png}
 \caption{AWS CloudWatch Log Group event detail}
 \label{img:admin-manual-aws.lambda.log.event.detail}
@@ -86,7 +85,7 @@ Scheduled tasks can be found in the list of all Lambda functions.
 They are conveniently named and are used to retrieve shipment status from supported carriers and send tracking emails to customers.
 Each of these tasks has \textit{EventBridge} attached with configuration of the event trigger (cron-like definition), see Figure \ref{img:admin-manual-aws.lambda.eventbridge}
 
-\begin{figure}[p]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=140mm]{img/docs/fig_aws_eventbridge.png}
 \caption{AWS Lambda EventBridge definition}
 \label{img:admin-manual-aws.lambda.eventbridge}
@@ -102,7 +101,7 @@ Database on the AWS is deployed in two instances - staging and production.
 Both databases are instances of \textit{Amazon RDS} service setup with the PostgreSQL engine.
 The chosen instance type is \texttt{db.t4g.small} \url{https://aws.amazon.com/rds/instance-types/} which was chosen since after testing the \texttt{db.t4g.micro} could not handle a load of 100 sequential Shipment inserts with related objects (to form a complete object) at the same time.
 
-\begin{figure}[p]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=140mm]{img/docs/fig_aws_rds.png}
 \caption{AWS RDS instance detail}
 \label{img:admin-manual-aws.rds.detail}
@@ -157,7 +156,7 @@ This meant creating a simple function within the \textit{AWS CloudFront} that (i
 
 \begin{enumerate}
     \item In the \textit{AWS CloudFront} console select the \textit{Functions} section.
-    \item Now, if not created, create new function \texttt{indexhtml-appender} with JavaScript runtime containing:
+    \item Now, if not created, create a new function as shown in Listings \ref{attachment:admin-platform.listing.cloudformation_function} \texttt{indexhtml-appender} with JavaScript runtime.
 \begin{lstlisting}[language=javascript,caption={AWS CloudFront function to  append \texttt{index.html} to each URI}]
 function handler(event) {
     var request = event.request;
@@ -172,6 +171,7 @@ function handler(event) {
     return request;
 }
 \end{lstlisting}
+\label{attachment:admin-platform.listing.cloudformation_function}
 \item Publish the function and associate it with distribution of documentation.
 \end{enumerate}
 
@@ -189,7 +189,7 @@ This function will ensure that the requests of other languages other than the pr
     \item Here select \textbf{ACLs enabled} and in the \textit{Bucket Ownership} section select \textbf{Bucket owner preferred}. Your setting should look like in Figure \ref{img:admin-manual-aws.s3.acls} and click \textit{Save changes}.
 \end{enumerate}
 
-\begin{figure}[p]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=140mm]{img/docs/fig_aws_object_ownership.png}
 \caption{AWS S3 bucket object ownership settings}
 \label{img:admin-manual-aws.s3.acls}
@@ -200,4 +200,4 @@ This function will ensure that the requests of other languages other than the pr
 As a email sender service \textit{AWS \ac{SES}} is used.
 The account, where the platform is hosted, was moved from the \textit{AWS \ac{SES}} sandbox.
 This process took approximately 7 days, and email examples and communication style had to be presented to the AWS support. 
-Now the account has sending quota of 50 000 messages per day with a maximum send rate of 14 messages per second.
+Now the account has a sending quota of 50 000 messages per day with a maximum send rate of 14 messages per second.

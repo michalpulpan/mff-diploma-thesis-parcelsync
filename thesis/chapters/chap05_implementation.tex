@@ -1,46 +1,151 @@
 \chapter{Implementation}
 \label{chap:implementation}
+% in previous chapters was an architecture and technical design presented
+% This chapter tries to fill in the space between technical design and programming/administrative documentation in attachments.
+% we will discuss several decisions in project structure with several implementation details discussing multi-tenancy as well as genearting PDF on backend and infrastructure.
+
+In the preceding chapters, we have dived into the architectural \ref{chap:architectural-design} and technical design \ref{chap:technical-design} of the platform, highlighting the theoretical and strategic decisions that form our system.
+This chapter transitions from conceptual outlines into concrete details of the implementation phase serving as a bridge connecting the high-level design decisions discussed earlier with the technical details covered in the programming \ref{attachments:programming-platform} and administrative \ref{attachments:admin-manual-platform} manual.
+
+This chapter will explore the structure and organisation of the project.
+We will delve into the backend implementation, focusing on how it manages multi-tenancy - a feature allowing the system to serve multiple tenants without sacrificing security.
+Special attention will be paid to the integration of carrier modules, which are essential for the platform.
+Moreover, the chapter will cover the implementation strategies for web clients, developed with ReactJS.
+Finally, we will discuss the \ac{IaC} approach that underlies the deployment and operational infrastructure of the platform.
+
 
 \section{Project Structure}
 \label{sec:project-structure}
+% discuss several approaches to structuring the project
 
-\subsection{Monorepo and it's advantages}
-\label{subsec:monorepo-advantages}
+% Mono repo vs Multiple Repos
 % Detail the specific advantages of using a monorepo for this project, such as simplified dependency management, streamlined workflows, and easier code sharing between different parts of the project.
+% However, take in consideration that when using monorepo, there's a problematic permission management over the project, but that can be solved 
 
-\section{API Service (Backend) Implementation}
-\label{sec:api-service-implementation}
-% Dedicate this section to the API service part of the project, which is built using KoaJS.
+Choosing an appropriate project structure is a fundamental decision in software development that significantly impacts the efficiency of the development and maintainability of the project.
+For our platform, the choice between a \ac{monorepo} and \ac{multi-repo} was critical.
+This decision influences the cooperation in future development, how the project is integrated and deployed, and how changes are managed across different parts of the project.
 
-\subsection{KoaJS Framework}
-\label{subsec:koajs-framework}
-% brief discussion the koajs and why it was chosen for the API service. Include details on its features, benefits, and how it supports the project requirements, such as handling HTTP requests and middleware management.
-% reference to the analysis
+A \ac{monorepo} refers to a development strategy where the code for multiple projects is stored in the same repository.
+This approach is contrasted with \ac{multi-repo}, where each project or service has its own repository.
+For this platform, the use of a monorepo has offered several benefits.
+With all code in a single repository, managing dependencies becomes easier.
+There is no need to publish internal packages that are used across services, and updates to shared libraries are reflected across whole codebase.
+This reduces the risk of the so-called dependency-hell\footnote{A term describing frustration when multiple packages have dependency on incompatible version of the same package.} and simplifies upgrades.
+\ac{CI}/\ac{CD} pipelines can be more efficiently managed when all projects share the same repository. Changes in one part of the platform can trigger build in another, ensuring integration and consistency across the platform. 
+This setup simplifies the process of rolling back the changes in all affected parts when necessary.
+\Ac{monorepo} also ensures that all components of the project are always synchronised with each other. The unified versioning approach arises from the compatibility of the individual services, especially when making API changes or updating shared libraries.
+On the other hand, \ac{monorepo} also brings some challenges that need to be considered, particularly around the permission management of the repository.
+In the \ac{multi-repo} setup, access can be controlled at the repository level, allowing for straightforward management of who can access what.
+In addition, \ac{multi-repo} might be more appropriate in large-scale projects.
+As the repository grows, so does the time to clone and the consumption of resources for the automatic \ac{CI}/\ac{CD} pipelines.
+However, this can be solved by adopting shallow cloning\footnote{Option in a \texttt{git} allowing to start working in the repository without downloading every version of every file in the entire history.} and defining pipeline strategies to determine which parts of the project need to be rebuilt based on the changes made.
 
-% ...
+\section{Backend Implementation}
+\label{sec:backend-implementation}
+% Dedicate this section to the API service part of the project, which is built using KoaJS and handles the multi tenancy compelxity
+The backend of our platform plays an important role in orchestrating the workflows and managing multi-tenancy.
+Built using the KoaJS framework as a REST API, it provides a robust foundation for the entire platform.
+In this section, we will provide some implementation specifics of the backend with a description of the logic in it.
+The whole backend is build around few key components:
+\begin{itemize}
+    \item \texttt{entites}
+    \item \texttt{services}
+    \item \texttt{actions}
+\end{itemize}
 
-\subsection{API Design and Endpoints}
+The \texttt{entites} define \gls{objection} \texttt{Model} representing a database table where each instance of that class represents a table row.
+The \texttt{services} define an injectable dependencies which are used for database queries using an \ac{ORM} \gls{objection}.
+And finally \texttt{actions} representing the API action called from the API endpoint.
+
+\subsection{API Design and multi-tenancy}
 \label{subsec:api-design-endpoints}
 % Discuss the design of the API, including the structure of endpoints, RESTful principles applied, and any particular design patterns or practices used.
+% Discuss multi-tenancy within the API - segregation of tenant data, etc.
+
+The design of the API tries to adhere to RESTful principles, aiming to provide a clear and logical representation of information with stateless operations.
+Each endpoint is crafted to meet specific business requirement and corresponds closely to the entities with retrieval, creation, update, and delete operations.
+
+The key part of the backend is handling authentication and authorisation. 
+In order to respect the \ac{DRY} principles, both of these operations are implemented as KoaJS middlewares.
+Given our deployment strategy described in Chapter \ref{chap:deployment}, we could have gone in the direction of using an \gls{aws-cognito} as authentication.
+However, this would bring vendor lock-in in a fairly critical part of the application logic.
+It would be a reversible solution, but it could pose a serious problem and interfere with the whole system.
+That is something we have decided to put off; hence, custom middleware was implemented to verify access tokens sent with each protected request, and methods handling token generation and regeneration.
+
+After authorisation and authentication, in tenant bias endpoints with a parameter containing project ID in the route, the parameter is stored and used strictly for data retrieval.
 
 \subsection{Carrier modules}
+% implementation of carrier modules with abstract class `AbstractCarrierModule` to keep the implementation details from user 
+To implement the different shipping modules, the backend uses the abstract class \texttt{AbstractCarrierModule}, which defines the interface for all shipping modules.
+Each specific implementation of a carrier module, in the current state of the platform, for example, for Packet, PPL or Česká Pošta, extends this abstract class and implements its methods to convert generic operations into carrier-specific API calls. 
+This design pattern encapsulates the variability between different carriers, providing a unified interface to the rest of the application. 
+It simplifies the addition of new shipping carriers, as only a new module inheriting from the abstract class needs to be created without altering the existing system.
 
 \subsection{Sending e-mails}
+% email sender is outsourced within the infrastructure. 
+% It is AWS SES called via `import { SendEmailCommand, SESv2Client } from '@aws-sdk/client-sesv2';`
+Email communication is an integral part of the platform, used for notifications and confirmations. 
+The email sending functionality is externalised through Amazon \gls{aws-ses}, leveraging the \texttt{SendEmailCommand} and \texttt{SESv2Client} from the \texttt{@aws-sdk/client-sesv2 package}. This approach decouples the email sending capability from the application logic, allowing scalable and reliable email delivery managed by the AWS infrastructure.
 
 \subsection{Generating waybills}
+% waybills are generated using `import pdf from 'pdfjs';` which is a bit harder to use for example for table data, etc.
+% we have tried multiple libraries during implementation, for example Puppeteer or jsPDF 
+% however both have struggled with Lambda runtime and modifications to the runtime were needed, mainly due to their Chromium dependency.
+% but pdfjs works pretty well and is fairly quick
+
+Generating waybills is a functionality provided by the backend, especially for the shipping operations when the warehouse is handing the parcels physically over.
+The backend utilises the \gls{pdfjs} library to create PDF documents.
+This library was selected after evaluating alternatives such as \gls{jsPDF} and \gls{puppeteer}.
+However, these alternatives are based on a browser rendering.
+This significantly simplifies the whole development process since we can render and export HTML templates.
+However, being browser-based also meant a heavy reliance on a dependency such as \Gls{Chromium} foe example. 
+This posed a challenge in the Lambda environment due to execution time and resource constraints, including dependencies.
+The \gls{pdfjs} library, on the contrary, offers a more lightweight solution that fits well within the serverless architecture, providing quick and efficient PDF generation without the overhead associated with browser-based rendering engines.
 
 \section{Web Client Implementation}
 \label{sec:web-client-implementation}
 % This section should focus on the implementation of the web client, developed using ReactJS.
+% We have two react frontend projects (web and tracking), both having similar structure
+% utilizing function based components
+% `web` or so-called dashboard contains <AuthenticatedRoute> and <ProjectRoute> where both serve the multi-tenant logic.
+% <AuthenticatedRoute> is for handling users outside of the tenant data, such as onboarding, general user profile settings, accepting invitations, etc.
+% <ProjectRoute> ensures that all tenant bias pages have project Id in the URL to fetch appropriate data from backend.
+% it also stores the projectID into local variable in order to always open selected project if user has access to more
 
-\subsection{ReactJS Framework}
-\label{subsec:reactjs-framework}
-% Highlight its features, such as component-based architecture, and how it facilitates the development of interactive user interfaces.
-% reference to the analysis
+Web clients, primarily developed using ReactJS, is a crucial component of the platform.
+Provides the user interface through which operators and customers interact with the system.
+This section will discuss the client-side part of our platform, focusing on routing, state management, and the integration of support for the multi-tenancy and dynamic functionality of the platform.
 
 \subsection{Client-Side Routing and State Management}
 \label{subsec:client-side-routing-state}
 % Elaborate on the implementation of client-side routing, state management, and any other significant aspects of the web client application.
+Client-side routing is implemented using the \gls{react-router-dom} library, which manages page navigation between different components without refreshing the page. 
+
+The state within the application is managed using combination of React Context API and a local state management through hooks such as \texttt{useState}.
+For global state management, particularly for user authentication and project selection which is critical for maintaining multi-tenancy, the Context API provides a way to pass data through the component tree without having to pass props down manually at every level.
+
+The operators dashboard supports multi-tenancy by storing the tenant-selected project ID within the URL.
+This ensures that all tenant-specific data fetched from the backend are scoped within the selected project.
+For both authentication and project management, dedicated page wrappers were created to handle the front-end logic.
+\texttt{AuthenticatedRoute} manages the routes that require user authentication but aren't meant to render tenant-specific data, only user-specific.
+\texttt{ProjectRoute}, indirectly extending the \texttt{AuthenticatedRoute}, on the other hand serves as a project fetcher based on the project ID in the URL.
+The indirect extension is meant as follows: if no project is returned for a given URL, the user is redirected to the page used to select the project. If this request fails to recover the expired access token, the user is logged out.
+It ensures that the user is not only authenticated, but also has the necessary permissions to access data related to a specific project.
+
+
+% all entities from backend represent a type on frontend
+% calling the backend is done via a `actions` on frontend defining a hook containing several methods used for data fetching through `useApiActions` with its `executeApiAction`
+% data are propagated via providers utilizing React Contexts 
+
+API calls are abstracted into reusable hooks defined in an \texttt{actions} directory.
+These hooks provide methods to interact with the backend, handling CRUD operations for defined entities.
+Each action hook fetching data from backend utilizes the \texttt{executeApiAction} which standardises API call processes including error handling, success message rendering, as well as token refreshing if needed.
+
+To ensure components have access to the necessary data without pop-drilling \footnote{Prop drilling is the process of passing down data or state through multiple layers of a component hierarchy.}, React Contexts are used.
+Context providers are set up at higher levels in the application to store user details, current project setting, and much more.
+This method helps to make data updates and access more efficient throughout the application. 
+
 
 \section{Infrastructure as Code}
 \label{sec:infrastructure-as-code}

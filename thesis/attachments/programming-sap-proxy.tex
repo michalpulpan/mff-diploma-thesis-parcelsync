@@ -12,6 +12,9 @@ Responses are generated based on the outcome of these interactions and sent back
 \section{Overview}
 The SAP Proxy holds active connections to both environments of the SAP ServiceLayer as well as the Microsoft SQL database, which underlies the SAP.
 With this proxy, it is possible to call requests on both environments just by specifying route segment \texttt{.../<env>/...}.
+The initialisation is performed by convention in \texttt{src/index.ts} which creates an instance of the Koa.js application by calling the \texttt{createServer} method from \texttt{/src/server.ts}.
+Here, the initialisation occurs. 
+Create a new Koa instance with the necessary settings, router, and initialising the Microsoft SQL connection.
 The SAP Proxy is built around several key components in the following order:
 \begin{enumerate}
     \item \textbf{Router:} Is pretty much the entry-file where all endpoints are defined.
@@ -57,10 +60,12 @@ The folder structure of the program is meant to group components of similar purp
 
 We will go through the most important directories and files.
 
-\subsection{Initialization}
-The initialisation is performed by convention in \texttt{src/index.ts} which creates an instance of the Koa.js application by calling the \texttt{createServer} method from \texttt{/src/server.ts}.
-Here, the initialisation occurs. 
-Create a new Koa instance with the necessary settings, router, and initialising the Microsoft SQL connection.
+% Moved before folder structure
+
+%\subsection{Initialization}
+%The initialisation is performed by convention in \texttt{src/index.ts} which creates an instance of the Koa.js application by calling the \texttt{createServer} method from \texttt{/src/server.ts}.
+%Here, the initialisation occurs. 
+%Create a new Koa instance with the necessary settings, router, and initialising the Microsoft SQL connection.
 
 \subsubsection{MSSQLConnection}
 Since one of the requirements is to initialise both development and production environments at the same time, it was necessary to eliminate the cold starts caused by logging into the database and request time. 

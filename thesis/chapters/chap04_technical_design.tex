@@ -18,8 +18,9 @@ Now, with an added layer of detail regarding the programming languages, framewor
 Choosing the right programming language and frameworks is a crucial decision that influences not only the development process but also the longevity of the software itself.
 Impacts every phase of the development life-cycle, from initial implementation to maintenance and the capacity to scale in response to future demands.
 In the following section, the platform technology stack will be presented with the reasoning behind these decisions and the alternatives taken into consideration. 
+We will go thought programming language selection and its runtime, as well as supportive frameworks.
 
-The core technologies that form the backbone of the platform include TypeScript for programming, React for the frontend development, Koa as the backend framework and PostgreSQL for data management.
+The core technologies that form the backbone of the platform include TypeScript for programming, \gls{react} for the frontend development, \gls{koa} as the backend framework and \gls{postgresql} for data management.
 Let us dive into more detail and reasoning behind these decisions.
 
 \subsection{Programming Language}
@@ -28,17 +29,15 @@ Let us dive into more detail and reasoning behind these decisions.
 In the world of full-stack web development, TypeScript has evolved as a popular choice for both frontend and backend development, largely due to its widespread and support from community.
 The decision to use TypeScript across the entire stack is aligned with the project's goals of scalability, maintainability, and productivity.
 
-When discussing TypeScript, it is, of course, fair to mention JavaScript, the (almost) native language of the Web.
-However, JavaScript is a subset of TypeScript for some reason.
 Static Type Checking with TypeScript offers significant advantages in terms of code quality and reliability.
 It makes TypeScript a more verbose and complex language to write, but in the long run and in such a large project it helps to create a more self-explanatory code-base.
 
 One of the primary reasons for selecting TypeScript is its ability to provide a similar developer experience across both the frontend and backend.
 This enables to easily transition between working on a client and server-side code with minimal context switching.
 
-We can see a strong upward trend in the popularity of TypeScript. Meanwhile, JavaScript continues to have its first place as the most used programming language according to both the Stack Overflow Developer Survey from 2022 \cite{StackOverflow2022} and 2023 \cite{StackOverflow2023}, number of developers actively using TypeScript grows. Placing it at the fifth place of the survey in both years in the professional developers community.
+We can see a strong upward trend in the popularity of TypeScript. Meanwhile, JavaScript continues to have its first place as the most used programming language according to both the Stack Overflow Developer Survey from 2022 \cite{StackOverflow2022} and 2023 \cite{StackOverflow2023}, number of developers actively using TypeScript grows. Placing it at the fifth place of the survey in both years in the professional developers' community.
 This ensures a wealth of resources, tools, and libraries.
-Not to mention again that TypeScript being a superset of JavaScript, the most used programming language, according to both surveys, is compatible with the TypeScript.
+Since TypeScript is a superset of JavaScript, we can also consider it the winner of the survey.
 
 \subsubsection{JavaScript and TypeScript}
 JavaScript is a dynamically typed language.
@@ -94,41 +93,60 @@ const a: IPerson[] = [
 ]
 \end{lstlisting}
 
+% 
+
+In conclusion, while JavaScript's flexibility makes it suitable for small projects or prototypes requiring quick iterations.
+TypeScript type system and object management features provide a more structured and error-resistant approach.
+These attributes are crucial for developing complex applications, making TypeScript the preferred choice for enhancing code quality and long-term project sustainability.
 
 \subsubsection{Alternatives}
 When deciding on the programming language for full-stack web development, Python was a strong consideration.
-With its large community, popularity, and robust web-frameworks Flask and Django, Python offers an interesting ecosystem for web development.
+With its large community, popularity, and robust web-frameworks \gls{flask} and \gls{django}, Python offers an interesting ecosystem for web development.
 The simplicity and readability of Python make it an attractive option, especially for fast prototyping and projects with a strong focus on developer productivity.
 
-Python dynamic typing creates challenges for larger and more complex applications.
+Dynamic Python typing creates challenges for larger and more complex applications.
 Although dynamic typing offers flexibility and development speed in the early stages of development, it can lead to type-related errors that are only caught at run-time.
-Performance benchmarks, as presented in \cite{PerformancePythonNode}, demonstrate Node.js (and therefore JavaScript) performance compared to Python in real-world scenarios.
+Recent versions of Python introduced optional type hints that allowed developers to specify types for variables similar to TypeScript.
+However, these hints are not enforced by the Python runtime itself.
+This adds a layer of type safety, although it remains optional and not as integrated as a TypeScript type system.
+
+Performance benchmarks, as presented in \cite{PerformancePythonNode}, demonstrate Node.js (and therefore JavaScript) performance compared to Python in real world scenarios.
 JavaScript should generally outperform Python in the measured scenarios.
 However, the choice of technology lies in the effectiveness of the developer with a specific language and framework.
 While Python developer experience and large number of libraries make it a strong candidate, the advantages offered by TypeScript type safety and JavaScript performance make TypeScript a more strategic choice for our needs.
 
+% 
+
+\subsubsection{Compilation and execution}
+\label{subsubsec:compilation-execution}
+After choosing TypeScript as the go-to language, in the context of platform technical design, it is important to understand how this language integrates into execution environments.
+The client side of the platform will run in browsers, which cannot execute TypeScript directly.
+The same applies to the backend - given the deployment requirements, we are limited to Node.js.
+This implies that our TypeScript code must be compiled into JavaScript.
 
 \subsection{Frontend}
 \label{subsec:frontend-library}
 % Choosing the frontend library 
 % Options of TS libs (React, Vue.js, AngularJS)
 % choosing react
-Given the popularity of JavaScript/TypeScript web development, the number of options when choosing the go-to library is substantional.
+Given the popularity of JavaScript/TypeScript web development, the number of options when choosing the go-to library is substantial.
 This choice influences the development experience and affects the application's long-term maintainability. 
 Among the many options, ranging from Vue.js, to AngularJS - React emerges as the library of choice for the platform. 
-Coupled with \ac{CRA}, this combination offers a robust foundation for development needs.
+Coupled with \ac{CRA} \footnote{As of writing this thesis, \ac{CRA} is obsolete and no longer directly supported by React}, this combination offers a solid foundation for development needs.
 This decision leverages the existing knowledge base and optimises the workflow. 
 
-\subsubsection{React}
+\subsubsection{\gls{react}}
 % Present the React, it's large community and popularity
 % latest React changes
 Developed by Meta Platforms, React has become one of the most popular libraries for building \ac{UI}.
-The declarative approach of React allows us to create complex \ac{UI}s from isolated pieces of code called "components" \cite{react-docs} within a vritual \ac{DOM}, a lightweight JavaScript representation of the real \ac{DOM}.
+According to the survey \cite{StackOverflow2023}, React is one of the most common web technologies used by the respondents.
+The declarative approach of React allows us to create complex \ac{UI}s from isolated pieces of code called "components" \cite{react-docs} within a virtual \ac{DOM}, a lightweight JavaScript representation of the real \ac{DOM}.
 Those components can be of two species; more on that later.
 They usually rely on the extended JavaScript so-called JSX syntax.
 As stated in the React documentation \cite{JSX-react-docs}, JSX allows one to write HTML-like markup inside a JavaScript file, keeping the rendering logic and content in the same place.
 
 As already mentioned, React was the go-to frontend library chosen for the platform. 
+
 Given its large community that contributes to its large number of tools, supportive libraries, and resources, it is a strategic choice.
 There are two main approaches to working with React. Let us take a look at both of them.
 
@@ -150,9 +168,7 @@ class Welcome extends Component {
     return <h1>Hello, {this.props.name}</h1>;
   }
 }
-
 \end{lstlisting}
-
 
 
 \subsubsubsection{Functional components}
@@ -177,37 +193,41 @@ const Welcome = (props) => {
 }
 \end{lstlisting}
 
+Given these options, the obvious variant of functional components was chosen.
+This approach aligns with modern React best practices and external library integration.
+
+
 \subsubsection{Alternatives}
 As mentioned previously, there are several alternatives to React for web development in the TypeScript environment.
 \begin{itemize}
-    \item \textbf{Vue.js:} JavaScript framework usually highlighted by its simplicity. Vue is written in JavaScript/TypeScript with HTML-based template syntax. Vue uses the so-called single-file components. Special file formats that allow one to encapsulate the template, logic, and styling of a Vue component are a single file \cite{vue-docs}. Similarly to React, Vue.js uses virtual \ac{DOM}.
-    \item \textbf{AngularJS:} Developed and maintained by Google, is a full-fledged \ac{MVC} framework providing much more functionality than React and Vue out of the box for the price of higher complexity and unnecessary features given the project architecture.
-    \item \textbf{Svelte:} Represents an interesting alternative to React given its performance orientated approach, eliminating the runtime overhead of virtual \ac{DOM} by shifting the work to compile time. This produces highly optimised vanilla JavaScript. 
+    \item \textbf{\gls{vue}:} JavaScript framework usually highlighted by its simplicity. Vue is written in JavaScript/TypeScript with HTML-based template syntax. Vue uses the so-called single-file components. Special file formats that allow one to encapsulate the template, logic, and styling of a Vue component are a single file \cite{vue-docs}. Similarly to \gls{react}, \gls{vue} uses virtual \ac{DOM}.
+    \item \textbf{\gls{angular}:} Developed and maintained by Google, is a full-fledged \ac{MVC} framework providing much more functionality than \gls{react} and \gls{vue} out of the box for the price of higher complexity and unnecessary features given the project architecture.
+    \item \textbf{\gls{svelte}:} Represents an interesting alternative to React given its performance orientated approach, eliminating the runtime overhead of virtual \ac{DOM} by shifting the work to compile time. This produces highly optimised vanilla JavaScript. 
 \end{itemize}
 
-While all options offer interesting features and different approach to problems of web development, React was chosen for compelling flexibility, strong community support, and large ecosystem.
-According to the survey \cite{StackOverflow2023}, React is one of the most common web technologies used by respondents.
+While all options offer interesting features and different approach to problems of web development, \gls{react} was chosen for compelling flexibility, strong community support, and large ecosystem.
+
 
 \subsection{Backend}
 \label{subsec:backend}
 % discussion about choosing KoaJS, compare with other backend framework (Express.js) 
-Choosing the right backend framework in Node.js was a key decision.
+Choosing the right backend framework in \gls{node} was a key decision.
 This part of the application should carry all the business logic and complexity associated with a multi-tenant architecture.
 Therefore, it was important to carefully select a robust solution that would be sustainable and scalable in the long term.
-The decision was to adopt Koa over popular frameworks, for example, Express \cite{express-docs}.
+The decision was to adopt \gls{koa} over popular frameworks, for example, \gls{express}.
 
-\subsubsection{Koa}
+\subsubsection{\gls{koa}}
 Koa \cite{koajs-docs} is a web-framework for Node.js designed by the Express team.
 However, the aim is to have a smaller and more robust foundation for a web API.
 Koa stands out with its "middleware-first" architecture, a principle that places a chain of middleware functions executed upon request.
 This offers significant advantages for use-cases of the platform requiring different levels of authorisation, and data isolation mechanism between tenants.
 
 \subsubsection{Middleware architecture}
-At the core of the Koa philosophy are the middlewares used to streamline the handling of HTTP requests.
-The Koa middleware is designed to be reusable, allowing for a highly flexible and modular system that can be adapted to most use cases.
-The middleware in Koa is a JavaScript function attached to the endpoint as an array.
+At the core of the \gls{koa} philosophy are the middlewares used to streamline the handling of HTTP requests.
+The \gls{koa} middleware is designed to be reusable, allowing for a highly flexible and modular system that can be adapted to most use cases.
+The middleware in \gls{koa} is a JavaScript function attached to the endpoint as an array.
 Each middleware can perform operations, make changes to the requests, and the response objects even with top to bottom propagation of data.
-As a good example, a slightly modified logging middleware used in our Koa backend can be presented.
+As a good example, a slightly modified logging middleware used in our \gls{koa} backend can be presented.
 
 \medskip
 \begin{lstlisting}[caption=Koa logging middleware]
@@ -255,18 +275,17 @@ In this example, we can see a sample GET route with three chained middlewares be
 
 \subsubsection{ORM a data models}
 % write about knex and objection with more implementation details and description in the next chapter
-For managing the database and building data models within Koa backend, Knex.js and Objection.js was used.
-Knex.js serves as a query builder, allowing for direct interactions with the database.
-Used together with Objection.js, an \ac{ORM} built on Knex.js, efficient way to manage and interact with database entities in structure object-like manner.
+For managing the database and building data models within \gls{koa} backend, \gls{knex} and \gls{objection} was used.
+\gls{knex} serves as a query builder, allowing for direct interactions with the database.
+Used together with \gls{objection}, an \ac{ORM} built on top of \gls{knex}, it is an efficient way to manage and interact with database entities in an object-like structure.
 Implementation details with examples will be explored in the following chapter, focusing on the implementation of the application itself.
 
 
-\subsubsection{Scalability}
+\subsubsection{Runtime}
 % Whole application is designed as a lambda handler with a serverless framework ensuring smooth deployment of lambda handlers
-Designing the application to run as a Lambda function built with the Serveless Framework ensures that scalability is built into the core architecture.
-The Serverless Framework simplifies the deployment process, allowing for seamless updates, management, and scheduled runs of Lambda functions.
-By leveraging serverless technologies, we ensure that the backend can accommodate varying request loads with minimal overhead.
-
+Building an application to run as a Lambda function in the \gls{node} runtime ensures that scalability is built into the core architecture.
+The \gls{serverless-framework} simplifies the deployment process, allowing for seamless updates, management, and scheduled runs of Lambda functions.
+By leveraging serverless technologies, we make sure that the backend can accommodate varying request loads with minimal overhead.
 
 
 \subsection{Database Management System}
@@ -276,7 +295,7 @@ By leveraging serverless technologies, we ensure that the backend can accommodat
 Selecting a \ac{DBMS} that aligns with application's data complexity and requirements is always a crucial. 
 The backend needs to perform complex data retrievals and also needs to store the possible configurations and customisation of tenant's data, namely the branding layouts and shipping carrier configurations.
 The data stored in the database are mostly structured with few mentioned exceptions.
-Given that, PostgreSQL was a good choice given its performance and ability to store complex data types.
+Given that \gls{postgresql} was a good choice given its performance and ability to store complex data types.
 
 \section{Multi-tenancy and its possible approaches}
 \label{sec:different-approaches-for-multitanency}
@@ -287,37 +306,29 @@ It's key principle is to simulate, otherwise needed on-premise deployment or a d
 This model works with the premise that the data are kept isolated from each other using several possible approaches.
 Let us define key terms and take a look at possible approaches to this interesting architectural model.
 
-\subsection{Tenant}
-\label{subsec:tenant}
-As stated in \cite{MultitennancyArchitecture2012}, the tenant is a group of users who share the same view on the application they use.
-The view usually includes the data they access, the configurations shared across the group, and much more.
-Usually, tenants are from different legal entities; hence, tenant can be a company, for example.
+\begin{itemize}
+    \item \textbf{Tenant:} As stated in \cite{MultitennancyArchitecture2012}, the tenant is a group of users who share the same view on the application they use.
+    The view usually includes the data they access, the configurations shared between the groups, and much more.
+    Usually, tenants are from different legal entities; hence, a tenant can be a company, for example.
+    \item \textbf{Single-tenancy:} For completeness and a better understanding of the forthcoming information, it is good to define the term "single-tenancy".
+    It is an architecture in which a single instance of a software application and supporting infrastructure serves one tenant.
+    However, this approach is usable for a \ac{SaaS} software, however, comes with a cost where for each tenant it is necessary to pay for additional infrastructure resources.
+    In practice, this approach is commonly used when moving old on-premise software to the cloud with a dedicated deployment pipeline that sets up each instance based on tenant demand. 
+\end{itemize}
 
-\subsection{Single-tenancy}
-For completeness and a better understanding of the forthcoming information, it is good to define the term "single-tenancy".
-It is an architecture in which a single instance of a software application and supporting infrastructure serves one tenant \ref{subsec:tenant}.
-However, this approach is usable for a \ac{SaaS} software, however, comes with a cost where for each tenant it is necessary to pay for additional infrastructure resources.
-In practice, this approach is commonly used when moving old on-premise software to the cloud with a dedicated deployment pipeline which sets up each instance based on tenant demand. 
-
-
-\subsection{Multi-tenancy}
-% general overview of the term with some examples
-In contrast, multi-tenancy is an approach to a software architecture to share an instance of the application between multiple tenants \ref{subsec:tenant}.
-It is done by providing each tenant with an isolated part of the instance that is not accessible by other tenants.
-Usually, this means data isolation, which can be done on several levels.
 
 \subsection{Approaches}
 % discuss possible approaches to multi-tenancy, detail each aproach's technical implementation - advantages and disadvantages
-After defining the foundational concept, it is important to consider how to approach design of the multi-tenant architecture - balancing between security, cost-efficiency and ease of maintenance.
-Let us take a look at possible approaches to the multi-tenant architecture proposed in both \cite{MultitennancyArchitecture2012} and \cite{MultitenancyArchitectureMedium} and suggest the best approach suited for our needs.
+After defining the foundational concept, it is important to consider how to approach design of the multi-tenancy - balancing between security, cost-efficiency, and ease of maintenance.
+Let us take a look at the possible approaches to it proposed in both \cite{MultitennancyArchitecture2012} and \cite{MultitenancyArchitectureMedium} and suggest the best way that best suits our needs.
 
 \subsubsection{Multiple databases}
 % Each tenant has its own database, maximizing data isolation and allowing for customizations but increasing complexity and potential resource usage.
-Multiple databases approach illustrated in Figure \ref{img04:multitenancy-multiple-databases}, know as "database level tenancy" is very similar to the proposed single-tenant architecture.
+Multiple databases approach illustrated in Figure \ref{img04:multitenancy-multiple-databases}, know as "database level tenancy" is very similar to the proposed single-tenancy.
 In this setup, each tenant uses a separate database, hence maximising the data isolation. 
 This can lead to the best possible data isolation in \ac{SaaS} multi-tenant software, but to worse maintainability. 
 
-\begin{figure}[p]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=80mm]{img/chap04/fig_multitenancy_multiple_databases.png}
 \caption{Multi-tenancy with multiple databases}
 \label{img04:multitenancy-multiple-databases}
@@ -331,7 +342,7 @@ Each schema serves a different tenant.
 Infrastructure cost is significantly reduced compared to the previous approach, bringing some implementation complexities.
 
 
-\begin{figure}[p]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=80mm]{img/chap04/fig_multitenancy_multiple_schemas.png}
 \caption{Multi-tenancy with multiple schemas}
 \label{img04:multitenancy-multiple-schemas}
@@ -345,7 +356,7 @@ Known as "record level tenancy" is designed that all tenants share the same data
 Tenant's data are stored in the same tables differentiated by column or columns containing a tenant identification.
 This approach necessitates strict data isolation within application queries, as the application layer is the only enforcer of data separation.
 
-\begin{figure}[p]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=80mm]{img/chap04/fig_multitenancy_single_database_single_schema.png}
 \caption{Multi-tenancy with single database and schema}
 \label{img04:multitenancy-single-database-single-schema}
@@ -358,10 +369,10 @@ This approach necessitates strict data isolation within application queries, as 
 The backend of the platform achieves multi-tenancy through the concepts of "Projects".
 Projects are entities that bundle multiple users into a single tenant, adopting the "record-level tenancy" seen in Section \ref{subsubsec:single-database-single-schema}.
 
-This setup allows users to share project-biased data among themselves with role-based access, ensuring that the data of each tenant are isolated and secure.
+This setup allows users to share \gls{project}-biased data among themselves with role-based access, ensuring that the data of each tenant are isolated and secure.
 Without giving much detail that would compensate for the clarity of the design in figure \ref{img04:uml-user-project} we can see a simple UML diagram of the relation ship. 
-Both \texttt{User} and \texttt{Project} have many more relations; however, these were removed for now.
-Data isolation is ensured through ORM queries that are project-biased, thus preventing accidental data leaks between tenants.
+Both \texttt{User} and \texttt{\gls{project}} have many more relations; however, these have been removed for now.
+Data isolation is ensured through ORM queries that are \gls{project}-biased, thus preventing accidental data leaks between tenants.
 
 
 %classDiagram
@@ -384,8 +395,8 @@ Data isolation is ensured through ORM queries that are project-biased, thus prev
 %    Project "1" -- "1" User : owner
 %    Project "*" -- "*" User : users
 
-\begin{figure}[p]\centering
-\includegraphics[width=140mm]{img/chap04/fig_simplified_project_concept.png}
+\begin{figure}[H]\centering
+\includegraphics[width=80mm]{img/chap04/fig_simplified_project_concept.png}
 \caption{Simplified UML diagram of the User and Project relation}
 \label{img04:uml-user-project}
 \end{figure}
