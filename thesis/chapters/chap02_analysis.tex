@@ -29,13 +29,19 @@ Defining this process helps to understand weaknesses and identify opportunities 
 Suppose a customer of a company is shopping in an e-Commerce store:
 
 \begin{figure}[H]\centering
-\includegraphics[width=140mm]{img/chap02/fig_proces_sequence_diagram.png}
+\includegraphics[width=140mm]{img/chap02/fig_proces_sequence_diagram_highres.png}
 \caption{Sequence diagram of order dispatching process}
 \label{img02:order-dispatch-process}
 \end{figure}
 
+%\begin{figure}[H]
+%\centerline{\includesvg[width=140mm]{img/chap02/fig_proces_sequence_diagram.svg}}
+%\caption{Sequence diagram of order dispatching process}
+%\label{img02:order-dispatch-process}
+%\end{figure}
+
 \begin{enumerate}
-    \item \textbf{Order placement:} Customer completes the checkout process with the shipping details and preferred shipping method. Order information is recorded in the e-Commerce platform's database.
+    \item \textbf{Order placement:} Customer completes the checkout process with the shipping details and preferred shipping method. Order information is saved in the e-Commerce platform's database.
     \item \textbf{Order transfer to \ac{ERP}:} The order details are automatically transferred to the \ac{ERP} system. This transfer can occur at scheduled intervals or automatically, depending on the integration setup between the e-Commerce platform and the \ac{ERP}.
     \item \textbf{Order confirmation and inventory check:} The operator of the ERP system in the billing department processes the order with the validation of the shipping address and confirms the order.
     \item \textbf{Packing list and invoice generation:} Once the shipment is confirmed, the \ac{ERP} system generates a packing list that details the items to be shipped. At the same time, an order invoice is created.
@@ -101,7 +107,8 @@ Requirements can be classified into two groups \cite{sommervilleSW}:
     \item \textit{Functional requirements:} describes how the system should react to particular inputs and how the system should behave in particular situations.
     \item \textit{Non-functional requirements:} constraints on the services of functions by the system. Including development process constraints and constraints defined by some standards. Non-functional requirements often apply to the system as a whole, rather than individual features.
 \end{enumerate}
-For a better description, we will define the three actors used in the requirements later.
+%For a better description, we will define the three actors used in the requirements later.
+The whole system has three expected user roles:
 \label{sec:requirements-actors}
 \begin{enumerate}
     \item \textbf{Operator:} Role attributed to individuals employed by the company, interacting with the platform through its user interface. 
@@ -142,10 +149,10 @@ The requirements were then slightly modified according to our own requirements f
     \item Operators can select and work within a specific \gls{project}.
     \item Operators can rename any of their \glspl{project}.
     \item Operators can delete any of their \glspl{project}.
-    \item Operators can configure a default shipper for all shipments within a \gls{project}.
+    \item Operators can configure a default shipper for all shipments within a\\ \gls{project}.
     \item Operators can configure settings for shipping carrier APIs, including authentication (e.g., tokens, IDs, secrets) and other required fields.
     \item Within each \gls{project}, operators can create multiple sellers to customise the location and branding of the tracking page and the email notifications.
-    \item For each \gls{seller}, operators can set the name, localization, and branding elements such as logo, primary colour, contact information (URL, email, phone, store name), and social media links (Facebook, Instagram, YouTube, TikTok). operators can also enable customer email notifications for specific parcel statuses.
+    \item For each \gls{seller}, operators can set the name, localization, and branding elements such as logo, primary colour, contact information (URL, email, phone, store name), and social media links (Facebook, Instagram,\\ YouTube, TikTok). operators can also enable customer email notifications for specific parcel statuses.
     \item Operators can remove any \gls{seller} from a \gls{project}.
     \item Operators can enter edit mode of the \gls{seller}.
     \item In \gls{seller} edit mode, operators can switch views between web and email to preview customer-facing pages and emails.

@@ -41,6 +41,7 @@
 \usepackage{bbding}         % various symbols (squares, asterisks, scissors, ...)
 \usepackage{bm}             % boldface symbols (\bm)
 \usepackage{graphicx}       % embedding of pictures
+%\usepackage[inkscapelatex=false]{svg} % embedding of svgs
 \usepackage{fancyvrb}       % improved verbatim environment
 \usepackage[nottoc]{tocbibind} % zajistí přidání seznamu literatury,
 \usepackage[natbib,style=iso-numeric,sorting=none]{biblatex}
@@ -201,13 +202,11 @@ Dedication.
 }
 
 % Abstract (recommended length around 80-200 words; this is not a copy of your thesis assignment!)
-\def\Abstract{%
-Abstract.
-}
+\def\Abstract{\input{thesis/abstract-en}}
 
 % 3 to 5 keywords (recommended), each enclosed in curly braces
 \def\Keywords{%
-{e-commerce} {logistics} {process automation} {web application} {software as a service}
+{e-commerce} {logistics} {process automation} {web application} {software as a service} {deployment}
 }
 
 %% The hyperref package for clickable links in PDF and also for storing

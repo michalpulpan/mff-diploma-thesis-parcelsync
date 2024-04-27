@@ -61,8 +61,7 @@ MSSQL_PROD_DB_PORT=mssql_prod_port
 
 \section{Docker Compose}
 In order to orchestrate and simplify the deployment process of both services, it is recommended to use the Docker Compose tool.
-The \texttt{docker-compose.yml} configuration on the deployment node \ref{sec:admin-manual-sap.deployment} is specified in \texttt{/srv/sap-api/docker-compose.yml}
-
+The \texttt{docker-compose.yml} configuration on the deployment node \ref{sec:admin-manual-sap.deployment} is specified in \texttt{/srv/sap-api}.
 The example \texttt{docker-compose.yml} is:
 \begin{lstlisting}[caption={SAP Business One ServiceLayer Proxy with database connector \texttt{docker-compose.yml}}]
 version: '3.9'
@@ -123,7 +122,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 \end{lstlisting}
 
-\texttt{Watchtower} is defined to automatically send Slack notifications using \texttt{shoutrrr} \url{https://containrrr.dev/projects/shoutrrr/} module when new version is pulled. The Slack notification is defined in the \texttt{/srv/monitoring/watchtower/.env}:
+\texttt{Watchtower} is defined to automatically send Slack notifications using notification library named \texttt{shoutrrr} \url{https://containrrr.dev/projects/shoutrrr/} module when new version is pulled. The Slack notification is defined in the \texttt{.env} file located in \texttt{/srv/monitoring/watchtower/}:
 \begin{lstlisting}[caption={Watchtower environment variables}]
 WATCHTOWER_LABEL_ENABLE=1
 WATCHTOWER_NOTIFICATIONS="shoutrrr"
@@ -141,7 +140,7 @@ In order to stop the containers in background, go to the folder \texttt{/srv/sap
 
 \subsubsection{Update the service}
 In order to update the API service, go to the folder \texttt{/srv/sap-api} and run \texttt{docker compose pull api \&\& docker compose up --profile prod -d}.
-This command will pull the latest container from the Docker Hub and start the services again.
+The specified command will pull the latest container from the Docker Hub and start the services again.
 
 However, note that containers should update automatically if there is a new image.
 
@@ -149,12 +148,18 @@ However, note that containers should update automatically if there is a new imag
 A reverse-proxy used for deployment is Nginx version 1.18.0.
 Since there is a domain routed directly onto the server, we can use Nginx for internal routing as a reverse-proxy.
 
-The standard Nginx definition is found by convention in \texttt{/etc/nginx/sites-available/domain}.
-The route is then symlinked to the \texttt{/etc/nginx/sites-enabled} folder using \texttt{`sudo ln -s /etc/nginx/sites-available/domain /etc/nginx/sites-enabled/}.
+The standard Nginx definition is found by convention in \texttt{sites-available} within the Nginx specific folder \texttt{/etc/nginx}.
+The route is then symlinked to the \texttt{/etc/nginx/sites-enabled} folder using the following command:
+\begin{lstlisting}[caption={Command to create symbolic link by Nginx convention}]
+sudo ln -s /etc/nginx/sites-available/domain /etc/nginx/sites-enabled/
+\end{lstlisting}
 
 \subsection{SSL certificate}
 For automatically SSL certificate renewal from Let's Encrypt, \texttt{Certbot} was installed and configured.
-To obtain a certificate for the newly created route, run \texttt{`sudo certbot --nginx -d example.com -d www.example.com`}
+To obtain a certificate for the newly created route, run:
+\begin{lstlisting}[caption={Certbot command to obtain SSL certificate}]
+sudo certbot --nginx -d example.com -d www.example.com
+\end{lstlisting}
 
 
 

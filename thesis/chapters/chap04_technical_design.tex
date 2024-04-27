@@ -110,8 +110,8 @@ Recent versions of Python introduced optional type hints that allowed developers
 However, these hints are not enforced by the Python runtime itself.
 This adds a layer of type safety, although it remains optional and not as integrated as a TypeScript type system.
 
-Performance benchmarks, as presented in \cite{PerformancePythonNode}, demonstrate Node.js (and therefore JavaScript) performance compared to Python in real world scenarios.
-JavaScript should generally outperform Python in the measured scenarios.
+Performance benchmarks, as presented in \cite{PerformancePythonNode}, demonstrate Node.js, and therefore JavaScript, performance compared to Python in real world scenarios.
+Java-\\Script should generally outperform Python in the measured scenarios.
 However, the choice of technology lies in the effectiveness of the developer with a specific language and framework.
 While Python developer experience and large number of libraries make it a strong candidate, the advantages offered by TypeScript type safety and JavaScript performance make TypeScript a more strategic choice for our needs.
 
@@ -275,9 +275,9 @@ In this example, we can see a sample GET route with three chained middlewares be
 
 \subsubsection{ORM a data models}
 % write about knex and objection with more implementation details and description in the next chapter
-For managing the database and building data models within \gls{koa} backend, \gls{knex} and \gls{objection} was used.
+For managing the database and building data models within \gls{koa} backend,\\ \gls{knex} and \gls{objection} was used.
 \gls{knex} serves as a query builder, allowing for direct interactions with the database.
-Used together with \gls{objection}, an \ac{ORM} built on top of \gls{knex}, it is an efficient way to manage and interact with database entities in an object-like structure.
+Used together with \gls{objection}, an \\ \ac{ORM} built on top of \gls{knex}, it is an efficient way to manage and interact with database entities in an object-like structure.
 Implementation details with examples will be explored in the following chapter, focusing on the implementation of the application itself.
 
 
@@ -300,7 +300,7 @@ Given that \gls{postgresql} was a good choice given its performance and ability 
 \section{Multi-tenancy and its possible approaches}
 \label{sec:different-approaches-for-multitanency}
 % discussion about multi-tenancy architectural approaches and what is multi-tanency in general.
-Multi-tenancy refers to a software architecture approach, designed for cost-efficiency and ease of maintenance.
+Multi-tenancy refers to a software architecture approach, designed for cost efficiency and ease of maintenance.
 It's key principle is to simulate, otherwise needed on-premise deployment or a dedicated instance of the software, on a single instance.
 
 This model works with the premise that the data are kept isolated from each other using several possible approaches.
@@ -319,7 +319,7 @@ Let us define key terms and take a look at possible approaches to this interesti
 
 \subsection{Approaches}
 % discuss possible approaches to multi-tenancy, detail each aproach's technical implementation - advantages and disadvantages
-After defining the foundational concept, it is important to consider how to approach design of the multi-tenancy - balancing between security, cost-efficiency, and ease of maintenance.
+After defining the foundational concept, it is important to consider how to approach design of the multi-tenancy - balancing between security, cost efficiency, and ease of maintenance.
 Let us take a look at the possible approaches to it proposed in both \cite{MultitennancyArchitecture2012} and \cite{MultitenancyArchitectureMedium} and suggest the best way that best suits our needs.
 
 \subsubsection{Multiple databases}

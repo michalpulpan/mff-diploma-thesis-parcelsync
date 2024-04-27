@@ -155,7 +155,8 @@ Phone users are certainly not insignificant, but the desktop leads the way.
 \subsection{Operational performance and business impact}
 \label{subsec:operational-performance-business-impact}
 The operational performance of the platform has been robust, supported by the detailed \gls{aws-cloudwatch} monitoring.
-Analysis of the Lambda invocation duration in Figure \ref{img08:plot:lambda_handler_durations} reveals that the average response time during peak periods can reach up to 4 seconds on average.
+Analysis of the Lambda invocation duration in Figure \ref{img08:plot:lambda_handler_durations} reveals that the average response time during peak periods can reach up to 4 seconds on average, which is still within the Lambda tolerance.
+So, just raising the timeout should be enough for these special cases described below.
 However, normally, this number is well below 250 miliseconds.
 \ref{img08:plot:tracking_page_device_type} show something different.
 Phone users are certainly not insignificant, but the desktop leads the way.
@@ -273,7 +274,7 @@ Here, we evaluate and reflect on how these goals were fulfilled through the depl
 \end{enumerate}
 
 This chapter has evaluated the operational efficacy and integration of the \ac{SaaS} platform within a real-world business environment.
-Through this evaluation, the platform has been shown to meet operational requirements by simplifying logistics processes, enhancing customer interaction through branded experiences, and integrating with existing business systems. 
+During this evaluation, the platform has been shown to meet operational requirements by simplifying logistics processes, enhancing customer interaction through branded experiences, and integrating with existing business systems. 
 By achieving these objectives, the platform not only fulfils the set project goals but also establishes a foundation for future expansions and optimisations in eCommerce logistics. 
 The platform provides a clear direction for continued innovation and improvement, ensuring that the platform can continue to deliver business value as market conditions evolve.
 

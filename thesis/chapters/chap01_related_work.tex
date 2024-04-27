@@ -3,7 +3,7 @@
 % brief intorduction of the purpose of this chapter
 % importance of understanding these works in the context of this project
 This chapter dives into the overview of existing solutions within the scope of parcel logistics in the dispatch process, generating labels, and shipment tracking, with a focus on the Czech market.
-Understanding these projects and their limitations helps us to understand the market gap that this platform is filling.
+Understanding these projects and their limitations helps us define the market gap we are trying to fill.
 Particularly in offering a cloud-based multi-tenant solution integrating customised tracking page and email notifications for recipients.
 The overview underscores the importance of innovating beyond current offerings, which primarily lack features such as a simple dashboard for data viewing, custom tracking pages for improved customer communication, and automated email notifications.
 
@@ -35,22 +35,21 @@ Let us take a look at some options available in the Czech market.
 % usually doesn't directly implement data structure of the ERP
 Offers integration directly into \ac{ERP}/e-Commerce systems, however lacking the flexibility to modify parcels outside of these systems.
 Requiring that the user using this software can modify the source data in \ac{ERP} and not being able to use any Balíkobot user-interface might be a strong limitation.
-The next limitation might be the label format provided by Balíkobot.cz.
-This solution generates its own label layout, validated by the carrier, of course, but sometimes a different layout might lead to inefficiency or even errors at the sorting centres or when loaded to the delivery vehicle.
+The next limitation might be the custom label format provided by Balíkobot.cz.
+Although the carrier validates it, sometimes a different layout might lead to inefficiency or even errors at the sorting centres or when loaded to the delivery vehicle.
 On the other hand, the amount of integrated carriers and \ac{ERP} integrations makes Balikobot very easy to start using.
 One thing to consider is that Balíkobot does not handle customer communication at any level.
 It is only strictly used for data transfer and printing the shipping labels.
 
-Overall, Balíkobot is definitely a considerable solution, but being integrated directly into the \ac{ERP} makes it a bit slow to use and is usually inaccessible from outside of the company network when needed.
-And, the most importantnly, it deals only with company processes, not with customer communication and presentation.
+Overall, Balíkobot is definitely a considerable solution, but being integrated directly into the \ac{ERP} makes it a bit slow to use and is usually inaccessible from outside the company network when needed.
+And, most importantly, it deals only with company processes, not with customer communication and presentation.
 
 \subsection{LabelPrinter.cz}
 \label{subsec:labelprinter}
 % on premise windows service run at client
 LabelPrinter, as the name suggests, is designed for label printing and data transfer. Like Balíkobot, LabelPrinter functions solely as warehouse software to transfer data from companies to carriers.
-Additionally, it operates only as an on-premise Windows service runtime at the client's computer.
+In addition,, it operates only as an on-premise Windows service runtime at the client's computer.
 This approach requires local infrastructure and maintenance, potentially increasing operational overhead in small to medium-sized enterprises, limiting scalability and accessibility.
-Additionally 
 
 % Zminit inhouse solution nebo to nechat byt??
 
@@ -74,7 +73,7 @@ This platform confronts these issues, presenting a new approach to the landscape
 
 \subsection{Unified data model}
 Existing solutions often lack a unified approach to data handling, which complicates integration with different carriers. 
-Our platform introduces a unified data model normalising data formats across all carriers, simplifying the integration, leaving the complexity of understanding different models to the project itself.
+Our platform introduces a unified data model normalising data formats across all carriers, simplifying the integration, leaving the complexity of understanding different models to the platform itself.
 This fits very well with the goals presented in the \hyperref[subsec:project-goals]{Project goals} section.
 Specifically, \textbf{G1} and \textbf{G4} are closely related to the complex integration of external systems.
 

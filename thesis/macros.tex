@@ -85,3 +85,29 @@
 %%% Various table goodies
 \newcommand{\pulrad}[1]{\raisebox{1.5ex}[0pt]{#1}}
 \newcommand{\mc}[1]{\multicolumn{1}{c}{#1}}
+
+
+
+\makeatletter
+\newif\ifAC@uppercase@first
+\def\Aclp#1{\AC@uppercase@firsttrue\aclp{#1}\AC@uppercase@firstfalse}
+\def\AC@aclp#1{%
+  \ifcsname fn@#1@PL\endcsname
+    \ifAC@uppercase@first
+      \expandafter\expandafter\expandafter\MakeUppercase\csname fn@#1@PL\endcsname
+    \else
+      \csname fn@#1@PL\endcsname
+    \fi
+  \else
+    \AC@acl{#1}s
+  \fi 
+}
+\edef\AC@uppercase@write{\string\ifAC@uppercase@first\string\expandafter\string\MakeUppercase\string\fi\space}
+\def\AC@acrodef#1[#2]#3{%
+  \@bsphack
+  \protected@write\@auxout{}{%
+    \string\newacro{#1}[#2]{\AC@uppercase@write #3}%
+  }\@esphack
+}
+\def\Acl#1{\AC@uppercase@firsttrue\acl{#1}\AC@uppercase@firstfalse}
+\makeatother

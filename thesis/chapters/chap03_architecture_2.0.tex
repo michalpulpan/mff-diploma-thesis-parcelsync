@@ -2,7 +2,7 @@
 \label{chap:architectural-design}
 % provide  architecture teory introduction 
 % intro to architecture, what it is, why we need it and generally what it tries to solve, help
-The architecture of a software system is much more than a simple assembly of technological components; it serves as a blueprint for the project that determines its layout and sets its future direction.
+The architecture of a software system can be much more than a simple assembly of technological components; it might serve as a blueprint for the project that determines its layout and sets its future direction.
 In essence, software architecture is a structured approach to development that supports system functionality and ensures that it meets current and future needs, as stated in \cite{sommervilleSW}.
 This chapter delves into the essential role of software architecture in project development, offering a foundational understanding for readers unfamiliar with the concept.
 Moreover, it addresses how the architecture underpins the system’s ability to meet a range of non-functional requirement introduced in the previous chapter, what approaches to architecture can be chosen in our case, and presents architecture of our platform.
@@ -11,7 +11,7 @@ The significance of software architecture can be related to architecture in the 
 Just as architects design buildings while aiming to meet specific purposes, needs, and environments, software architects design systems to meet specific operational standards and goals.
 Providing a clear visualisation and description that can help stakeholders easily understand system's structure.
 Sets a direction for all the following design and development activities by describing the structure of the system, its components, and their interactions.
-Establishing a software architecture framework early in the project enables a common understanding between all parties involved, developers, designers, and business stakeholders.
+Establishing a software architecture early in the project enables a common understanding between all parties involved, developers, designers, and business stakeholders.
 This shared understanding is an important factor in aligning project goals with technological implementations and helps manage expectations throughout the project lifecycle.
 
 
@@ -21,7 +21,7 @@ In the previous chapter \ref{chap:analysis}, we have introduced the concept of s
 In this context, non-functional requirements presented in Section \ref{subsec:nonfunctional-requirements} play a pivotal role.
 Non-functional requirements describe not what the system does but how it does it.
 These are the parameters that enhance the functionality and make the software robust, usable, and maintainable.
-Let us recall the architectural requirements set in the previous chapter and how they impact the architecture itself.
+Let us reiterate the architectural requirements set in the previous chapter and how they impact the architecture itself.
 
 % \subsubsection{Usability}
 % The user interface should be intuitive, requiring minimal training for warehouse and billing staff.
@@ -76,11 +76,11 @@ Let us recall the architectural requirements set in the previous chapter and how
     \item \textbf{Integration:} The architecture includes a comprehensive API layer that not only supports internal operations but also offers external integration capabilities.
     The API layer should be designed using REST principles.
     \item \textbf{Customization:} To support a higher levels of customization, the architecture allows clients to define branding of their tracking pages and notification emails according to their identity, without altering the core functionality.
-    The backend supports this by managing customize elements as configurable parameters stored per tenant, which the system applies dynamically at runtime.
+    The backend supports this by managing customise elements as configurable parameters stored per tenant, which the system applies dynamically at runtime.
 \end{itemize}
-After discussing the non-functional requirements that shape our system's architecture, it is crucial to explore various architectural approaches that could potentially align with these premises.
-This exploration not only guides the structuring of our software, but also ensures that the chosen architecture can adequately support the system's objectives.
-
+Having discussed the non-functional requirements that shape our system architecture, it is essential to explore different architectural approaches that could potentially meet these criteria.
+%This exploration not only guides the structuring of our software, but also ensures that the chosen architecture can adequately support the system's objectives.
+This step involves considering different architectural approaches, as the final choice of architecture will significantly affect the way the system is structured and how it functions.
 
 % Present architectural approaches for a client client web application (that adhere to the multi-tenancy requirement with scalability - or don't and say why they don't) 
 % Hop into the layered architecture - describe and emphasize the concept and gradually arrive at the fact that a 3-tier-architecture fits our requirements + add image \ref{img03:layered_architecture_diagram} of the 3-tier architecture, what it does and how it hepls solve our problem
@@ -90,7 +90,8 @@ This exploration not only guides the structuring of our software, but also ensur
 The process of selecting an architectural approach involves evaluating several well-established patterns, each offering different benefits and trade-offs. 
 Among these, the event-driven architecture, client-server architecture, and multi-tier architecture are well-known and considerable approaches. 
 Each approach has unique characteristics that could enhance or detract from the non-functional goals of our system.
-Let us present and compare them.
+%Let us present and compare them.
+Firstly, we will present them separately, then compare them and finally choose the pattern that suits the best.
 
 \subsection{Event-Driven architecture}
 As stated in \cite{edaDevto} Event-Driven Architecture sits around the production, detection, consumption, and reaction to events.
@@ -112,8 +113,8 @@ However, Event-Driven architecture can be complex to implement and maintain due 
 
 
 \subsection{Client-Server architecture}
-Client-server architecture divides system into two entities: clients, requests for services, and servers providing services.
-As stated in \cite{mediumArchitectureComparison} the functional characteristics of a client and a server are examples of programs that interact with each other within an application. The functionality of this architecture is highly flexible, as a single server can serve multiple clients as see in Figure \ref{img03:client_server_architecture_diagram} or a single client can use multiple servers.
+Client-server architecture divides system into two entities: clients who request services and servers that provide the services.
+As stated in \cite{mediumArchitectureComparison} the functional characteristics of a client and a server are examples of programs that interact with each other within an application. The functionality of this architecture is highly flexible, as a single server can serve multiple clients as seen in Figure \ref{img03:client_server_architecture_diagram} or a single client can use multiple servers.
 \begin{figure}[H]\centering
 \includegraphics[width=80mm]{img/chap03/fig_client_server_architecture_mermaid.png}
 \caption{Client-Server architecture diagram}
@@ -130,7 +131,7 @@ As stated in \cite{mediumArchitectureComparison} the functional characteristics 
 
 \subsection{Multi-Layer (N-Tier) architecture}
 Multi-layer architecture, often referred to as n-tier, organises a system into logically separated layers that each handle specific types of processing as can be seen in Figure \ref{img03:multi_layer_architecture_diagram}. 
-Typically, these include a presentation layer (user interface), an application layer (business logic), data layer and database layer (data management). 
+Typically, these include a presentation layer (user interface), an application layer (business logic), data layer, and database layer (data management). 
 This separation helps better organization and allows for independent scaling, maintenance, or updating of each layer. 
 Supports scalability and simplifies the development process by allowing teams to work on different layers independently.
 \begin{figure}[H]\centering
@@ -231,18 +232,17 @@ The frontend of the platform consists of three main components, each serving a d
     This page supports custom branding, allowing businesses to provide a cohesive brand experience. 
     Optimised for touch interaction, it improves accessibility and ease of use on mobile devices.
     \item \textbf{Docs:} A documentation website that provides users with guidelines, API documentation, and setup tutorials.
-    This component is crucial for on-boarding new Operators and supporting existing ones by offering easy access to necessary technical and usage information.
+    This component is crucial for onboarding new Operators and supporting existing ones by offering easy access to necessary technical and usage information.
 \end{itemize}
 
-The backend serves as the core of the platform, integrating various external systems and managing the business logic. 
-It includes integrations with external systems and APIs from shipping carriers, handling all data synchronisation tasks, shipment dispatching, and updates between the platform and shipping carriers. 
+The backend serves as the core of the platform, integrating with external systems and APIs from shipping carriers, handling all data synchronisation tasks, shipment dispatch, and updates between the platform and shipping carriers. 
 The business logic processes data from the frontend to ensure that all operations adhere to all business processes within our domain, which consists of shipment processing, user management, and the generation of customer notifications. 
 In addition, an email system is integrated to manage communications with users by email based on specific triggers and events within the platform. 
 This system is designed to support customizable email and tracking page templates, which allows for alignment with the branding requirements of different tenants, enhancing the customisation capability of the platform.
 
 \subsection{Database}
 The database serves as the central repository for storing all operational data along with user information. 
-The database is designed to support multi-tenancy, implementing data isolation strategies that keep tenant data separate and secure. This setup is crucial in adhering to the multi-tenancy requirements of the architecture, ensuring that each tenant's data is accessed and managed securely without interference from or to other tenants.
+The database schema is designed to support multi-tenancy, implementing data isolation strategies that keep tenant data separate and secure. This setup is crucial in adhering to the multi-tenancy requirements of the architecture, ensuring that each tenant's data is accessed and managed securely without interference from or to other tenants.
 
 \subsection{Overall System Interaction}
 The frontend communicate with the backend via secure, REST API, which abstract the complexity of business processes and shipping carrier integrations.

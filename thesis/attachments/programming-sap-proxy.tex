@@ -79,7 +79,7 @@ Hence why it is necessary to initialise \texttt{ConnectionPool} directly, instea
 
 If one connection fails for some reason during the request, a new one is initiated.
 This may slow down the data retrieval but will ensure that, as long as the database is reachable, the proxy will try to connect.
-The pool retrieval from anywhere within the program is done by calling \texttt{MSSQLConnection.getInstance(env)} where \texttt{env} parameter is \texttt{dev} or \texttt{prod}.
+The pool retrieval from anywhere within the program is done by calling \texttt{getInstance(env)} on \texttt{MSSQLConnection} where \texttt{env} parameter is \texttt{dev} or \texttt{prod}.
 
 \subsection{Router}
 The file representing router \texttt{src/router.ts} defines endpoints and HTTP methods with middleware chains together with the result action.
@@ -101,7 +101,7 @@ The usual workflow of these methods defined in \texttt{src/actions} is to retrie
 The service usually returns some data which are then passed into the response.
 
 \subsection{Entities}
-Entities defined in SAP Proxy are TypeScript classes that extend \texttt{objection.Model} and are directly mapped to the database using modules \texttt{knex} and \texttt{objection}.
+Entities defined in SAP Proxy are TypeScript classes that extend \texttt{Model} from \texttt{objection} and are directly mapped to the database using modules \texttt{knex} and \texttt{objection}.
 
 \subsubsection{\texttt{SAPToken}}
 Entity used for caching the login token for SAP ServiceLayer. 
@@ -127,12 +127,12 @@ Containing fields such as:
 
 \subsection{Services}
 \label{attachments:programming-sap.overview.sevices}
-Services presents the data communication between the application and the database or the SAP ServiceLayer.
+Services represent the place where data communication between the application and the database or the SAP ServiceLayer is performed.
 
 \subsubsection{\texttt{sap-service}}
 This service represents the connector to both the SAP ServiceLayer and \texttt{SAPToken} entity in the database.
 It is located at \texttt{src/services/sap-service.ts}.
-The service methods for SAP ServiceLayer login for token retrieval, token caching in the database for each environment, and proxy call from method \texttt{SAPService.proxy} while returning \texttt{Stream} object.
+The service methods for the SAP ServiceLayer login for token retrieval, token caching in the database for each environment, and proxy call from method \texttt{proxy} in \texttt{SAPService} while returning \texttt{Stream} object.
 
 
 \subsubsection{\texttt{user-service}}

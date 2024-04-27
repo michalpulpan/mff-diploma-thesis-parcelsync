@@ -56,6 +56,7 @@ Please note that as long as there is an option, all infrastructure should be dep
 The backend service fully utilises \textit{AWS Lambda} for the deployment and related services. 
 This section will describe managing of the Lambda handlers of both backend service and scheduled tasks.
 
+
 \subsubsection{Accessing logs}
 Logs of the Lambda handlers are accessible within the AWS console in \textit{CloudWatch} section.
 Here it is possible to list all the log groups within whole account where are all the deployed services as well as Lambda handlers used as scheduled tasks and those ran while deployment (migrations).
@@ -81,9 +82,18 @@ To access the logs at a specific time, click the desired log group (usually labe
 \end{figure}
 
 \subsubsection{Scheduled tasks}
+\label{attachments:admin-manual-lambda.scheduled-tasks}
 Scheduled tasks can be found in the list of all Lambda functions.
 They are conveniently named and are used to retrieve shipment status from supported carriers and send tracking emails to customers.
 Each of these tasks has \textit{EventBridge} attached with configuration of the event trigger (cron-like definition), see Figure \ref{img:admin-manual-aws.lambda.eventbridge}
+We currently use these Lambda functions as scheduled tasks:
+\begin{itemize}
+    \item \texttt{packetaStatusUpdate}: For Packeta parcel status retrieval.
+    \item \texttt{pplStatusUpdate}: For Packeta parcel status retrieval.
+    \item \texttt{ceskaPostaStatusRequest}: To request parcel statuses within given timeframe.
+    \item \texttt{ceskaPostaStatusPickup}: To pickup requested parcel statuses and update them in the database.
+    \item \texttt{sendStatusEmail}: To send-out status e-mails based on seller settings (allowed statuses).
+\end{itemize}
 
 \begin{figure}[H]\centering
 \includegraphics[width=140mm]{img/docs/fig_aws_eventbridge.png}
@@ -91,9 +101,22 @@ Each of these tasks has \textit{EventBridge} attached with configuration of the 
 \label{img:admin-manual-aws.lambda.eventbridge}
 \end{figure}
 
-Each lambda handler can be triggered manually; however, it is recommended to do so only with the scheduled tasks and tasks that run migrations or seeding the database.
-You can see the URL of the function in the details of every Lambda function.
-This will trigger the function to run.
+\subsubsection{Lambda handler functions}
+Lambda handler functions are the entry point methods which are executed when the \texttt{lambda} function is started.
+We define the Lambda handler function for all scheduled tasks listed in \ref{attachments:admin-manual-lambda.scheduled-tasks} as well as for the backend service.
+Each lambda function can be triggered manually; however, it is recommended to do so only with the scheduled tasks and tasks that run migrations or seeding the database.
+You can create the URL of the function in the details of every Lambda function.
+This will trigger the function to run, but it is recommended to setup the URL trigger only with \gls{aws-iam} authentication.
+
+Each Lambda function is limited by the predefined timeout of each function.
+If the function is time-consuming, we might consider raising the timeout limit from anywhere between 1 second and 15 minutes.
+However, bear in mind that the pricing model of the Lambda function relies on billing the execution time.
+All our methods are configured with defualt one minute timeouts, except for \texttt{packetaStatusUpdate}.
+Due to the large number of Packet packages and the latency of their API responses, we had to extend the timeout to 2 minutes and 30 seconds.
+This should be enough because, during the mornings, when the Packeta API tends to be a bit slower, we can update about 600 parcels in approximately 110 seconds.
+As soon as the maximum possible time is no longer sufficient, it will be necessary to reconsider the design of the method and decompose it, for example, into Lambda step functions or to use the predefined queue logic used, for example, by the Česká Pošta shipment update.
+
+
 
 
 \subsection{Database}
@@ -156,7 +179,7 @@ This meant creating a simple function within the \textit{AWS CloudFront} that (i
 
 \begin{enumerate}
     \item In the \textit{AWS CloudFront} console select the \textit{Functions} section.
-    \item Now, if not created, create a new function as shown in Listings \ref{attachment:admin-platform.listing.cloudformation_function} \texttt{indexhtml-appender} with JavaScript runtime.
+    \item Now, if not created, create a new function as shown in Listings \ref{attachment:admin-platform.listing.cloudformation_function}  named \texttt{indexhtml-appender} with JavaScript runtime.
 \begin{lstlisting}[language=javascript,caption={AWS CloudFront function to  append \texttt{index.html} to each URI}]
 function handler(event) {
     var request = event.request;
@@ -184,10 +207,16 @@ This function will ensure that the requests of other languages other than the pr
 \begin{enumerate}
     \item Navigate to the newly deployed AWS \ac{S3} bucket used to store public assets.
     \item Go to the \textit{Permissions} tab and click on \textbf{Edit} button in section \textit{Block public access (bucket settings)}
-    \item Here uncheck all the check-boxes listed (\textit{Block all public access} and save changes.
+    \item Here uncheck all the check-boxes listed (\textit{Block all public access} and save changes as in the Figure \ref{:admin-manual-aws.s3.public}.
     \item Now within the \textit{Permissions} tab, scroll down to \textit{Object Ownership} and click the \textbf{Edit} button. 
     \item Here select \textbf{ACLs enabled} and in the \textit{Bucket Ownership} section select \textbf{Bucket owner preferred}. Your setting should look like in Figure \ref{img:admin-manual-aws.s3.acls} and click \textit{Save changes}.
 \end{enumerate}
+
+\begin{figure}[H]\centering
+\includegraphics[width=140mm]{img/docs/fig_aws_s3_bucket_public.png}
+\caption{AWS S3 bucket Block public access settings}
+\label{img:admin-manual-aws.s3.public}
+\end{figure}
 
 \begin{figure}[H]\centering
 \includegraphics[width=140mm]{img/docs/fig_aws_object_ownership.png}
@@ -197,7 +226,68 @@ This function will ensure that the requests of other languages other than the pr
 
 
 \subsection{Email sender}
+\label{attachment:ses}
 As a email sender service \textit{AWS \ac{SES}} is used.
 The account, where the platform is hosted, was moved from the \textit{AWS \ac{SES}} sandbox.
-This process took approximately 7 days, and email examples and communication style had to be presented to the AWS support. 
+This process took approximately 2 days, and email examples and communication style had to be presented to the AWS support. 
 Now the account has a sending quota of 50 000 messages per day with a maximum send rate of 14 messages per second.
+
+
+\subsection{Deployment to the new AWS account}
+% Create new AWS account
+% Create IAM user with administration policy
+% run yarn aws:setup 
+% point domain NS records to the AWS Route53
+% run yarn deploy:aws to setup the resources
+% % beware of aws account scoring
+% push code to the github for the deplyoment of services
+Thanks to the complex \ac{IaC} setup within the platform, deployment to the Amazon Web Services is straight forward.
+As a prerequisite, you need to have platform repository localy, running {Node.js $\geq$ 16 and have packages installed using \texttt{yarn install} command. 
+Create a new clean AWS account \href{https://repost.aws/knowledge-center/create-and-activate-aws-account}{using instructions how to create AWS account} with MFA authentication.
+Then follow the \href{https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html}{instructions how to create IAM user} and use this configuration:
+\begin{itemize}
+    \item Set password for the IAM user.
+    \item Generate Access Key and Secret to allow programatic access.
+    \item In the "Set permissions" section, click on "Attach existing policies directly" and select \texttt{AdministratorAccess}.
+    \item Skip the "Add tags"
+\end{itemize}
+Next time you log in to the AWS console, it is recommended to use created IAM.
+
+Now create entry in the \texttt{~/.aws/config} file and append following configuration to the file:
+\begin{lstlisting}[language=bash,caption={\texttt{~/.aws/config}}]
+[account-name]
+region=eu-central-1
+output=json
+\end{lstlisting}
+
+Now open \texttt{~/.aws/credentials} and using values generated while creating IAM user append the following:
+\begin{lstlisting}[language=bash,caption={\texttt{~/.aws/credentials}}]
+[account-name]
+aws_access_key_id=<ACCES_KEY>
+aws_secret_access_key=<SECRET_KEY>
+\end{lstlisting}
+In order to test the credentials in the CLI, run following command:
+\begin{lstlisting}[language=bash,caption={Command to test AWS identity}]
+AWS_PROFILE=account-name aws sts get-caller-identity
+\end{lstlisting}
+This should output JSON with information about the IAM user.
+
+Now, with everything setup locally, it is time to set up the AWS infrastructure.
+We will need to setup IAM roles to allow GitHub actions to deploy resources and setup a hosted zone in the Route53 and verify Amazon SES e-mail.
+Run the following command:
+\begin{lstlisting}[language=bash,caption={Command to setup AWS infrastructure}]
+AWS_PROFILE=account-name yarn setup:aws
+\end{lstlisting}
+Once the task if finished, it will output four name servers.
+Add this list of name servers to the domain NS records and wait until the name servers are propagated.
+\begin{lstlisting}[language=bash,caption={Command to deploy to the AWS}]
+AWS_PROFILE=account-name yarn deploy:aws
+\end{lstlisting}
+
+With the services deployed, we need to deploy our applications in the S3 subsets.
+For this, it is best to trigger the GitHub deployment action.
+Whether in the GitHub repository or by pushing some code to the \texttt{main} branch.
+
+Now continue with Locale redirection on the documentation described in Section \ref{attachments:admin-manual-aws.s3.docs_redirect}, enabling ACLs for assets storage as in Section \ref{attachments:admin-manual-aws.s3.permissions}, and requesting for the SES production access described in Section \ref{attachment:ses}.
+
+

@@ -81,7 +81,7 @@ For a more in-depth look, refer to the diagram illustrated in \ref{img06:fig_lam
 % consistent, repeatable deployment processes
 
 \gls{aws-cloudformation} plays a crucial role in managing the project infrastructure.
-It perfectly aligns with the purpose of \ac{IaC} - to create and manage resources with templates.
+It perfectly aligns with the purpose of \ac{IaC} - creating and managing resources with templates.
 CloudFormation enables the user to define the entire cloud environment as code that can be versioned, reused, and shared. 
 Automating the deployment of resources in a consistent and repeatable manner.
 By organising resources into multiple stacks, the deployment can be segmented logically (e.g., networking, application layers, security), facilitating easier management and updates of specific components.
@@ -92,7 +92,8 @@ In our case, several \gls{aws-cloudformation} stacks are created using \gls{aws-
 As a result, the deployment process systematically manages the creation of several key \gls{aws-cloudformation} stacks, each designed to support different facets of the application's infrastructure:
 Having said that the deployment creates the following \gls{aws-cloudformation} stacks:
 \begin{itemize}
-    \item \textbf{API Service Stack:} Central backend infrastructure, the API Service Stack comprises all the necessary resources deployed by the \gls{serverless-framework} such as all Lambda handlers and events triggering the scheduled tasks.
+    \item \textbf{API Service Stack:} Central backend infrastructure, the API Service Stack comprises all the necessary resources deployed by the\\ \gls{serverless-framework} such as all Lambda handlers and events triggering the scheduled tasks.
+    With necessary \gls{aws-iam} roles for the runtime environment as well as GitHub actions deployment.
     \item \textbf{Docs page stack:} Dedicated to the application documentation portal, the Docs page stack provides the infrastructure required to host and serve the documentation. 
     \item \textbf{Tracking page stack:} Tailored for the tracking functionality, this stack establishes the infrastructure needed for the tracking page.
     \item \textbf{Dashboard page stack:}  Focused on the administrative aspect of the application, the Dashboard Page Stack creates the infrastructure for the dashboard page. 
@@ -102,8 +103,10 @@ Having said that the deployment creates the following \gls{aws-cloudformation} s
 \label{sec:alternative-deployment-methods}
 % This section should explore alternative deployment methods that could be used for the project.
 
-While the chosen deployment path for this project is \ac{AWS} with serverless architecture for deployment, it is important to explore alternative deployment methods that might offer different benefits or better align with specific needs.
-Two main alternatives are containerisation and utilisation of services from other cloud providers.
+Although the deployment path chosen for this project is \ac{AWS} with serverless architecture for deployment, it is important to explore alternative deployment methods that could offer different benefits or align with other needs.
+The two main alternatives that are presented are containerisation and utilisation of services from other cloud providers.
+After this brief overview of both options, we will present the potential risks of both of them.
+% 
 
 
 \subsection{Containerization}
@@ -113,7 +116,7 @@ Two main alternatives are containerisation and utilisation of services from othe
 Containerization is a method that allows to encapsulate an application along with its environment and dependencies into a container that should run consistently on any infrastructure. 
 Being either a local development environment or production on a remote server, containers are increasing in popularity and are very often the way to go for both development and deployment.
 This approach is complemented by technologies such as \gls{docker}.
-\gls{docker} can run completely free in both development and production environments, significantly reducing cost.
+\gls{docker} can run completely free in both the development and production environments, significantly reducing cost.
 This gives freedom to the deployment environment. 
 Containers can run on a bare \ac{VPS} or in a container-specific environment developed to host containers without taking the costs of maintaining a server such as \gls{aws-ecs}.
  Containerisation offers numerous benefits, including:
@@ -196,12 +199,15 @@ The phases of the pipeline are the following.
 \begin{itemize}
     \item \textbf{Code quality checks:} On every pull request, automated workflow for linting, type checking and spelling is triggered. These steps are important for maintaing high code quality and catching potential issues early.
     \item \textbf{Build process:} For frontend applications, the build process compiles the source code into static assets. Backend services are prepared for deployment, ensuring that all necessary dependencies are correctly packaged.
-    \item \textbf{Deployment to AWS services:} Deployment is carried out in stages, starting from staging to production environments. If something fails, the staging process is over, production is terminated, and the job fails. This phased approach allows for validation of changes in a controlled context before affecting live users. \gls{aws-cdk} is used to provision or update \ac{AWS} resources, including Lambda functions for backend services and \ac{S3} buckets for hosting frontend assets. Infrastructure changes are managed through \gls{aws-cloudformation} stacks, allowing for reliable and repeatable deployments.
-    \item \textbf{Post-Deployment tasks:} After the build and deployment, database migrations and invalidating CDN caches ensure that the latest and valid content is served to user and that the database schema is up to date with what application is expecting.
+    \item \textbf{Deployment to AWS services:} Deployment is carried out in stages, starting from staging to production environments. If something fails, the staging process is over, production is terminated, and the job fails. This phased approach allows for validation of changes in a controlled context before affecting live users. \gls{aws-cdk} is used to provision or update \ac{AWS} resources, including Lambda functions for backend services and \ac{S3} buckets to host frontend assets. Infrastructure changes are managed through \gls{aws-cloudformation} stacks, allowing reliable and repeatable deployments.
+    The deployment of a static web application is carried out in two phases after the infrastructure is set up.
+    It begins by building it and then copying it to the \gls{aws-s3} bucket.
+    The deployment of backend services, on the other hand, is carried out by the \gls{serverless-framework} framework itself with \gls{aws-iam} policy defined within the setup phase.
+    \item \textbf{Post-Deployment tasks:} After the build and deployment, database migrations and invalidating CDN caches ensure that the latest and valid content is served to user and that the database schema is up to date with what the application is expecting.
 \end{itemize}
 
-By integrating these steps into \gls{github-actions}, the project benefits from an automated pipeline minimising manual intervention in error-prone processes.
-For example, on the \ref{img06:fig_github_actions_integration} are three stages of the code quality pipeline.
+By integrating these steps into \gls{github-actions}, the project benefits from an automated pipeline that minimises manual intervention in error-prone processes.
+For example, on \ref{img06:fig_github_actions_integration} there are three stages of the code quality pipeline.
 \begin{figure}[H]\centering
 \includegraphics[width=140mm]{img/chap06/fig_github_actions_integration.png}
 \caption{GitHub Actions - Pull request integration}

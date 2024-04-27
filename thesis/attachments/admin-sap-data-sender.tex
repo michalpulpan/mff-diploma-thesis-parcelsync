@@ -21,7 +21,7 @@ The server is running Ubuntu Server 22.04.3 with Docker version 24.0.7.
 The service container is automatically built as a private image in the Docker Hub \texttt{michalpulpan/milpex-sap-data-sender:latest}.
 
 \subsubsection{Environment variables}
-To ensure the connection to the SAP ServiceLayer Proxy and the platform, it is necessary to run the service with a set of environment variables located in \texttt{/srv/sap-api/.data\_sender.env} in Listings \ref{\label{attachment:data-sender-admin.listings-evn}}.
+To ensure the connection to the SAP ServiceLayer Proxy and the platform, it is necessary to run the service with a set of environment variables located in \texttt{\/srv\/sap-api/.data\_sender.env} in Listings \ref{attachment:data-sender-admin.listings-evn}.
 
 \begin{lstlisting}[language=bash,caption={Data sender environment configuration}]
 ENVIRONMENT=production
@@ -39,7 +39,7 @@ PARCELSYNC_API_KEY=key
 
 \section{Docker Compose}
 In order to orchestrate and simplify the deployment process of both services, it is recommended to use the Docker Compose tool.
-The \texttt{docker-compose.yml} configuration on the deployment node \ref{sec:admin-manual-sap.deployment} is specified in \texttt{/srv/sap-api/docker-compose.yml}
+The \texttt{docker-compose.yml} configuration on the deployment node \ref{sec:admin-manual-sap.deployment} is specified in \texttt{/srv/sap-api/} directory.
 
 The example \texttt{docker-compose.yml} is in Listings \ref{attachment:data-sender-admin.listings-dockercompose}.
 \begin{lstlisting}[caption={Data-sender \texttt{docker-compose.yml}}]
@@ -82,13 +82,12 @@ services:
 \end{lstlisting}
 \label{attachment:data-sender-admin.listings-dockercompose.watchtower}
 
-\texttt{Watchtower} is defined to automatically send Slack notifications using \texttt{shoutrrr} \url{https://containrrr.dev/projects/shoutrrr/} module when new version is pulled. The Slack notification is defined in the \texttt{/srv/monitoring/watchtower/.env} in Listings \ref{attachment:data-sender-admin.listings-env.watchtower}.
+\texttt{Watchtower} is defined to automatically send Slack notifications using notification library named \texttt{shoutrrr} \url{https://containrrr.dev/projects/shoutrrr/} module when new version is pulled. The Slack notification is defined in the \texttt{.env} file located in \texttt{/srv/monitoring/watchtower/}:
 \begin{lstlisting}[caption={Watchtower environment variables}]
 WATCHTOWER_LABEL_ENABLE=1
 WATCHTOWER_NOTIFICATIONS="shoutrrr"
 WATCHTOWER_NOTIFICATION_URL="slack://token:token@channel/"
 \end{lstlisting}
-\label{attachment:data-sender-admin.listings-env.watchtower}
 In order to define other communication channel, please refer to the \texttt{shoutrrr} documentation \url{https://containrrr.dev/projects/shoutrrr/}
 
 \subsection{Working with the containers}
@@ -100,8 +99,10 @@ In order to start the containers in background, go to the folder \texttt{/srv/sa
 In order to stop the containers in background, go to the folder \texttt{/srv/sap-api} and run \texttt{docker compose stop}
 
 \subsubsection{Update the service}
-In order to update the API service, go to the folder \texttt{/srv/sap-api} and run \texttt{docker compose pull data-sender \&\& docker compose --profile prod up -d}.
-This command will pull the latest container from Docker Hub and start the services again.
-However, note that containers should update automatically if there is a new image.
+In order to update the API service, go to the folder \texttt{/srv/sap-api} and run \texttt{docker compose pull api \&\& docker compose up --profile prod -d}.
+The specified command will pull the latest container from the Docker Hub and start the services again.
+Note that containers should update automatically 
+within few minutes if there is a new image.
+
 
 

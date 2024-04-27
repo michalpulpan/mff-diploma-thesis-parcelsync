@@ -1,3 +1,104 @@
 \chapter*{Conclusion}
 \addcontentsline{toc}{chapter}{Conclusion}
 
+% recap - purpose (from intent)
+% we've gone through existing solutions for communication between shipping carriers and e-Commerce companies
+% we've found out that none of the existing solutions integrates the recipient side of the process - customizable tracking page and email notifications with tracking number purposly crafted as a additional post-purchase marketing chanel 
+
+% main goal of this thesis was to implement a multi-tenant SaaS web application for the comunication with shipping carriers.
+% the cherry on the top was an integration with the SAP Business One with custom communication proxy allowing to exchange data between third party services and SAP.
+% This integration provided a great opportunity to test the platform in a real warehouse environment.
+
+% the platform was deployed on AWS with modern stards of a \ac{IaC} maintaining CI/CD processes and is publicly accessible 
+
+In this thesis, we explored the complexities of communication between e-Commerce companies and shipping carriers.
+Our initial research into existing solutions revealed a gap: Most platforms focus primarily on the operational aspects of expedition logistics without integrating any interface for the customer to whom the collected data about their parcel could be presented.
+This provided an opportunity to enhance the post-purchase experience through a customizable tracking page and email notification, serving as a possible new marketing channel.
+
+The primary goal of this thesis was to develop a multi-tenant \ac{SaaS} application that not only handles communication with shipping carriers, but also enhances the customer's engagement with the seller after the purchase. 
+At the same time, we integrated the platform with SAP Business One through a communication proxy we created, which allowed us to exchange data.
+This integration was pivotal, as it allowed us to test the platform in a real warehouse environment, validating its functionality in a real-world setting.
+
+The deployment of the platform on \ac{AWS} uses modern standards of \ac{IaC} and maintaining a \ac{CI}/\ac{CD} processes, highlights its readiness for industry use.
+By using AWS services, the platform benefits from availability, security, and performance, which are critical for handling sensitive business operations.
+
+
+% evaluation
+%-----
+% fulfilled all goals of the platform, by creating a SaaS application usable in a day-to-day scenarios of a small to mid sized companies
+% platform fullfills all the requirements set during the analysis phase
+% we have implemented integration with three carriers (PPL, Česká Pošta, Packeta) and created the platform so that integrating any other carrier is as seamles as possible while hiding the logic from the operator of the platform
+% Also, for the platform integration in a company shipping on avg. over 100 parcels/day, we have developed two additional softwares, one for safe proxiing request to the SAP Business One and second for scheduling the synchronnization tasks for data exchange between platform and SAP.
+% This SAP Proxy API was also used to connect one of the e-shops operated by the company.
+% as of the date of a submission of this thesis, the platform successfuly transfered data for more than 3,5k parcels for more than 3k recipients.
+
+\section*{Evaluation}
+%\addcontentsline{toc}{section}{Evaluation}
+
+
+The platform has successfully achieved all the goals set out at the beginning of this thesis.
+The creation of a \ac{SaaS} platform designed to streamline the communication between e-Commerce businesses and shipping carriers has proven to be a valuable asset in daily operations for both operators and customers.
+
+The platform has met all functional and non-functional requirements identified during the analysis phase.
+We have implemented integrations with three major shipping carriers in the Czech republic - Česká Pošta, Packeta, and PPL.
+Furthermore, the platform is designed for easy integration with additional carriers, ensuring that the integration process is as seamless as possible and abstracts the complexities from the operators.
+To facilitate the integration of the platform within a company environment, two additional software solutions were developed.
+The main is to secure a proxy for \gls{sapb1-servicelayer}, which ensures the safe and reliable handling of requests to the ERP system.
+The second software handles the scheduling of synchronization tasks that enables continuous data exchange between the platform and SAP Business One.
+Despite the fact that it is out of the scope of this thesis, we will mention that the SAP Proxy API was used to connect one of the e-Commerce stores of the company in which the integration took place.
+
+As of the date of this submission, the platform has successfully processed logistics data for more than 3,500 shipments and served more than 3,000 customers since its integration in mid-March 2024.
+This not only shows the success of the platform but also demonstrates the seamless integration and ability used by the operators.
+The successful deployment, integration, and functionality of the platform reflects its robustness and readiness to meet the evolving needs of the e-Commerce sector, opening the doors for future enhancements and wider adoption.
+
+% future work
+%--------
+% even though the platform fullfils everything set at the beginning, it has a much bigger potentional.
+
+\section*{Future work}
+%\addcontentsline{toc}{section}{Future work}
+Although the platform has successfully  met its original objectives, it has potential for expansion and further development.
+Future enhancements can expand its usability and increase its value to a wider range of companies and their use cases.
+
+% carriers
+% the key focus should be implementation of additional carrier integrations, such as DPD, GLS and simmilar operating on the czech market
+\subsubsection*{Carriers}
+Expanding the range of integrated shipping carriers is a key focus for the future development of the platform.
+By integrating additional carries such as DPD, GLS, and others that operate within the Czech market, the platform will be able to meet more logistical needs and requirements.
+It is also important to keep in mind that the Czech market is not the only target market, but it is better to focus on it first and then expand to other markets. 
+Unfortunately, in this domain, often the carriers in question have a bias towards a given country, and therefore, for example, the API communication with Czech PPL owned by a German DHL is different.
+
+% integrations
+% other important factor is to focus on ready made integrations with ERPs and e-Commerce solutions
+% to make it for companies more straight forward and simplier to adopt the platform
+\subsubsection*{Ready-made integrations with external systems}
+Ready-made integrations will simplify the adoption process for companies, making it simpler and more efficient. 
+These integrations should involve automatic data transfers between ERP systems or e-Commerce platforms, thus reducing the barriers for potential users.
+
+% international shipping companies
+% many e-Commerce companies from the Czech republic go international.
+% however, usually the domestic carrier cooperates with a foreign partner with a different brand.
+% this means that, for example, a German customer receives a tracking notification that their shipment was sent via Česká Pošta or PPL, but in fact it will be delivered with a DHL 
+% the platform should be able to recognize this a present the recipient with the actual logo and brand deliveriing the parcel
+\subsubsection*{Domestic carriers for international shipments}
+The platform should improve its support for international shipments managed by domestic carriers that partner with foreign carriers. 
+Often, a shipment sent through a domestic shipping carrier like Česká Pošta or PPL is actually delivered by a partner like DHL in a foreign country.
+The sellers usually also try to display the branding of delivery carriers in the checkout process on their e-Commerce store to make the entire shopping process more trustworthy and local.
+The platform needs to recognise and adapt to these co-operations by displaying the actual carrier's logo and brand information to the recipient. 
+This will ensure transparency and maintain consistency in customer communication for the seller.
+
+% Showing pick-up points with the specifics
+% if the shipment is sent to the pickup point, it would be ideal to present the recipient with an info and location about the actual pickup-point that the parcel will be delivered to
+% this can enahnce customer experience and make the whole page more valuable
+\subsubsection*{Pick-up point details}
+Providing detailed information about the pick-up points could improve the customer experience. 
+If a shipment is sent to the pick-up, the platform could provide detailed information, location, and operating hours. 
+Such features would make the tracking page more informative and valuable for recipients.
+
+% allowing customers to retrieve all their parcels
+% the platform could work as a go-to spot for customers seeing all their incoming and historical parcels at once from the companies integrating our platform
+% this could be a great boon for the beneficiaries the moment the platform starts to be much more adopted.
+\subsubsection*{Customer's parcels overview}
+The platform has the potential to become a central hub for customers to view all their incoming and historical parcels.
+This feature would allow users to manage and track all their shipments in one place, regardless of the carrier or the sender.
+As the platform gains wider adoption, this functionality could become a valuable tool for recipients, enhancing their overall experience and interaction with the platform.

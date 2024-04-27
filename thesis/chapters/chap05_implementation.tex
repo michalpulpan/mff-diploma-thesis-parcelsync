@@ -34,12 +34,19 @@ There is no need to publish internal packages that are used across services, and
 This reduces the risk of the so-called dependency-hell\footnote{A term describing frustration when multiple packages have dependency on incompatible version of the same package.} and simplifies upgrades.
 \ac{CI}/\ac{CD} pipelines can be more efficiently managed when all projects share the same repository. Changes in one part of the platform can trigger build in another, ensuring integration and consistency across the platform. 
 This setup simplifies the process of rolling back the changes in all affected parts when necessary.
-\Ac{monorepo} also ensures that all components of the project are always synchronised with each other. The unified versioning approach arises from the compatibility of the individual services, especially when making API changes or updating shared libraries.
+\Acl{monorepo} also ensures that all components of the project are always synchronised with each other. The unified versioning approach arises from the compatibility of the individual services, especially when making API changes or updating shared libraries.
 On the other hand, \ac{monorepo} also brings some challenges that need to be considered, particularly around the permission management of the repository.
 In the \ac{multi-repo} setup, access can be controlled at the repository level, allowing for straightforward management of who can access what.
 In addition, \ac{multi-repo} might be more appropriate in large-scale projects.
 As the repository grows, so does the time to clone and the consumption of resources for the automatic \ac{CI}/\ac{CD} pipelines.
 However, this can be solved by adopting shallow cloning\footnote{Option in a \texttt{git} allowing to start working in the repository without downloading every version of every file in the entire history.} and defining pipeline strategies to determine which parts of the project need to be rebuilt based on the changes made.
+
+After weighing the benefits and challenges, a \ac{monorepo} approach was chosen for the platform. 
+This decision was driven by the streamlined dependency management and easier integration between services.
+In addition, the simplicity of the deployment process and overall project management significantly influenced this choice. 
+The \ac{monorepo} structure not only simplifies the operational workflow, but also enhances the ability to manage the project efficiently as it scales. 
+This approach ensures that all components of the system are in-sync and can be updated or rolled back simply.
+
 
 \section{Backend Implementation}
 \label{sec:backend-implementation}
@@ -125,7 +132,7 @@ Client-side routing is implemented using the \gls{react-router-dom} library, whi
 The state within the application is managed using combination of React Context API and a local state management through hooks such as \texttt{useState}.
 For global state management, particularly for user authentication and project selection which is critical for maintaining multi-tenancy, the Context API provides a way to pass data through the component tree without having to pass props down manually at every level.
 
-The operators dashboard supports multi-tenancy by storing the tenant-selected project ID within the URL.
+The operators dashboard supports multi-tenancy by storing the currently selected project ID by the tenant within the URL.
 This ensures that all tenant-specific data fetched from the backend are scoped within the selected project.
 For both authentication and project management, dedicated page wrappers were created to handle the front-end logic.
 \texttt{AuthenticatedRoute} manages the routes that require user authentication but aren't meant to render tenant-specific data, only user-specific.
@@ -147,11 +154,11 @@ Context providers are set up at higher levels in the application to store user d
 This method helps to make data updates and access more efficient throughout the application. 
 
 
-\section{Infrastructure as Code}
-\label{sec:infrastructure-as-code}
+%\section{Infrastructure as Code}
+%\label{sec:infrastructure-as-code}
 %  Infrastructure as Code aspect of the project, detailing how it is integrated and managed within the monorepo.
 
-\subsection{IaC Tools and Configuration}
-\label{subsec:iac-tools-configuration}
+%\subsection{IaC Tools and Configuration}
+%\label{subsec:iac-tools-configuration}
 % the tools and technologies used for IaC (Serverless), and how they are configured and utilized within the project.
 

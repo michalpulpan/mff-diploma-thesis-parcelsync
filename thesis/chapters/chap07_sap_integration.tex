@@ -58,17 +58,16 @@ Furthermore, at the time of writing this thesis, \textit{VCZ.WebService} is grad
 \label{subsec:sap-b1-service-layer}
 % Year after finishing the bachaleor's thesis, company moved to the newer version of SAP Business One (v9) which introduced SAP Business One Service Layer which finally brought simple REST-based approach for communicating with SAP with all mappings onto SAP objects and tables
 
-The introduction of \textit{ \gls{sapb1-servicelayer}} marked an evolution in SAP integration capabilities. 
+The introduction of \gls{sapb1-servicelayer} marked an evolution in SAP integration capabilities. 
 Launched with version 9 of \gls{sapb1}, the \textit{Service Layer} is a modern \ac{REST}-based interface that handles communication with SAP systems. 
-The \textit{Service Layer} is controllable only using HTTP operations, making it accessible from any programming environment able to perform HTTP requests, thus vastly broadening its applicability.
-
+The \gls{sapb1-servicelayer} is controllable only using HTTP operations, making it accessible from any programming environment able to perform HTTP requests, thus vastly broadening its applicability.
 It offers a well-documented, standardised way to interact with SAP objects and perform operations similar to the ones in \ac{ERP}'s user interface. 
-Featuring user-defined queries and the ability to control safe patching and posting into the SAP database.
+Featuring user-defined queries and the ability to patch and post securely to the SAP database.
 User-defined queries are an interesting feature. They are normal SQL \texttt{SELECT} queries with the requirement to first be stored as a string in the SAP database and then called by the \gls{sapb1-servicelayer} for data retrieval.
-It is very safe in this way, but fairly limiting and time-consuming for the user. 
-Sadly, authentication is still done using an SAP user licence, generating a short-lived token via \gls{sapb1-servicelayer} introducing a little overhead when using this service.
-Both limitations will be discussed later in this chapter \ref{chap:analysis} including a possible solution.
-The transition from the raw \gls{di-api} adopting \textit{\gls{sapb1-servicelayer}} reflects a broader trend towards web-based APIs for enterprise integration.
+It is safe in this way, but limiting and time consuming for the user. 
+Authentication still relies on the SAP user licence, generating a short-lived token through \gls{sapb1-servicelayer} introducing an overhead when using this service.
+Both limitations will be discussed later in this chapter \ref{chap:analysis} including a solution proposal.
+The transition from \gls{di-api} to adopting \gls{sapb1-servicelayer} reflects a broader trend toward web-based APIs for enterprise integration.
 However, being a first-party solution and providing key features with seamless SAP data manipulation, it still lacks the features needed for fast data queries and it's own authentication. Business does not want to provide it's own licence for which they have to pay extra and raise a security concerns with exposing the licence.
 
 This project proposes a new approach to overcome these challenges.
@@ -98,7 +97,7 @@ This analysis explores the needs for creating a proxy for the \gls{sapb1} servic
     \item Maintain a unified SAP login session across all user interactions.
     \item Forward requests/responses to/from the \gls{sapb1-servicelayer}.
     \item Implement a direct route to execute \texttt{SELECT} database queries bypassing the SAP Service Layer.
-    \item Provide the ability to switch between production and development environments for both the SAP Service Layer and the direct database connector.
+    \item Provide the ability to switch between production and development environments for both the SAP Service Layer and the direct databa-\\se connector.
     \item Implement a simple user management system for CRUD operations on users of the Proxy.
     \item Provide authorization tools for role-based access to create administrators and users.
 \end{enumerate}
@@ -227,14 +226,14 @@ This approach, of course, creates some overhead by calling the API directly.
 
 A series of performance tests were conducted to quantify the difference in response times. 
 The goal was to evaluate efficiency of the Proxy API while handling authentication, authorization and data forwarding while operating remotely. 
-As can be seen in figure \ref{img07:response_times}, on average, direct calls to request the full \texttt{BusinessPartner} object from the \gls{sapb1-servicelayer} were completed in approximately 0.085 seconds. 
-In contrast, calls made through the Proxy API were executed in an average response time of approximately 0,268 seconds.
+As can be seen in figure \ref{img07:response_times}, on average, direct calls to request the full \texttt{BusinessPartner} object from \gls{sapb1-servicelayer} were completed in approximately 85 milliseconds. 
+In contrast, calls made through the Proxy API were executed in an average response time of approximately 268 milliseconds.
 
 Although the Proxy API introduces an additional overhead, resulting in longer response times compared to direct Service Layer interactions, the increase is fairly consistent and within acceptable margins, given the added functionalities and remote location with public domain access which introduces considerable network latency.
 %
 
 \begin{figure}[H]\centering
-\includegraphics[width=140mm]{img/chap07/fig_api_response_direct_response_time.png}
+\includegraphics[width=140mm]{img/chap07/fig_api_response_direct_response_time_ms.png}
 \caption{Response time of direct SAP Service Layer call in contrast of Proxy API}
 \label{img07:response_times}
 \end{figure}
@@ -247,7 +246,7 @@ This approach might initially appear to be an overextension, such as "using a sl
 However, our user base might grow, and even for minimal usage of the production instance, it is necessary to provide reliable persistent storage.
 
 \begin{figure}[H]\centering
-\includegraphics[width=140mm]{img/chap07/fig_db-diagram.jpg}
+\includegraphics[width=140mm]{img/chap07/fig_db-diagram.png}
 \caption{DB diagram of database models}
 \label{img07:db_diagram}
 \end{figure}
@@ -274,7 +273,7 @@ This approach not only speeds up the build process, but it even significantly mi
 \subsubsubsection{Dockerfile strategy}
 The \gls{dockerfile} was divided into multiple phases to optimize the build process
 \begin{itemize}
-    \item \textbf{Dependency Caching:} The initial phase used \texttt{Node.js 18.16.1-bullseye-slim} as the base image to cache package.json file.
+    \item \textbf{Dependency Caching:} The initial phase used \texttt{Node.js 18.16.1} in the \texttt{bullseye-slim} release as the base image to cache package.json file.
     \item \textbf{Build Process:} A temporary image created in the first phase is reused to install dependencies and build the Proxy API using \gls{esbuild}, JavaScript bundler, and minifier. 
     \item \textbf{Production Image:} The final image was prepared using the same Node.js base image as in the first phase. From this image, all development dependencies and source code were removed to ensure that only necessary components for running the application were included.
 \end{itemize}

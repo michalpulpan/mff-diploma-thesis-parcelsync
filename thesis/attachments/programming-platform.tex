@@ -415,11 +415,63 @@ Steps to integrate a new carrier:
 \begin{enumerate}
     \item \textbf{Create carrier type:} Create new value in \texttt{ShippingCarrierId} enumeration in \path{config/types.ts}.
     \item \textbf{Define carrier type:} In the central platform configuration \path{app.config.ts} create a entry in the \texttt{shippingCarriers} array containing the newly defined carrier with all the necessary authentication and generic fields.
-    \item \textbf{Defining carrier module:} To create the implementation of the carrier API, it is necessary to create a new file in \path{src/modules/carrier} on the backend that contains a class that implements \texttt{AbstractCarrierModule}.
+    \item \textbf{Defining carrier module:} To create the implementation of the carrier API, it is necessary to create a new file in \path{src/modules/carrier} in the backend that contains a class that implements \texttt{AbstractCarrierModule}.
     \item \textbf{Register the carrier:} In \path{src/services/carrier-service.ts} on backend in the method \texttt{\_createCarrierModule} register the newly created module under the \texttt{ShippingCarrierId} value.
 \end{enumerate}
 
 With these steps involved, a new carrier should be integrated into the platform.
+
+\subsection{Database migrations}
+A database migration refers to version control of a database schema.
+Database migrations produce incremental changes to the schema.
+Sometimes, these changes can be reversible. 
+Migrations can create a table, add a column, remove it, rename it, or change the type.
+
+All migrations are stored in the \texttt{lib/db/migrations.ts} file within the \texttt{api} directory.
+Each migration is inside an array that fully respects the format expected by \gls{knex} library \href{https://knexjs.org/guide/migrations.html#custom-migration-sources}{specified in the \gls{knex} documentation}.
+The migration might look like this:
+\begin{lstlisting}[language=javascript,caption={Example of a migration from \texttt{migrations.ts}}]
+...
+{
+    name: '16_create_shipment_analytics_events_table',
+    up: async (knex: Knex) => {
+      await knex.schema.createTable('shipment_analytics_events', (table) => {
+        table.uuid('id').defaultTo(knex.raw('uuid_generate_v4()')).primary();
+        table
+          .uuid('shipmentId')
+          .notNullable()
+          .index()
+          .references('id')
+          .inTable('shipments')
+          .onUpdate('CASCADE')
+          .onDelete('CASCADE');
+        table.enum('eventType', ['view', 'click']).notNullable().index().defaultTo('view');
+        table.jsonb('eventData').notNullable();
+        table.timestamps(true, true);
+      });
+      return knex;
+    },
+    down: async (knex: Knex) => {
+      await knex.schema.dropTable('shipment_analytics_events');
+      return knex;
+    },
+  },
+...
+\end{lstlisting}
+
+Running migrations in both local and AWS environment is very straightforward.
+We can utilise the following commands which are environment-biased and will run migrations only within the specified environment as long as the database is accessible.
+Go to the \texttt{services/api} directory and run:
+\begin{itemize}
+    \item \texttt{yarn migrate:up:<environment>}: Runs the first unapplied migration in the list.
+    \item \texttt{yarn migrate:down:<environment>}: Reverts the last migration applied.
+    \item \texttt{yarn migrate:latest:<environment>}: Runs all unapplied migrations.
+\end{itemize}
+
+Where the environment can be one of: \texttt{ local | staging | production}.
+
+However, in AWS environments, we recommend leaving migrations for the GitHub action triggered on every push to the \texttt{main} branch.
+
 
 \subsection{Adding new environment variables}
 Adding new environment variable to the whole platform is a very straightforward process.

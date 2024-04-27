@@ -60,10 +60,10 @@ Due to that, the tracking numbers for the carriers are inserted into different c
 Hence why, the cleanest and well maintainable approach was to implement this completely separately as isolated scripts.
 
 \section{API fetchers}
-In order to call SAP Proxy and the public API of the platform, two \texttt{AxiosInstance} were created in \texttt{src/utils/}.
+In order to call SAP Proxy and the public API of the platform, two instances of \texttt{Axios} were created in \texttt{src/utils/}.
 Each of them calls different endpoints and handles authentication a little differently.
 \begin{itemize}
-    \item \textbf{\texttt{parcelsyncApi.ts}:} Defines \texttt{AxiosInstance} to call platform API with supportive scripts to generate seller identification and defines several groups of parcel statuses to help with recognition whether parcel was delivered, etc.
+    \item \textbf{\texttt{parcelsyncApi.ts}:} Defines \texttt{AxiosInstance} to call the API of the platform with support scripts to generate seller identification and defines several groups of parcel statuses to help with recognition whether the parcel was delivered, etc.
     \item \textbf{\texttt{sapApi.ts}:} Defines \texttt{AxiosInstance} to call SAP Proxy.
 \end{itemize}
 
