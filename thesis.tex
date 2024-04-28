@@ -170,6 +170,7 @@ captionpos=b
 
 % Thesis title in English (exactly as in the formal assignment)
 \def\ThesisTitle{Development and deployment of SaaS solution for logistics automation in e-commerce}
+\def\ThesisTitleCZ{Vývoj a nasazení SaaS řešení pro automatizaci logistiky v \\ e-commerce}
 
 % Author of the thesis
 \def\ThesisAuthor{Bc. Michal Půlpán}
@@ -181,20 +182,25 @@ captionpos=b
 % (according to the Organizational Structure of MFF UK in English,
 % or a full name of a department outside MFF)
 \def\Department{Department of Software Engineering}
+\def\DepartmentCZ{Katedra softwarového inženýrství}
 
 % Is it a department (katedra), or an institute (ústav)?
 \def\DeptType{Department}
+\def\DeptTypeCZ{Katedra}
 
 % Thesis supervisor: name, surname and titles
 \def\Supervisor{Mgr. Petr Škoda, Ph.D.}
 
 % Supervisor's department (again according to Organizational structure of MFF)
 \def\SupervisorsDepartment{Department of Software Engineering}
+\def\SupervisorsDepartmentCZ{Katedra softwarového inženýrství}
 
 % Study programme and specialization
 \def\StudyProgramme{Computer Science}
 \def\StudyBranch{Software and Data Engineering (ISDP)}
 
+\def\StudyProgrammeCZ{Informatika}
+\def\StudyBranchCZ{Softwarové a datové inženýrství (ISDP)}
 % An optional dedication: you can thank whomever you wish (your supervisor,
 % consultant, a person who lent the software, etc.)
 \def\Dedication{%
@@ -205,11 +211,16 @@ Your unwavering support, patience, and tolerance for my studies, this thesis, an
 }
 
 % Abstract (recommended length around 80-200 words; this is not a copy of your thesis assignment!)
-\def\Abstract{\input{thesis/abstract-en}}
+\def\Abstract{\input{thesis/abstract_text-en}}
+\def\AbstractCZ{\input{thesis/abstract_text-cz}}
 
 % 3 to 5 keywords (recommended), each enclosed in curly braces
 \def\Keywords{%
-{e-commerce} {logistics} {process automation} {web application} {software as a service} {deployment}
+{e-commerce} {logistics} {process automation} {web application} {software as a service}
+}
+
+\def\KeywordsCZ{%
+{e-commerce} {logistika} {automatizace procesů} {webová aplikace} {software as a service}
 }
 
 %% The hyperref package for clickable links in PDF and also for storing
