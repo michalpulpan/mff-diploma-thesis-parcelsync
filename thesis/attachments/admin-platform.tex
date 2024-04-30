@@ -14,12 +14,6 @@ Before setting up the local development environment, ensure that you have the fo
     \item \textbf{Yarn}
 \end{itemize}
 
-\subsection{Running database}
-Navigate to the source directory containing the \texttt{docker-compose.yml} file which includes the service definition for the database.
-Run the following command to start the service:
-\texttt{docker compose up -d}.
-This command will pull the necessary images and create container for your database and start the service on the background.
-
 \subsection{Running backend and frontend services}
 \begin{enumerate}
     \item Once you have \texttt{yarn} and \texttt{Node.js} installed - preferably by using some package manager like \texttt{asdf}.
@@ -30,17 +24,26 @@ This command will pull the necessary images and create container for your databa
 JWT_SECRET_KEY=<key>
 JWT_ACCESS_LIFESPAN_SECONDS=3600
 JWT_REFRESH_LIFESPAN_SECONDS=604800
-AWS_ACCESS_KEY_ID=<access_key_id>
-AWS_SECRET_ACCESS_KEY=<secret_access_key>
+AWS_ACCESS_KEY_ID=<aws_access_key_id>
+AWS_SECRET_ACCESS_KEY=<aws_secret_access_key>
 AWS_SECRET_KEY_ID=<secret_key_id>
-PARCELSYNC_AWS_ACCESS_KEY_ID=<parcelsync_access_key_id>
-PARCELSYNC_AWS_SECRET_KEY_ID=<parcelsync_secret_key_id>
+PARCELSYNC_AWS_ACCESS_KEY_ID=<aws_access_key_id>
+PARCELSYNC_AWS_SECRET_KEY_ID=<aws_secret_access_key>
 FROM_EMAIL=<from_email>
 AWS_ACCOUNT=<aws_account>
 AWS_S3_ASSETS_BUCKET=<s3_bucket_url>
 \end{lstlisting}
-    \item Run \texttt{yarn start} and all three services (both frontends and API) should start up.
+    \item Run \texttt{yarn start:dev} and all three services (both frontends and API) \\should start up with database.
 \end{enumerate}
+The \texttt{aws\_access\_key\_id} variable appears twice in the environment settings due to differing requirements for its usage. Firstly, it is required in its conventional format as recognised by AWS services. 
+Secondly, a distinct instance of this variable is necessary because in the \texttt{generate-signed-url.ts} the call of AWS S3 cannot adhere to the AWS naming conventions and hence requires a separate declaration of the \texttt{aws\_access\_key\_id} variable in the environment configuration.
+
+
+\subsection{Running database}
+Navigate to the \texttt{services/api} directory containing the \texttt{docker-compose.yml} file which includes the service definition for the database.
+Run the following command to start the service:
+\texttt{yarn dependencies:start}.
+This command will pull the necessary images and create container for your database and start the service on the background.
     
 
 \section{Administration Manual - AWS Infrastructure}
@@ -207,7 +210,7 @@ This function will ensure that the requests of other languages other than the pr
 \begin{enumerate}
     \item Navigate to the newly deployed AWS \ac{S3} bucket used to store public assets.
     \item Go to the \textit{Permissions} tab and click on \textbf{Edit} button in section \textit{Block public access (bucket settings)}
-    \item Here uncheck all the check-boxes listed (\textit{Block all public access} and save changes as in the Figure \ref{:admin-manual-aws.s3.public}.
+    \item Here uncheck all the check-boxes listed (\textit{Block all public access} and save changes as in the Figure \ref{img:admin-manual-aws.s3.public}.
     \item Now within the \textit{Permissions} tab, scroll down to \textit{Object Ownership} and click the \textbf{Edit} button. 
     \item Here select \textbf{ACLs enabled} and in the \textit{Bucket Ownership} section select \textbf{Bucket owner preferred}. Your setting should look like in Figure \ref{img:admin-manual-aws.s3.acls} and click \textit{Save changes}.
 \end{enumerate}

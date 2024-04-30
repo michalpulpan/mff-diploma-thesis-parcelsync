@@ -5,7 +5,7 @@
 % the decision was that the external software will be in charge of the synchronizations (call Parcelsync directly when needed, no webhooks or calls from the Parcelsync)
 
 In the modern landscape of daily business operations, seamless integration between external software solutions and the core \ac{ERP} systems is not just a convenience; it is a necessity.
-As the number of external services needed for businesses to operate grows rapidly, comes the need to integrate those with minimising tight coupling and complex (hard to maintain) dependencies.
+As the number of external services needed for businesses to operate grows rapidly, comes the need to integrate those with minimising tight coupling and complex unmaintainable dependencies.
 \gls{sapb1}, a leading \ac{ERP} solution for small to medium companies, offers robust and unimaginable capabilities, but presents unique challenges when it comes to integration with third-party software. 
 
 This chapter dives into the complexity of establishing a direct connection with \gls{sapb1} and its underlying database. 
@@ -76,7 +76,7 @@ By introducing a publicly accessible solution through a reverse proxy equipped w
 \section{\gls{sapb1-servicelayer} Proxy with direct Database connector}
 \label{sec:sap-b1-service-layer-proxy}
 % description of the SAP Business One Server Layer Proxy which was created so that company can simply integrate Parcelsync. 
-Integrating \gls{sapb1} with external applications - such as e-Commerce platforms, different warehouse solutions, and our platform - presents complex challenges that existing  approaches fail to address. 
+Integrating \gls{sapb1} with external applications such as e-Commerce platforms, different warehouse solutions, and our platform - presents complex challenges that existing  approaches fail to address. 
 These challenges call for a new solution (or at least an enhancement of the existing one) that allows secure access to the Service Layer over the Internet without compromising SAP credentials and thus creating SAP user accounts for each user of the API.
 This solution should not only allow new integration capabilities but also ensure that business can maintain the security and integrity of the \gls{sapb1} and it's database.
 

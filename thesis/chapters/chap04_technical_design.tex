@@ -29,9 +29,8 @@ Let us dive into more detail and reasoning behind these decisions.
 In the world of full-stack web development, TypeScript has evolved as a popular choice for both frontend and backend development, largely due to its widespread and support from community.
 The decision to use TypeScript across the entire stack is aligned with the project's goals of scalability, maintainability, and productivity.
 
-Static Type Checking with TypeScript offers significant advantages in terms of code quality and reliability.
+Static type checking with TypeScript offers significant advantages in terms of code quality and reliability.
 It makes TypeScript a more verbose and complex language to write, but in the long run and in such a large project it helps to create a more self-explanatory code-base.
-
 One of the primary reasons for selecting TypeScript is its ability to provide a similar developer experience across both the frontend and backend.
 This enables to easily transition between working on a client and server-side code with minimal context switching.
 
@@ -54,7 +53,7 @@ However, TypeScript introduces static typing, allowing developers to specify var
 \medskip
 \begin{lstlisting}[caption=TypeScript static typing example]
 let myVar: string = 'Hello, world!';
-myVar = 100; // Error: Type 'number' is not assignable to type 'string'.
+myVar = 100; // Error: Type number is not assignable to string.
 \end{lstlisting}
 
 JavaScript lacks a built-in mechanism for enforcing the structure of objects. This can lead to different inconsistencies in object shapes during the execution.
@@ -89,7 +88,7 @@ const a: IPerson[] = [
     }, 
     { 
         name: 'Alice' 
-    } // Property 'age' is missing in type '{ name: string; }' but required in type 'IPerson'.
+    } // Property age is missing in type { name: string } but required in type IPerson.
 ]
 \end{lstlisting}
 
@@ -146,7 +145,6 @@ They usually rely on the extended JavaScript so-called JSX syntax.
 As stated in the React documentation \cite{JSX-react-docs}, JSX allows one to write HTML-like markup inside a JavaScript file, keeping the rendering logic and content in the same place.
 
 As already mentioned, React was the go-to frontend library chosen for the platform. 
-
 Given its large community that contributes to its large number of tools, supportive libraries, and resources, it is a strategic choice.
 There are two main approaches to working with React. Let us take a look at both of them.
 
@@ -278,7 +276,7 @@ In this example, we can see a sample GET route with three chained middlewares be
 For managing the database and building data models within \gls{koa} backend,\\ \gls{knex} and \gls{objection} was used.
 \gls{knex} serves as a query builder, allowing for direct interactions with the database.
 Used together with \gls{objection}, an \\ \ac{ORM} built on top of \gls{knex}, it is an efficient way to manage and interact with database entities in an object-like structure.
-Implementation details with examples will be explored in the following chapter, focusing on the implementation of the application itself.
+Implementation details will be explored in the following chapter \ref{chap:implementation} as well as in the programming documentation found in \ref{attachments:programming-platform}, focusing on the implementation of the application itself.
 
 
 \subsubsection{Runtime}
@@ -302,7 +300,6 @@ Given that \gls{postgresql} was a good choice given its performance and ability 
 % discussion about multi-tenancy architectural approaches and what is multi-tanency in general.
 Multi-tenancy refers to a software architecture approach, designed for cost efficiency and ease of maintenance.
 It's key principle is to simulate, otherwise needed on-premise deployment or a dedicated instance of the software, on a single instance.
-
 This model works with the premise that the data are kept isolated from each other using several possible approaches.
 Let us define key terms and take a look at possible approaches to this interesting architectural model.
 
@@ -312,7 +309,7 @@ Let us define key terms and take a look at possible approaches to this interesti
     Usually, tenants are from different legal entities; hence, a tenant can be a company, for example.
     \item \textbf{Single-tenancy:} For completeness and a better understanding of the forthcoming information, it is good to define the term "single-tenancy".
     It is an architecture in which a single instance of a software application and supporting infrastructure serves one tenant.
-    However, this approach is usable for a \ac{SaaS} software, however, comes with a cost where for each tenant it is necessary to pay for additional infrastructure resources.
+    This approach is usable for a \ac{SaaS} software, however, comes with a cost where for each tenant it is necessary to pay for additional infrastructure resources.
     In practice, this approach is commonly used when moving old on-premise software to the cloud with a dedicated deployment pipeline that sets up each instance based on tenant demand. 
 \end{itemize}
 

@@ -11,7 +11,6 @@ This chapter will explore the structure and organisation of the project.
 We will delve into the backend implementation, focusing on how it manages multi-tenancy - a feature allowing the system to serve multiple tenants without sacrificing security.
 Special attention will be paid to the integration of carrier modules, which are essential for the platform.
 Moreover, the chapter will cover the implementation strategies for web clients, developed with ReactJS.
-Finally, we will discuss the \ac{IaC} approach that underlies the deployment and operational infrastructure of the platform.
 
 
 \section{Project Structure}
@@ -77,7 +76,7 @@ The key part of the backend is handling authentication and authorisation.
 In order to respect the \ac{DRY} principles, both of these operations are implemented as KoaJS middlewares.
 Given our deployment strategy described in Chapter \ref{chap:deployment}, we could have gone in the direction of using an \gls{aws-cognito} as authentication.
 However, this would bring vendor lock-in in a fairly critical part of the application logic.
-It would be a reversible solution, but it could pose a serious problem and interfere with the whole system.
+It would be a reversible solution, but it could present a serious problem and interfere with the whole system.
 That is something we have decided to put off; hence, custom middleware was implemented to verify access tokens sent with each protected request, and methods handling token generation and regeneration.
 
 After authorisation and authentication, in tenant bias endpoints with a parameter containing project ID in the route, the parameter is stored and used strictly for data retrieval.
@@ -93,7 +92,7 @@ It simplifies the addition of new shipping carriers, as only a new module inheri
 % email sender is outsourced within the infrastructure. 
 % It is AWS SES called via `import { SendEmailCommand, SESv2Client } from '@aws-sdk/client-sesv2';`
 Email communication is an integral part of the platform, used for notifications and confirmations. 
-The email sending functionality is externalised through Amazon \gls{aws-ses}, leveraging the \texttt{SendEmailCommand} and \texttt{SESv2Client} from the \texttt{@aws-sdk/client-sesv2 package}. This approach decouples the email sending capability from the application logic, allowing scalable and reliable email delivery managed by the AWS infrastructure.
+The email sending functionality is externalised through Amazon \gls{aws-ses}, leveraging the \texttt{SendEmailCommand} and \texttt{SESv2\-Client} from the \texttt{@aws-sdk/client-sesv2 package}. This approach decouples the email sending capability from the application logic, allowing scalable and reliable email delivery managed by the AWS infrastructure.
 
 \subsection{Generating waybills}
 % waybills are generated using `import pdf from 'pdfjs';` which is a bit harder to use for example for table data, etc.
@@ -106,7 +105,7 @@ The backend utilises the \gls{pdfjs} library to create PDF documents.
 This library was selected after evaluating alternatives such as \gls{jsPDF} and \gls{puppeteer}.
 However, these alternatives are based on a browser rendering.
 This significantly simplifies the whole development process since we can render and export HTML templates.
-However, being browser-based also meant a heavy reliance on a dependency such as \Gls{Chromium} foe example. 
+However, being browser-based also meant a heavy reliance on a dependency such as \Gls{Chromium} for example. 
 This posed a challenge in the Lambda environment due to execution time and resource constraints, including dependencies.
 The \gls{pdfjs} library, on the contrary, offers a more lightweight solution that fits well within the serverless architecture, providing quick and efficient PDF generation without the overhead associated with browser-based rendering engines.
 
@@ -128,7 +127,6 @@ This section will discuss the client-side part of our platform, focusing on rout
 \label{subsec:client-side-routing-state}
 % Elaborate on the implementation of client-side routing, state management, and any other significant aspects of the web client application.
 Client-side routing is implemented using the \gls{react-router-dom} library, which manages page navigation between different components without refreshing the page. 
-
 The state within the application is managed using combination of React Context API and a local state management through hooks such as \texttt{useState}.
 For global state management, particularly for user authentication and project selection which is critical for maintaining multi-tenancy, the Context API provides a way to pass data through the component tree without having to pass props down manually at every level.
 

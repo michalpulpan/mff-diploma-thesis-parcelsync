@@ -147,7 +147,6 @@ However, note that containers should update automatically if there is a new imag
 \section{Reverse-proxy}
 A reverse-proxy used for deployment is Nginx version 1.18.0.
 Since there is a domain routed directly onto the server, we can use Nginx for internal routing as a reverse-proxy.
-
 The standard Nginx definition is found by convention in \texttt{sites-available} within the Nginx specific folder \texttt{/etc/nginx}.
 The route is then symlinked to the \texttt{/etc/nginx/sites-enabled} folder using the following command:
 \begin{lstlisting}[caption={Command to create symbolic link by Nginx convention}]

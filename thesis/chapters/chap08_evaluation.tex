@@ -158,8 +158,6 @@ The operational performance of the platform has been robust, supported by the de
 Analysis of the Lambda invocation duration in Figure \ref{img08:plot:lambda_handler_durations} reveals that the average response time during peak periods can reach up to 4 seconds on average, which is still within the Lambda tolerance.
 So, just raising the timeout should be enough for these special cases described below.
 However, normally, this number is well below 250 miliseconds.
-\ref{img08:plot:tracking_page_device_type} show something different.
-Phone users are certainly not insignificant, but the desktop leads the way.
 \begin{figure}[H]\centering
 \includegraphics[width=140mm]{img/chap08/lambda_handler_durations.png}
 \caption{Duration of backend Lambda handler}
@@ -183,9 +181,9 @@ In contrast, the new platform offers flexibility and remote accessibility, allow
 This improvement in accessibility and user experience is complemented by the extensibility of the platform. 
 The architecture of the new system is designed to facilitate integration with different carriers and allow for very straightforward integrations with new carriers and updates within existing APIs. 
 This capability is particularly valuable in today's dynamic business environment, where shipping conditions and costs can change frequently, making it unsuitable for the business.
-The platform design allows the business to quickly adapt to these changes by enabling a seamless transition to different carriers as needed, as long as the implementation of the carrier is present.
+The platform design allows the business to quickly adapt to these changes by enabling a seamless transition to different carriers as needed, as long as the carrier implementation is present.
 Or, the business can request the implementation of a new carrier, which generally should be a complex problem given the platform carrier integration design. 
-This adaptability not only provides operational resilience, but also gives the company a competitive advantage in logistics management and enhances its ability to respond effectively to market changes and customer needs.
+This adaptability not only provides operational flexibility, but also gives the company a competitive advantage in logistics management and enhances its ability to respond effectively to market changes and customer needs.
 
 
 \subsection{Achievement of project goals}

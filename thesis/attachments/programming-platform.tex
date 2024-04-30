@@ -10,7 +10,7 @@ The third \ref{attachments:programming-platform.technical-design} Section will p
 Next, the fourth Section \ref{attachments:programming-platform.backend} will introduce the backend of the platform, including segmentation of project parts and technical details such as authorization, authentication, data filtering and general communication with shipping carriers.
 In the fifth Section \ref{attachments:programming-platform.frontend} we will present frontends with several decision and key elements influencing the project.
 Next, in the Section \ref{attachments:programming-platform.integrating}, we will delve into a way how to integrate new features, such as shipping carriers, but also essential things such as adding new environment variable.
-In the seventh Section \ref{attachments:programming-platform.infrastructure} several important infrastructure points from programmers perspective will be presented.
+In the Section \ref{attachments:programming-platform.infrastructure} several important infrastructure points from programmers perspective will be presented.
 And lastly, in the Section \ref{attachments:programming-platform.docs}, some information regarding user documentation will be provided. 
 
 
@@ -54,10 +54,10 @@ The Infrastructure folder contains all the necessary setups for the deployment i
 The \texttt{apps} folder contains the deployment entry point file. It is where all \texttt{stacks} are initialised for the requested environment.
 In the \texttt{constructs} we can find several AWS Constructs.
 These are classes inherited from \texttt{Construct} from package \texttt{constructs} defining so-called "piece of system state".
-In our case, the constructs are used to define the database, the gateways, the policies, and the S3 bucket for the assets.
+In our case, the constructs are used to define the database, the gateways, the policies, and the S3 bucket for the user uploaded assets.
 And lastly, \texttt{stacks} is where the actual services are defined.
 Using data from \texttt{aws-cdk-lib.Stack}, they define actual CloudFormation stacks.
-Having said that, there is a stack for api, dashboard (webapp), tracking page, documentation, and stack for certificates.
+Having said that, there is a stack for api, dashboard (webapp), tracking page, documentation, and a specific stack for certificates.
 
 
 
@@ -71,7 +71,7 @@ The root \texttt{package.json} includes scripts and dependencies applied through
 \label{attachments:programming-platform.coding-convention}
 \subsection{Style guide}
 It is recommended to adhere to the Airbnb JavaScript and React style guide for both backend and frontend code.
-Including consistent use of modern JavaScript syntax and readable formatting.
+Including consistent use of modern Java\-Script syntax and readable formatting.
 Please use linter regularly, each workspace within the repository contains \texttt{eslint} which can be run by \texttt{yarn check:lint}.
 \subsection{File naming}
 It is recommended to use \texttt{kebaba-case} for file names.
@@ -84,7 +84,7 @@ However, in the React frontend codebase, \texttt{PascalCase} is usually used exc
 The platform overview can be seen on Figure \ref{imgdocs:programming-platform.technical-design}.
 
 \begin{figure}[H]\centering
-\includegraphics[width=100mm]{img/chap04/fig_architecture.png}
+\includegraphics[width=140mm]{img/chap04/fig_architecture.png}
 \caption{C4 overview of the architecture}
 \label{imgdocs:programming-platform.technical-design}
 \end{figure}
@@ -180,7 +180,7 @@ Shipment is a complex object constructed from:
 \end{itemize}
 
 \begin{figure}[H]\centering
-\includegraphics[width=80mm]{img/docs/fig_db_schema_shipments.png}
+\includegraphics[width=90mm]{img/docs/fig_db_schema_shipments.png}
 \caption{Database schema diagram of \texttt{Shipments} related tables}
 \label{imgdocs:db-schema-shipments}
 \end{figure}
@@ -219,7 +219,7 @@ Each user can have a single role, being either:
 \subsection{Request body validation}
 Validating request body on backend is a necessity.
 Improve the integrity of the data and the security of the entire system.
-For this task, a \texttt{Joi} library was chosen.
+For this task, a \gls{joi} library was chosen.
 It allows us to simply describe the schema of request body and validate against it.
 
 For an endpoint requiring request body validation it is necessary to define the schema.
@@ -357,14 +357,17 @@ The integration with PPL similarly employs an asynchronous approach to data hand
  An essential feature of the PPL integration is the handling of shipping labels. 
  Labels are generated at the PPL API side during the data transfer process and are crucial for the physical shipping of parcels. 
  To accommodate the needs of users who may not immediately retrieve these labels, they are stored as an URL reference the shipment metadata and can be accessed at any point within 20 days after the data transfer. 
- This solution ensures that labels are available whenever needed.
+ This solution ensures that labels are available whenever needed during the period.
+ The only downside is that the labels are returned one by one from the PPL.
+ So when requesting labels from multiple parcels, it is necessary to obtain each label separately as a JPEG and then construct a single PDF with 4 labels per page using \gls{pdf-lib}.
+ The method responsible for this operation is \texttt{\_mergeLabels} defined in \texttt{pplModule}.
 
 \subsection{Generating PDF waybills}
 % generating waybills is neccessary feature for every shiper in order to have paper in hand if something weird happens.
 % for Packeta, the waybill contains generated barcode which is loaded by the carrier for faster parcel pickup
 % it is generated using `import pdf from 'pdfjs'` library as an A4 PDF with custom OpenSans font
 Generating PDF waybills meant as a list of shipped parcels with courier's signature is a necessary feature for any shipping operation, providing a document that can serve as a reliable backup in case of discrepancies or issues during the shipping process.
-Waybills are generated as A4-sized PDFs using the \texttt{pdfjs} library.
+Waybills are generated as A4-sized PDFs using the \gls{pdfjs} library.
 The process of generating these documents is designed to be flexible and to accommodate various needs and specifications required by different carriers and regulations. 
 Specifically for Packeta, the waybills include a uniquely generated barcode from the Packeta API. 
 This barcode facilitates a faster and more efficient parcel pickup process, as the carrier scans it to verify and process the shipment. 
@@ -390,7 +393,7 @@ Elevating Context API principles: passing data through components is done mostly
 This enables to toggle the loading mode, as well as to manage currently selected project in order to differentiate tenants.
 
 \subsection{Routing}
-Routing is achieved using \texttt{react-router-dom} package where every protected project route is defined by the project ID on the path. 
+Routing is achieved using \texttt{react-router-dom} package where every protected project route is defined by the project ID in the path. 
 Each of these protected paths is wrapped in the \texttt{AuthenticatedRoute} component that controls the validity of the user on every request.
 
 \subsection{Data fetching}
@@ -405,7 +408,7 @@ Upon completion of an API call, feedback is provided through toast notifications
 \section{Integrating new features}
 \label{attachments:programming-platform.integrating}
 This section provides guidelines for the integration of new features into the platform. 
-Covers the addition of new logistics carriers, the management of environment variables, the handling of front-end metadata, and the implementation of localisation strategies.
+Covers the addition of new logistics carriers, the management of environment variables, the handling of frontend metadata, and the implementation of localisation strategies.
 
 \subsection{Adding carriers}
 Integrating a new carrier into the platform involves several key steps to ensure a seamless interaction between the platform and the carrier's services. 
@@ -418,7 +421,6 @@ Steps to integrate a new carrier:
     \item \textbf{Defining carrier module:} To create the implementation of the carrier API, it is necessary to create a new file in \path{src/modules/carrier} in the backend that contains a class that implements \texttt{AbstractCarrierModule}.
     \item \textbf{Register the carrier:} In \path{src/services/carrier-service.ts} on backend in the method \texttt{\_createCarrierModule} register the newly created module under the \texttt{ShippingCarrierId} value.
 \end{enumerate}
-
 With these steps involved, a new carrier should be integrated into the platform.
 
 \subsection{Database migrations}
@@ -517,6 +519,25 @@ On the frontend, the process to upload a file involves:
 This setup is beneficial for use cases where clients need to upload images or documents related to project sellers, such as banners, logos, or other relevant files. 
 The use of AWS S3 ensures scalable and secure storage, while presigned URLs keep AWS credentials safe and provide a method to control access rights on a per-use basis.
 
+\subsection{Sending e-mails}
+The functionality for sending emails is defined in \texttt{communication-service.ts} within \texttt{sendEmail} method.
+Using \gls{aws-ses} to handle outgoing emails.
+This method is responsible for constructing and sending an email through \gls{aws-ses}. It is designed to be flexible, supporting both plain text and HTML email bodies, as well as additional email parameters such as CC, BCC, and reply-to addresses.
+The method accepts the following parameters to construct the email:
+\begin{itemize}
+    \item \textbf{email (string)}: The recipient's email address.
+    \item \textbf{subject (string)}: The subject line of the email.
+    \item \textbf{textBody (string)}: The plain text body of the email. This is the fallback option for clients that do not support HTML.
+    \item \textbf{fromOrganization (string)}: The email address of the sender. By default, this is set to the environment variable \texttt{ORGANIZATION}, which should be configured in the system environment settings.
+    \item \textbf{htmlBody (string)}: An optional parameter for the HTML body of the email. If provided, it allows the email to include HTML formatting.
+    \item \textbf{replyTo (string)}: An optional parameter specifies the reply-to email address.
+    \item \textbf{bccAddresses (array of strings)}: An optional array of BCC (blind carbon copy) addresses for sending the email to additional recipients without disclosing their identities to other recipients.
+\end{itemize}
+The method initialises a connection to \gls{aws-ses} using \gls{aws-sdk}. 
+The \gls{aws-ses} client is configured with the necessary credentials and region information, which are obtained from the environment settings of the platform. Once the client is initialised, the \texttt{sendEmail} method constructs the email parameters into the format required by \gls{aws-ses} and sends the email using the \texttt{SendEmailCommand} from the \gls{aws-sdk}.
+
+
+
 
 \subsection{Time consuming functions}
 In the platform architecture, certain operations, such as updating shipment statuses with carriers like Česká Pošta, are time-consuming and require handling that goes beyond the typical execution time limits of AWS Lambda functions. 
@@ -528,7 +549,7 @@ The process is divided into two distinct Lambda functions:
 \end{enumerate}
 
 \subsubsection{Scalability with Step Functions}
-With the platform's user base expanding and the volume of shipments growing, the existing method of handling status updates through separate Lambda functions might not scale efficiently. Transitioning to \gls{step-functions} could offer a more robust solution by orchestrating these operations more dynamically and resiliently.
+With the platform's user base expanding and the volume of shipments growing, the existing method of handling status updates through separate Lambda functions might not scale efficiently. Transitioning the current setup to \gls{step-functions} could offer a more robust solution by orchestrating these operations more dynamically and resiliently.
 
 
 

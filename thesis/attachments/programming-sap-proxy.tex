@@ -57,7 +57,6 @@ The folder structure of the program is meant to group components of similar purp
 .2 router.ts.
 .2 server.ts.
 }
-
 We will go through the most important directories and files.
 
 % Moved before folder structure
@@ -101,7 +100,7 @@ The usual workflow of these methods defined in \texttt{src/actions} is to retrie
 The service usually returns some data which are then passed into the response.
 
 \subsection{Entities}
-Entities defined in SAP Proxy are TypeScript classes that extend \texttt{Model} from \texttt{objection} and are directly mapped to the database using modules \texttt{knex} and \texttt{objection}.
+Entities defined in SAP Proxy are TypeScript classes that extend \texttt{Model} from \gls{objection} and are directly mapped to the database using modules \gls{knex} and \gls{objection}.
 
 \subsubsection{\texttt{SAPToken}}
 Entity used for caching the login token for SAP ServiceLayer. 
@@ -130,7 +129,7 @@ Containing fields such as:
 Services represent the place where data communication between the application and the database or the SAP ServiceLayer is performed.
 
 \subsubsection{\texttt{sap-service}}
-This service represents the connector to both the SAP ServiceLayer and \texttt{SAPToken} entity in the database.
+This service represents connector to both the SAP ServiceLayer and \texttt{SAPToken} entity in the database.
 It is located at \texttt{src/services/sap-service.ts}.
 The service methods for the SAP ServiceLayer login for token retrieval, token caching in the database for each environment, and proxy call from method \texttt{proxy} in \texttt{SAPService} while returning \texttt{Stream} object.
 

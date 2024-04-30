@@ -26,9 +26,7 @@ The \texttt{Data-sender} is designed with two entry-points:
     \item \textbf{Scheduler:} Manages the timing of data exchange tasks, ensuring that they are executed at appropriate intervals.
     \item \textbf{\ac{CLI}:} Allows manual triggering and execution of specific scripts.
 \end{enumerate}
-
 So, the program can run in scheduled mode as well as in nonscheduled mode just by triggering the command. 
-
 The folder structure of the program is very straight forward and defined the module separation:
 \dirtree{%
 .1 src.
@@ -53,25 +51,24 @@ The folder structure of the program is very straight forward and defined the mod
 .2 logger.ts.
 .2 setup.ts.
 }
-
 As we can see from the structure, in \texttt{src/tasks} there is a lot of redundancy in tasks.
 The reason for this is that the company implementation of SAP handles each carrier slightly differently.
 Due to that, the tracking numbers for the carriers are inserted into different columns and the data is fetched differently. 
 Hence why, the cleanest and well maintainable approach was to implement this completely separately as isolated scripts.
 
 \section{API fetchers}
-In order to call SAP Proxy and the public API of the platform, two instances of \texttt{Axios} were created in \texttt{src/utils/}.
+In order to call SAP Proxy and the public API of the platform, two instances of \gls{axios} were created in \texttt{src/utils/}.
 Each of them calls different endpoints and handles authentication a little differently.
 \begin{itemize}
-    \item \textbf{\texttt{parcelsyncApi.ts}:} Defines \texttt{AxiosInstance} to call the API of the platform with support scripts to generate seller identification and defines several groups of parcel statuses to help with recognition whether the parcel was delivered, etc.
+    \item \textbf{\texttt{parcelsyncApi.ts}:} Defines \gls{AxiosInstance} to call the API of the platform with support scripts to generate seller identification and defines several groups of parcel statuses to help with recognition whether the parcel was delivered, etc.
     \item \textbf{\texttt{sapApi.ts}:} Defines \texttt{AxiosInstance} to call SAP Proxy.
 \end{itemize}
 
 \section{Scheduler and \ac{CLI}}
-All tasks available to schedule and call via \ac{CLI} are imported into \texttt{src/setup.ts} which is called from the entry \texttt{src/index.ts}.
+All tasks available to schedule and call via \ac{CLI} are imported in \texttt{src/setup.ts} which is called from the entry \texttt{src/index.ts}.
 The \texttt{setup.ts} defined a mapping for each task between the method and the standard Cron schedule definition.
 
-Each task is then bound to the \texttt{yargs} module object as a command to run either from \ac{CLI} or as a single command triggering the scheduled mode.
+Each task is then bound to the \gls{yargs} module object as a command to run either from \ac{CLI} or as a single command triggering the scheduled mode.
 
 \section{Carrier specific modules}
 \label{subsec:programming-data-sender.carrier}

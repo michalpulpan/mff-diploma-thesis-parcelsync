@@ -13,11 +13,11 @@ With a focus on \ac{IaC}, this chapter highlights how this method is used within
 %  the deployment is managed using Infrastructure as Code (IaC) on AWS, use of specific services (Amazon S3 for hosting the static frontend and AWS Lambda for the backend functionality)
 % how these components are organized into multiple stacks using AWS cloudformation
 
-The deployment strategy for this projects leverages \ac{AWS} services with focus on \ac{IaC} to automate and manage cloud infrastructure.
+The deployment strategy for this platform leverages \ac{AWS} services with focus on \ac{IaC} to automate and manage cloud infrastructure.
 Thanks to this approach, creating a consistent deployment process is achieved while reducing possibilities of human error and ensuring replication across different stages or environments.
 
 Specifically, the strategy uses \gls{aws-s3} for hosting the static frontend(s), \gls{aws-lambda} for backend functionalities including scheduled background tasks and organising these diverse components into multiple stacks using \gls{aws-cloudformation}.
-Furthermore, this project improves its architecture with the inclusion of the PostgreSQL database using \ac{RDS}, \gls{aws-route-53} for domain routing, \gls{aws-certificate-manager} for SSL/TLS certificate management and \gls{aws-ses} for securing a high email delivery rate.
+Furthermore, this platform utilizes the PostgreSQL database using \ac{RDS}, \gls{aws-route-53} for domain routing, \gls{aws-certificate-manager} for SSL/TLS certificate management and \gls{aws-ses} for securing a high email delivery rate.
 This structure allows for a well-controlled infrastructure, allowing quick adjustments if needed.
 
 \subsection{\gls{aws-s3} for Static Frontend Hosting}
@@ -42,7 +42,7 @@ For a detailed visualisation of the deployment architecture for static frontend 
 \label{subsec:aws-lambda-backend}
 % use of AWS Lambda for the backend
 % discussing how serverless architecture benefits the application, including scalability, cost-efficiency, and reduced operational overhead.
-For the backend services, the project leverages \gls{aws-lambda}, a serverless computing service that runs code in response to events with automatic management of underlying computing resources.
+For the backend services, the platform leverages \gls{aws-lambda}, a serverless computing service that runs code in response to events with automatic management of underlying computing resources.
 This choice supports a serverless architecture for the backend, benefiting from scalability of Lambda functions, which scale automatically based on the number of requests and are quite cost-efficient by charging only for the compute time consumed.
 Such a pricing strategy is important for our platform, primarily operational during the Central European working hours, ensuring that resource allocation during off-peak hours - such as nights, early morning and weekends - is minimized, thus aligning resource usage with the actual demand.
 
@@ -80,7 +80,7 @@ For a more in-depth look, refer to the diagram illustrated in \ref{img06:fig_lam
 % the role of AWS cloudformation in managing the infrastructure.
 % consistent, repeatable deployment processes
 
-\gls{aws-cloudformation} plays a crucial role in managing the project infrastructure.
+\gls{aws-cloudformation} plays a crucial role in managing the platform infrastructure.
 It perfectly aligns with the purpose of \ac{IaC} - creating and managing resources with templates.
 CloudFormation enables the user to define the entire cloud environment as code that can be versioned, reused, and shared. 
 Automating the deployment of resources in a consistent and repeatable manner.
@@ -103,7 +103,7 @@ Having said that the deployment creates the following \gls{aws-cloudformation} s
 \label{sec:alternative-deployment-methods}
 % This section should explore alternative deployment methods that could be used for the project.
 
-Although the deployment path chosen for this project is \ac{AWS} with serverless architecture for deployment, it is important to explore alternative deployment methods that could offer different benefits or align with other needs.
+Although the deployment path chosen for this platform is \ac{AWS} with serverless architecture for deployment, it is important to explore alternative deployment methods that could offer different benefits or align with other needs.
 The two main alternatives that are presented are containerisation and utilisation of services from other cloud providers.
 After this brief overview of both options, we will present the potential risks of both of them.
 % 
@@ -114,7 +114,7 @@ After this brief overview of both options, we will present the potential risks o
 % concept of containerization, particularly using Docker
 % how containerization could be applied to both the frontend and backend
 Containerization is a method that allows to encapsulate an application along with its environment and dependencies into a container that should run consistently on any infrastructure. 
-Being either a local development environment or production on a remote server, containers are increasing in popularity and are very often the way to go for both development and deployment.
+Being either a local development environment or production on a remote server, containers are popular option and are very often the way to go for both development and deployment.
 This approach is complemented by technologies such as \gls{docker}.
 \gls{docker} can run completely free in both the development and production environments, significantly reducing cost.
 This gives freedom to the deployment environment. 
@@ -145,7 +145,7 @@ Cost-wise, considering the fact that Vercel is running on top of the AWS, it is 
 Google Cloud Run is a fully managed platform that automatically scales containers, similar to \gls{aws-lambda}, but with the benefits of containerisation. 
 % new start
 However, while \gls{gke} provides interesting container management and scalability, the overhead of managing Kubernetes can be significant.
-Requiring a deep understanding of Kubernetes architecture, management, and best practices, which might introduce additional complexity to the project.
+Requiring a deep understanding of Kubernetes architecture, management, and best practices, which might introduce additional complexity to the platform.
 % new end
 
 \subsubsection{\gls{microsoft-azure}}
@@ -163,7 +163,7 @@ The \gls{aws-lambda} usually takes no more than 1-2 seconds on cold start.
 %Although the current deployment strategy uses \ac{AWS} services and a serverless architecture that offers good scalability, exploring alternative deployment methods such as containerisation presents an opportunity to minimise the potential risks associated with vendor lock-in.
 
 % new start
-Although the current deployment strategy mainly uses \ac{AWS} services and leverages a serverless architecture, it also exposes the project to potential risks associated with vendor lock-in. 
+Although the current deployment strategy mainly uses \ac{AWS} services and leverages a serverless architecture, it also exposes the platform to potential risks associated with vendor lock-in. 
 % new end
 
 Vendor lock-in occurs when a project becomes so dependent on a particular cloud provider that migrating is technically challenging or expensive.
@@ -183,9 +183,9 @@ Using \gls{github-actions} as the running environment of the \ac{CI}/\ac{CD} pip
 % how GitHub Actions are used for CI/CD
 % details on how code changes in the repository trigger automated workflows for building, and deploying both the frontend and backend components
 
-Since GitHub was chosen as the primarily code repository for the project, it was a straightforward choice to use cloud runners in GitHub Actions as the go-to solution for the integration and deployment pipeline.
-When code changes in the repository, GitHub Actions are triggered to execute predefined jobs, such as typing checks with TypeScript, linting with \gls{eslint}, and the identification of spelling errors.
-These initial steps ensure that the code base adheres to the project's standards and conventions.
+Since GitHub was chosen as the primarily code repository for the platform, it was a straightforward choice to use cloud runners in \gls{github-actions} as the go-to solution for the integration and deployment pipeline.
+When code changes in the repository, \gls{github-actions} are triggered to execute predefined jobs, such as typing checks with TypeScript, linting with \gls{eslint}, and the identification of spelling errors.
+These initial steps ensure that the code base adheres to the platform's standards and conventions.
 
 Following quality checks, deployment workflows are activated based on pushing to the \texttt{main} branch publishing the code to both production and staging environments with all necessary migrations and updates.
 These workflows use \gls{aws-cdk} commands and \gls{aws-cli} to deploy infrastructure changes and application updates to \ac{AWS} services, effectively and relatively quickly, bringing the application from the repository to the world.
@@ -206,7 +206,7 @@ The phases of the pipeline are the following.
     \item \textbf{Post-Deployment tasks:} After the build and deployment, database migrations and invalidating CDN caches ensure that the latest and valid content is served to user and that the database schema is up to date with what the application is expecting.
 \end{itemize}
 
-By integrating these steps into \gls{github-actions}, the project benefits from an automated pipeline that minimises manual intervention in error-prone processes.
+By integrating these steps into \gls{github-actions}, the platform benefits from an automated pipeline that minimises manual intervention in error-prone processes.
 For example, on \ref{img06:fig_github_actions_integration} there are three stages of the code quality pipeline.
 \begin{figure}[H]\centering
 \includegraphics[width=140mm]{img/chap06/fig_github_actions_integration.png}
